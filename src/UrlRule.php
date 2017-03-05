@@ -6,6 +6,7 @@
  * @date 05.03.2017
  */
 namespace skeeks\cms\backend;
+use skeeks\cms\helpers\StringHelper;
 use \yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 
@@ -14,18 +15,19 @@ use yii\helpers\ArrayHelper;
  *
  * @package skeeks\cms\backend
  */
-class BackendUrlRule
+class UrlRule
     extends \yii\web\UrlRule
 {
     /**
      * @var string
      */
-    public $urlPrefix = '~backend';
+    public $urlPrefix = ''; //~backend
 
     /**
+     *
      * @var string
      */
-    public $routePrefix = 'backend';
+    public $routePrefix = ''; //backend
 
 
     public function init()
@@ -50,25 +52,59 @@ class BackendUrlRule
     public function createUrl($manager, $route, $params)
     {
         $routeData = explode("/", $route);
-        $isAdminRoute = false;
-        if (isset($routeData[1]))
+        $isRoute   = false;
+
+        if ($routeData)
         {
-            if (strpos(trim($routeData[1]), 'admin-') == 0)
+            foreach ($routeData as $path)
             {
-                $isAdminRoute = true;
+                if (!$path)
+                {
+                    continue;
+                }
+
+                $routePrefix = StringHelper::substr($path, 0, StringHelper::strlen($this->routePrefix));
+                if ($this->routePrefix == $routePrefix)
+                {
+                    $isRoute = true;
+                }
             }
         }
 
-        if ($isAdminRoute === false)
+        if ($isRoute === false)
         {
             return false;
         }
 
         $url = $this->urlPrefix . "/" . $route;
-        if (!empty($params) && ($query = http_build_query($params)) !== '')
-        {
+
+        /**
+         * @see parent::createUrl()
+         */
+        if ($this->host !== null) {
+            $pos = strpos($url, '/', 8);
+            if ($pos !== false) {
+                $url = substr($url, 0, $pos) . preg_replace('#/+#', '/', substr($url, $pos));
+            }
+        } elseif (strpos($url, '//') !== false) {
+            $url = preg_replace('#/+#', '/', $url);
+        }
+
+        /**
+         * @see parent::createUrl()
+         */
+        if ($url !== '') {
+            $url .= ($this->suffix === null ? $manager->suffix : $this->suffix);
+        }
+
+        /**
+         * @see parent::createUrl()
+         */
+        if (!empty($params) && ($query = http_build_query($params)) !== '') {
             $url .= '?' . $query;
         }
+
+
 
         return $url;
     }
@@ -87,6 +123,12 @@ class BackendUrlRule
         if ($firstPrefix == $this->urlPrefix)
         {
             $route = str_replace($this->urlPrefix, "", $pathInfo);
+            if (!$route || $route == "/")
+            {
+                $route = "/" . $this->routePrefix . "/index";
+                /*print_r($route);
+                die;*/
+            }
             return [$route, $params];
         }
 
