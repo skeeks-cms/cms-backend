@@ -1,21 +1,21 @@
 <?php
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
- * @link http://skeeks.com/
- * @copyright 2010 SkeekS (СкикС)
+ * @link https://skeeks.com/
+ * @copyright 2010 SkeekS
  * @date 05.03.2017
  */
 namespace skeeks\cms\backend;
 
 /**
- * Interface PermissionsInterface
+ * Interface BackendPermissionsInterface
  * @package skeeks\cms\backend
  */
-interface PermissionsInterface
+interface BackendPermissionsInterface
 {
     /**
-     * Permission name
-     * @return string
+     * Permission names
+     * @return array
      */
     public function getPermissionNames();
 }

@@ -12,10 +12,9 @@ use yii\helpers\ArrayHelper;
 
 /**
  * Class BackendUrlRule
- *
  * @package skeeks\cms\backend
  */
-class UrlRule
+class BackendUrlRule
     extends \yii\web\UrlRule
 {
     /**
