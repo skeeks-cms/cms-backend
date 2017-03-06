@@ -8,6 +8,8 @@
 namespace skeeks\cms\backend;
 
 /**
+ * @property $permissionNames;
+ *
  * Interface BackendPermissionsInterface
  * @package skeeks\cms\backend
  */
