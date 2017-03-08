@@ -12,7 +12,7 @@ use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\IHasInfo;
 use skeeks\cms\IHasPermissions;
 use skeeks\cms\IHasUrl;
-use skeeks\cms\traits\InfoTrait;
+use skeeks\cms\traits\THasInfo;
 use yii\base\Action;
 use yii\filters\AccessControl;
 use yii\helpers\Inflector;
@@ -28,7 +28,7 @@ use yii\web\NotFoundHttpException;
 class BackendController extends Controller
     implements IHasPermissions, IHasInfo, IHasUrl, IHasInfoActions
 {
-    use InfoTrait;
+    use THasInfo;
 
     /**
      * @return array
@@ -189,5 +189,27 @@ class BackendController extends Controller
         }
 
         return $this->_actions;
+    }
+
+
+    public function getMenuData()
+    {
+        return [];
+        /*[
+            'admin' =>
+            [
+                'items' =>
+                [
+                    $this->uniqueId =>
+                    [
+                        'name'              => $this->name,
+                        'url'               => $this->url,
+                        'image'             => $this->image,
+                        'icon'              => $this->icon,
+                        'permissionNames'   => $this->permissionNames,
+                    ]
+                ]
+            ]
+        ];*/
     }
 }

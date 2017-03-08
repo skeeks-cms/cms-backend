@@ -13,7 +13,6 @@ use skeeks\cms\backend\BackendPermissionsInterface;
 use skeeks\cms\backend\BackendUrlInterface;
 use skeeks\cms\backend\BackendUrlRule;
 use skeeks\cms\backend\HasModelInterface;
-use skeeks\cms\backend\traits\BackendInfoTrait;
 use skeeks\cms\backend\traits\BackendModelControllerTrait;
 use skeeks\cms\helpers\StringHelper;
 use yii\filters\AccessControl;
