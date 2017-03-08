@@ -11,10 +11,10 @@ use yii\base\Action;
 /**
  * @property Action[] $actions;
  *
- * Interface HasActionsControllerInterface
+ * Interface IHasInfoActions
  * @package skeeks\cms\backend
  */
-interface HasActionsControllerInterface
+interface IHasInfoActions
 {
     /**
      * @return Action[]

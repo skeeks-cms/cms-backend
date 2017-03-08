@@ -8,12 +8,11 @@
 namespace skeeks\cms\backend\controllers;
 
 use skeeks\cms\backend\BackendUrlRule;
-use skeeks\cms\backend\HasActionsInterface;
-use skeeks\cms\backend\HasInfoInterface;
-use skeeks\cms\backend\HasPermissionsInterface;
-use skeeks\cms\backend\HasUrlInterface;
-use skeeks\cms\backend\traits\InfoTrait;
 use skeeks\cms\helpers\StringHelper;
+use skeeks\cms\IHasInfo;
+use skeeks\cms\IHasPermissions;
+use skeeks\cms\IHasUrl;
+use skeeks\cms\traits\InfoTrait;
 use yii\base\Action;
 use yii\filters\AccessControl;
 use yii\helpers\Inflector;
@@ -27,7 +26,7 @@ use yii\web\NotFoundHttpException;
  * @package skeeks\cms\backend\controllers
  */
 class BackendController extends Controller
-    implements HasPermissionsInterface, HasInfoInterface, HasUrlInterface, HasActionsControllerInterface
+    implements IHasPermissions, IHasInfo, IHasUrl, IHasInfoActions
 {
     use InfoTrait;
 
