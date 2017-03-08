@@ -8,16 +8,16 @@
 namespace skeeks\cms\backend;
 
 /**
- * @property $permissionNames;
+ * @property $url;
  *
- * Interface BackendPermissionsInterface
+ * Interface HasUrlInterface
  * @package skeeks\cms\backend
  */
-interface BackendPermissionsInterface
+interface HasUrlInterface
 {
     /**
-     * Permission names
-     * @return array
+     * Has url
+     * @return string
      */
-    public function getPermissionNames();
+    public function getUrl();
 }

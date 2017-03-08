@@ -5,7 +5,7 @@
  * @copyright 2010 SkeekS
  * @date 05.03.2017
  */
-namespace skeeks\cms\backend;
+namespace skeeks\cms\backend\controllers;
 
 /**
  * @property $modelClassName;

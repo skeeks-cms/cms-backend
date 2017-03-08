@@ -12,10 +12,10 @@ namespace skeeks\cms\backend;
  * @property $icon;
  * @property $image;
  *
- * Interface BackendInfoInterface
+ * Interface HasInfoInterface
  * @package skeeks\cms\backend
  */
-interface BackendInfoInterface
+interface HasInfoInterface
 {
     /**
      * Controller name

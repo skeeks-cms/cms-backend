@@ -6,18 +6,18 @@
  * @date 05.03.2017
  */
 namespace skeeks\cms\backend;
+use yii\base\Model;
 
 /**
- * @property $url;
+ * @property Model $model;
  *
- * Interface BackendUrlInterface
+ * Interface HasModelInterface
  * @package skeeks\cms\backend
  */
-interface BackendUrlInterface
+interface HasModelInterface
 {
     /**
-     * Has url
-     * @return string
+     * @return Model
      */
-    public function getUrl();
+    public function getModel();
 }

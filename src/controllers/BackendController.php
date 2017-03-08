@@ -7,12 +7,14 @@
  */
 namespace skeeks\cms\backend\controllers;
 
-use skeeks\cms\backend\BackendInfoInterface;
-use skeeks\cms\backend\BackendPermissionsInterface;
-use skeeks\cms\backend\BackendUrlInterface;
 use skeeks\cms\backend\BackendUrlRule;
-use skeeks\cms\backend\traits\BackendInfoTrait;
+use skeeks\cms\backend\HasActionsInterface;
+use skeeks\cms\backend\HasInfoInterface;
+use skeeks\cms\backend\HasPermissionsInterface;
+use skeeks\cms\backend\HasUrlInterface;
+use skeeks\cms\backend\traits\InfoTrait;
 use skeeks\cms\helpers\StringHelper;
+use yii\base\Action;
 use yii\filters\AccessControl;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
@@ -25,9 +27,9 @@ use yii\web\NotFoundHttpException;
  * @package skeeks\cms\backend\controllers
  */
 class BackendController extends Controller
-    implements BackendPermissionsInterface, BackendInfoInterface, BackendUrlInterface
+    implements HasPermissionsInterface, HasInfoInterface, HasUrlInterface, HasActionsControllerInterface
 {
-    use BackendInfoTrait;
+    use InfoTrait;
 
     /**
      * @return array
@@ -123,7 +125,7 @@ class BackendController extends Controller
         $data[] = \Yii::$app->name;
         $data[] = $this->name;
 
-        if ($this->action && $this->action instanceof BackendInfoInterface)
+        if ($this->action && $this->action instanceof HasInfoInterface)
         {
             $data[] = $this->action->name;
         }
@@ -141,7 +143,7 @@ class BackendController extends Controller
             'url' => $this->url
         ];
 
-        if ($this->action && $this->action instanceof BackendInfoInterface)
+        if ($this->action && $this->action instanceof HasInfoInterface)
         {
              $this->view->params['breadcrumbs'][] = $this->action->name;
         }
@@ -156,5 +158,37 @@ class BackendController extends Controller
     {
         $baseRoute = $this->module instanceof Application ? $this->id : ("/" . $this->module->id . "/" . $this->id);
         return Url::to([$baseRoute. '/' . $this->defaultAction]);
+    }
+
+
+    /**
+     * @var Action[]
+     */
+    protected $_actions    = null;
+
+    /**
+     * @return Action[]
+     */
+    public function getActions()
+    {
+        if ($this->_actions !== null)
+        {
+            return $this->_actions;
+        }
+
+        $actions = $this->actions();
+
+        if ($actions)
+        {
+            foreach ($actions as $id => $data)
+            {
+                $action = $this->createAction($id);
+            }
+        } else
+        {
+            $this->_actions = [];
+        }
+
+        return $this->_actions;
     }
 }

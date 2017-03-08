@@ -12,10 +12,10 @@ namespace skeeks\cms\backend\traits;
  * @property $icon;
  * @property $image;
  *
- * Class BackendInfoTrait
+ * Class InfoTrait
  * @package skeeks\cms\backend
  */
-trait BackendInfoTrait
+trait InfoTrait
 {
     /**
      * @var string
