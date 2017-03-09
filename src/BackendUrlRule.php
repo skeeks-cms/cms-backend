@@ -26,7 +26,7 @@ class BackendUrlRule
      *
      * @var string
      */
-    public $routePrefix = ''; //backend
+    public $controllerPrefix = ''; //backend
 
 
     public function init()
@@ -62,8 +62,8 @@ class BackendUrlRule
                     continue;
                 }
 
-                $routePrefix = StringHelper::substr($path, 0, StringHelper::strlen($this->routePrefix));
-                if ($this->routePrefix == $routePrefix)
+                $controllerPrefix = StringHelper::substr($path, 0, StringHelper::strlen($this->controllerPrefix));
+                if ($this->controllerPrefix == $controllerPrefix)
                 {
                     $isRoute = true;
                 }
@@ -124,7 +124,7 @@ class BackendUrlRule
             $route = str_replace($this->urlPrefix, "", $pathInfo);
             if (!$route || $route == "/")
             {
-                $route = "/" . $this->routePrefix . "/index";
+                $route = "/" . $this->controllerPrefix . "/index";
                 /*print_r($route);
                 die;*/
             }

@@ -7,6 +7,7 @@
  */
 namespace skeeks\cms\backend;
 
+use skeeks\cms\backend\controllers\BackendController;
 use skeeks\cms\IHasInfo;
 use skeeks\cms\IHasPermissions;
 use skeeks\cms\IHasUrl;
@@ -79,37 +80,57 @@ class BackendMenuItem extends Component
         parent::init();
 
         $controller = null;
-        //Права доступа по умолчанию
+        //Default access rights
         if (!$this->permissionNames && is_array($this->url))
         {
-            $controller = null;
-
-            try
+            if ($controller = $this->_getController())
             {
-                list($controller, $route) = \Yii::$app->createController($this->url[0]);
-            } catch (\Exception $e)
-            {}
-
-            if (!$controller)
-            {
-                return true;
+                if ($controller instanceof IHasPermissions)
+                {
+                    $this->permissionNames = $controller->permissionNames;
+                }
             }
 
-            if ($controller instanceof IHasPermissions)
-            {
-                $this->permissionNames = $controller->permissionNames;
-            }
         }
 
-        //TODO::
+        //No name specified
         if (!$this->name)
         {
-            if ($controller)
+            if ($controller = $this->_getController())
             {
-
+                if ($controller instanceof IHasInfo)
+                {
+                    $this->name = $controller->name;
+                }
             }
         }
+    }
 
+    /**
+     * @var null|BackendController
+     */
+    protected $_controller = null;
+
+    /**
+     * @return BackendController
+     */
+    protected function _getController()
+    {
+        if ($this->_controller !== null)
+        {
+            return $this->_controller;
+        }
+
+        try
+        {
+            list($controller, $route) = \Yii::$app->createController($this->url[0]);
+            $this->_controller = $controller;
+        } catch (\Exception $e)
+        {
+            $this->_controller = false;
+        }
+
+        return $this->_controller;
     }
 
     /**
