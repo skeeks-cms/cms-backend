@@ -8,6 +8,8 @@
 namespace skeeks\cms\backend\controllers;
 
 use skeeks\cms\backend\BackendUrlRule;
+use skeeks\cms\backend\IHasBreadcrumbs;
+use skeeks\cms\backend\IHasMenu;
 use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\IHasInfo;
 use skeeks\cms\IHasPermissions;
@@ -26,7 +28,7 @@ use yii\web\NotFoundHttpException;
  * @package skeeks\cms\backend\controllers
  */
 class BackendController extends Controller
-    implements IHasPermissions, IHasInfo, IHasUrl, IHasInfoActions
+    implements IHasPermissions, IHasInfo, IHasUrl, IHasInfoActions, IHasMenu, IHasBreadcrumbs
 {
     use THasInfo;
 
@@ -80,7 +82,6 @@ class BackendController extends Controller
     {
         $this->_ensureUrl();
         $this->_initMetaData();
-        $this->_initBreadcrumbsData();
 
         return parent::beforeAction($action);
     }
@@ -133,21 +134,23 @@ class BackendController extends Controller
     }
 
     /**
-     * @return $this
+     * @return array
      */
-    protected function _initBreadcrumbsData()
+    public function getBreadcrumbsData()
     {
-        $this->view->params['breadcrumbs'][] = [
+        $result = [];
+
+        $result[] = [
             'label' => $this->name,
-            'url' => $this->url
+            'url'   => $this->url
         ];
 
-        if ($this->action && $this->action instanceof HasInfoInterface)
+        if ($this->action && $this->action instanceof IHasInfo)
         {
-             $this->view->params['breadcrumbs'][] = $this->action->name;
+             $result[] = $this->action->name;
         }
 
-        return $this;
+        return $result;
     }
 
     /**
@@ -191,7 +194,10 @@ class BackendController extends Controller
         return $this->_actions;
     }
 
-
+    /**
+     *
+     * @return array
+     */
     public function getMenuData()
     {
         return [];

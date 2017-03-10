@@ -116,7 +116,7 @@ class BackendMenu extends Component
                 {
                     if ($item->items)
                     {
-                        $item->items = static::buid($item->items, $item);
+                        $item->items = $this->buid($item->items, $item);
                     }
 
                     if ($item->isAllow)
@@ -125,43 +125,6 @@ class BackendMenu extends Component
                     }
                 }
 
-            }
-        }
-
-        return $result;
-    }
-
-    /**
-     * @return array
-     */
-    public function getDataBootstrapMenu()
-    {
-        $result = [];
-
-        if ($this->items)
-        {
-            foreach ($this->items as $item)
-            {
-
-                $result[$item->id] = [
-                    'label' => $item->name,
-                    'url' => $item->url,
-                ];
-
-                if ($item->items)
-                {
-                    $childItems = [];
-
-                    foreach ($item->items as $childItem)
-                    {
-                        $childItems[] = [
-                            'label' => $childItem->name,
-                            'url' => $childItem->url,
-                        ];
-                    }
-
-                    $result[$item->id]['items'] = $childItems;
-                }
             }
         }
 

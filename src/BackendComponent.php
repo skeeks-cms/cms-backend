@@ -14,7 +14,7 @@ use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 
 /**
- * @property helpers\BackendMenu $menu
+ * @property BackendMenu $menu
  *
  * Class BackendComponent
  * @package skeeks\cms\backend
