@@ -5,7 +5,7 @@
  * @copyright 2010 SkeekS
  * @date 06.03.2017
  */
-namespace skeeks\cms\backend\controllers;
+namespace skeeks\cms\backend;
 
 use skeeks\cms\backend\BackendUrlRule;
 use skeeks\cms\backend\IHasBreadcrumbs;
@@ -25,7 +25,7 @@ use yii\web\NotFoundHttpException;
 
 /**
  * Class BackendController
- * @package skeeks\cms\backend\controllers
+ * @package skeeks\cms\backend
  */
 class BackendController extends Controller
     implements IHasPermissions, IHasInfo, IHasUrl, IHasInfoActions, IHasMenu, IHasBreadcrumbs
