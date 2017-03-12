@@ -9,9 +9,9 @@ return
 [
     'components' =>
     [
-        /*'cmsBackend' =>
+        /*'cmsBackends' =>
         [
-            'class' => 'skeeks\cms\backend\BackendComponent'
+            'class' => 'skeeks\cms\backend\Backends'
         ]*/
     ]
 ];

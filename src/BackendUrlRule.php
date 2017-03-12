@@ -11,6 +11,8 @@ use \yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 
 /**
+ * @property IBackendComponent|BackendComponent $backend
+ *
  * Class BackendUrlRule
  * @package skeeks\cms\backend
  */
@@ -18,17 +20,27 @@ class BackendUrlRule
     extends \yii\web\UrlRule
 {
     /**
+     * ~backend
      * @var string
      */
-    public $urlPrefix = ''; //~backend
+    public $urlPrefix = '';
 
     /**
-     *
+     * backend
      * @var string
      */
-    public $controllerPrefix = ''; //backend
+    public $controllerPrefix = '';
 
 
+    /**
+     * BackendComponent id from config
+     * @var string
+     */
+    public $backendId = '';
+
+    /**
+     * @throws InvalidConfigException
+     */
     public function init()
     {
         if ($this->name === null)
@@ -38,7 +50,12 @@ class BackendUrlRule
 
         if (!$this->urlPrefix)
         {
-            throw new InvalidConfigException("Incorrect configuration of a component " . static::class);
+            throw new InvalidConfigException("Need 'urlPrefix'. Incorrect configuration of a component " . static::class);
+        }
+
+        if (!$this->backendId && $this->_backend === null)
+        {
+            throw new InvalidConfigException("Need 'backendId' or 'backend'. Incorrect configuration of a component " . static::class);
         }
     }
 
@@ -121,6 +138,18 @@ class BackendUrlRule
 
         if ($firstPrefix == $this->urlPrefix)
         {
+            if ($this->backend === null)
+            {
+                if ($this->backendId)
+                {
+                    throw new InvalidConfigException("Backend Id '{$this->backendId}' not exist. Incorrect configuration of a component " . static::class);
+                } else
+                {
+                    throw new InvalidConfigException("Need 'backendId' or 'backend'. Incorrect configuration of a component " . static::class);
+                }
+            }
+
+            $this->backend->run();
             $route = str_replace($this->urlPrefix, "", $pathInfo);
             if (!$route || $route == "/")
             {
@@ -132,5 +161,48 @@ class BackendUrlRule
         }
 
         return false;
+    }
+
+
+    /**
+     * @var null|IBackendComponent|BackendComponent
+     */
+    protected $_backend = null;
+
+    /**
+     * @param IBackendComponent $backendComponent
+     */
+    public function setBackend(IBackendComponent $backendComponent)
+    {
+        $this->_backend = $backendComponent;
+        return $this;
+    }
+
+    /**
+     * @return null|BackendComponent|IBackendComponent
+     */
+    public function getBackend()
+    {
+        if ($this->_backend !== null)
+        {
+            return $this->_backend;
+        }
+
+        if ($this->backendId)
+        {
+            if (\Yii::$app->has($this->backendId))
+            {
+                if ($backendComponent = \Yii::$app->get($this->backendId))
+                {
+                    if ($backendComponent instanceof IBackendComponent)
+                    {
+                        $this->_backend = $backendComponent;
+                        return $this->_backend;
+                    }
+                }
+            }
+        }
+
+        return null;
     }
 }

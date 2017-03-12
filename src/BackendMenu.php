@@ -50,11 +50,41 @@ class BackendMenu extends Component
         if ($this->data && $this->_items === null)
         {
             $this->_items = $this->buid($this->data);
-            ArrayHelper::multisort($this->_items, 'priority');
         }
         return $this->_items;
     }
 
+    /**
+     * @param array $config
+     * @return array
+     */
+    static public function loadConfig(array $config = [])
+    {
+        $config = [];
+        
+        foreach ($config as $key => $itemData)
+        {
+            if ($items = ArrayHelper::getValue($itemData, 'items'))
+            {
+                if (is_callable($items))
+                {
+                    $items = (array) call_user_func($items);
+                }
+                
+                if ($items)
+                {
+                    foreach ($items as $subKey => $subItemData)
+                    {
+                        $items[$subKey] = static::loadConfig($subItemData);
+                    }
+                }
+                
+                $config[$key]['items'] = $items;
+            }
+        }
+        
+        return $config;
+    }
 
     /**
      * @param array $data
@@ -66,25 +96,10 @@ class BackendMenu extends Component
         $result         = [];
         $itemClass      = $this->itemClass;
 
-        foreach ($data as $key => $value)
+        foreach ($data as $key => $itemData)
         {
-            if ($value instanceof $itemClass)
+            if (is_array($itemData))
             {
-                $result[] = $value;
-            }
-            else if (is_callable($value))
-            {
-                $data = $value();
-                if (is_array($data))
-                {
-                    $result = ArrayHelper::merge($result, $data);
-                }
-
-            }
-            else if (is_array($value))
-            {
-                $itemData = (array) $value;
-
                 if (!$itemData)
                 {
                     continue;
@@ -110,23 +125,22 @@ class BackendMenu extends Component
                 }
 
                 $itemData['menu'] = $this;
-                $item = new $itemClass($itemData);
+                $itemData['class'] = $itemClass;
+                $item = \Yii::createObject($itemData);
 
                 if ($item->isAllow)
                 {
-                    if ($item->items)
-                    {
-                        $item->items = $this->buid($item->items, $item);
-                    }
+                    $result[] = $item;
 
-                    if ($item->isAllow)
+                    if ($itemsData = ArrayHelper::getValue($itemData, 'items'))
                     {
-                        $result[] = $item;
+                        $item->items = $this->buid($itemsData, $item);
                     }
                 }
-
             }
         }
+        
+        //ArrayHelper::multisort($result, 'priority');
 
         return $result;
     }

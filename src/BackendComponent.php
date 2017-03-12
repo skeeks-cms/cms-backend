@@ -8,7 +8,9 @@
 namespace skeeks\cms\backend;
 
 use yii\base\Application;
+use yii\base\BootstrapInterface;
 use yii\base\Component;
+use yii\base\Event;
 use yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
@@ -20,21 +22,43 @@ use yii\helpers\Inflector;
  * @package skeeks\cms\backend
  */
 class BackendComponent extends Component
+    implements IBackendComponent, BootstrapInterface
 {
+    const EVENT_BEFORE_RUN = 'beforeRun';
+
+    /**
+     * @var BackendComponent
+     */
+    static protected $_runningBakcend = null;
+
+    /**
+     * @return null|BackendComponent
+     */
+    static public function getCurrent()
+    {
+        return static::$_runningBakcend;
+    }
+
     /**
      * @var string
      */
     public $controllerPrefix    = "";
 
     /**
-     * @var bool
+     * @var array
      */
-    public $isMergeControllerMenu = false;
+    public $urlRule             = [];
 
     /**
      * @var null
      */
     protected $_menu = null;
+
+
+    /**
+     * @var bool
+     */
+    public $isMergeControllerMenu = false;
 
     /**
      * @throws InvalidConfigException
@@ -49,14 +73,60 @@ class BackendComponent extends Component
         }
     }
 
+
+    /**
+     * @param Application $application
+     */
+    public function bootstrap($application)
+    {
+        if ($application instanceof \yii\web\Application)
+        {
+            /**
+             * Adding routing rules
+             */
+            $this->urlRule = ArrayHelper::merge([
+                'class' => 'skeeks\cms\backend\BackendUrlRule'
+            ], $this->urlRule, [
+                'controllerPrefix'  => $this->controllerPrefix,
+                'backend'           => $this
+            ]);
+
+            $application->urlManager->addRules([$this->urlRule]);
+        }
+    }
+
+    /**
+     * @var bool
+     */
+    protected $_isRunning = false;
+
+    /**
+     * Run backend app
+     * @return $this
+     */
+    public function run()
+    {
+        if ($this->_isRunning === false)
+        {
+            $this->_isRunning           = true;
+            static::$_runningBakcend    = $this;
+
+            $event = new Event();
+            $this->trigger(self::EVENT_BEFORE_RUN, $event);
+        }
+        
+        return $this;
+    }
+
+
     /**
      * @return BackendMenu
      */
     public function getMenu()
     {
-        if (is_array($this->_menu))
+        if (is_array($this->_menu) || $this->_menu === null)
         {
-            $data = $this->_menu;
+            $data = (array) $this->_menu;
             if (!ArrayHelper::getValue($data, 'class'))
             {
                 $data['class'] = BackendMenu::class;

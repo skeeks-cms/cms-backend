@@ -15,11 +15,14 @@ use skeeks\cms\traits\THasInfo;
 use skeeks\cms\traits\THasPermissions;
 use skeeks\cms\traits\THasUrl;
 use yii\base\Component;
+use yii\helpers\Url;
 
 /**
  * @property bool $isVisible
  * @property bool $isActive
  * @property bool $isAllow
+ *
+ * @property array|mixed $urlData
  *
  * Class BackendMenuItem
  * @package skeeks\cms\backend
@@ -81,7 +84,8 @@ class BackendMenuItem extends Component
 
         $controller = null;
         //Default access rights
-        if (!$this->permissionNames && is_array($this->url))
+
+        if (!$this->permissionNames && is_array($this->_url))
         {
             if ($controller = $this->_getController())
             {
@@ -90,7 +94,6 @@ class BackendMenuItem extends Component
                     $this->permissionNames = $controller->permissionNames;
                 }
             }
-
         }
 
         //No name specified
@@ -123,7 +126,7 @@ class BackendMenuItem extends Component
 
         try
         {
-            list($controller, $route) = \Yii::$app->createController($this->url[0]);
+            list($controller, $route) = \Yii::$app->createController($this->_url[0]);
             $this->_controller = $controller;
         } catch (\Exception $e)
         {
@@ -146,7 +149,7 @@ class BackendMenuItem extends Component
         {
             list($assetClassName, $localPath) = $this->_image;
             return (string) \Yii::$app->getAssetManager()->getAssetUrl(\Yii::$app->assetManager->getBundle($assetClassName), $localPath);
-        } if (is_string($image))
+        } if (is_string($this->_image))
         {
             return $this->_image;
         }
@@ -154,12 +157,43 @@ class BackendMenuItem extends Component
         return "";
     }
 
+
+    /**
+     * @return string
+     */
+    public function getUrl()
+    {
+        if (is_array($this->_url))
+        {
+            if (isset($this->_url[0]))
+            {
+                $this->_url[0] = "/" . $this->_url[0];
+            }
+
+            return Url::to($this->_url);
+
+        } else if (is_string($this->_url))
+        {
+            return $this->_url;
+        }
+
+        return "";
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUrlData()
+    {
+        return $this->_url;
+    }
+
     /**
      * @return bool
      */
-    public function getIsVisbile()
+    public function getIsVisible()
     {
-        if ($this->visible === true && $this->isAllow)
+        if ($this->visible === true)
         {
             if ($this->items)
             {
@@ -174,10 +208,12 @@ class BackendMenuItem extends Component
                 return false;
             } else
             {
-                return true;
+                if ($this->_url)
+                {
+                    return true;
+                }
             }
         }
-
 
         return false;
     }
@@ -201,7 +237,33 @@ class BackendMenuItem extends Component
         if ($this->activeCallback && is_callable($this->activeCallback))
         {
             $callback = $this->activeCallback;
-            return (bool) $callback($this);
+            return (bool) call_user_func($callback, $this);
+        }
+
+        if (is_array($this->_url))
+        {
+            $routeData = explode("/", $this->_url[0]);
+            $routeDataCheck = [];
+            if ($routeData && is_array($routeData))
+            {
+                foreach ($routeData as $routePath)
+                {
+                    if ($routePath)
+                    {
+                        $routeDataCheck[] = $routePath;
+                    }
+                }
+            }
+
+            if (!$routeDataCheck)
+            {
+                return false;
+            }
+
+            if (strpos('-' . \Yii::$app->controller->route . '/', implode("/", $routeDataCheck) . '/') !== false)
+            {
+                return true;
+            }
         }
 
         return false;
@@ -219,10 +281,7 @@ class BackendMenuItem extends Component
             {
                 if ($permission = \Yii::$app->authManager->getPermission($permissionName))
                 {
-                    if (\Yii::$app->user->can($permission->name))
-                    {
-                        return $this->_accessCallback();
-                    } else
+                    if (!\Yii::$app->user->can($permission->name))
                     {
                         return false;
                     }
@@ -245,7 +304,7 @@ class BackendMenuItem extends Component
         if ($this->accessCallback && is_callable($this->accessCallback))
         {
             $callback = $this->accessCallback;
-            return (bool) $callback($this);
+            return (bool) call_user_func($callback, $this);
         }
 
         return true;

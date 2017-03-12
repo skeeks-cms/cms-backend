@@ -57,7 +57,23 @@ class BackendController extends Controller
                 [
                     [
                         'allow'         => true,
-                        'roles'         => $this->permissionNames,
+                        'matchCallback' => function($rule, $action)
+                        {
+                            if ($this->permissionNames)
+                            {
+                                foreach ($this->permissionNames as $permissionName)
+                                {
+                                    if (!\Yii::$app->user->can($permissionName))
+                                    {
+                                        return false;
+                                    }
+                                }
+
+                                return true;
+                            }
+
+                            return false;
+                        }
                     ],
                 ]
             ],
