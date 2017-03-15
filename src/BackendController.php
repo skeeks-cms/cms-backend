@@ -141,7 +141,7 @@ class BackendController extends Controller
         $data[] = \Yii::$app->name;
         $data[] = $this->name;
 
-        if ($this->action && $this->action instanceof HasInfoInterface)
+        if ($this->action && $this->action instanceof IHasInfo)
         {
             $data[] = $this->action->name;
         }
