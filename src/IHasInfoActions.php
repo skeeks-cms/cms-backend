@@ -9,7 +9,7 @@ namespace skeeks\cms\backend;
 use yii\base\Action;
 
 /**
- * @property Action[] $actions;
+ * @property BackendAction[] $actions;
  *
  * Interface IHasInfoActions
  * @package skeeks\cms\backend
