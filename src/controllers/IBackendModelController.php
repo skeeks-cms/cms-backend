@@ -17,7 +17,7 @@ namespace skeeks\cms\backend\controllers;
  * Interface BackendModelControllerInterface
  * @package skeeks\cms\backend
  */
-interface BackendModelControllerInterface
+interface IBackendModelController
 {
     /**
      * Required to fill!

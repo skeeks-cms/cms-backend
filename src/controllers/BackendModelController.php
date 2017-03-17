@@ -14,6 +14,7 @@ use skeeks\cms\backend\BackendUrlInterface;
 use skeeks\cms\backend\BackendUrlRule;
 use skeeks\cms\backend\HasModelInterface;
 use skeeks\cms\backend\traits\BackendModelControllerTrait;
+use skeeks\cms\backend\traits\TBackendModelController;
 use skeeks\cms\helpers\StringHelper;
 use yii\filters\AccessControl;
 use yii\helpers\Inflector;
@@ -27,7 +28,7 @@ use yii\web\NotFoundHttpException;
  * @package skeeks\cms\backend\controllers
  */
 class BackendModelController extends BackendController
-    implements HasModelInterface
+    implements IBackendModelController
 {
-    use BackendModelControllerTrait;
+    use TBackendModelController;
 }

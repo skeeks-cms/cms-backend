@@ -8,14 +8,16 @@
 namespace skeeks\cms\backend\traits;
 
 /**
- * @property $name;
- * @property $icon;
- * @property $image;
+ * @property $modelClassName;
+ * @property $modelDefaultAction;
+ * @property $modelShowAttribute;
+ * @property $modelPkAttribute;
+ * @property $requestPkParamName;
  *
  * Class BackendModelControllerTrait
  * @package skeeks\cms\backend
  */
-trait BackendModelControllerTrait
+trait TBackendModelController
 {
     /**
      * @var string
