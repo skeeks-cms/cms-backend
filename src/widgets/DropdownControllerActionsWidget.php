@@ -22,6 +22,7 @@ use yii\helpers\Url;
  */
 class DropdownControllerActionsWidget extends ControllerActionsWidget
 {
+
     public $options =
     [
         "class" => "dropdown-menu"
@@ -44,7 +45,7 @@ class DropdownControllerActionsWidget extends ControllerActionsWidget
      */
     public function run()
     {
-        $actions = $this->controller->actions;
+        $actions = $this->actions;
 
         $firstAction = '';
         if ($actions && is_array($actions) && count($actions) >= 1)
@@ -60,7 +61,7 @@ class DropdownControllerActionsWidget extends ControllerActionsWidget
             $actionDataJson = Json::encode($this->getActionData($firstAction));
 
             $tagOptions = [
-                "onclick"   => "new sx.classes.app.controllerAction({$actionDataJson}).go(); return false;",
+                "onclick"   => "new sx.classes.backend.widgets.Action({$actionDataJson}).go(); return false;",
                 "class"     => "btn btn-xs btn-default sx-row-action",
                 "title"     => $firstAction->name
             ];

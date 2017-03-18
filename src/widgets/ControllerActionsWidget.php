@@ -21,15 +21,14 @@ use yii\helpers\Url;
 class ControllerActionsWidget extends Widget
 {
     /**
+     * @var array
+     */
+    public $actions = [];
+
+    /**
      * @var null
      */
     public $activeId          = null;
-
-
-    /**
-     * @var IHasInfoActions
-     */
-    public $controller              = null;
 
     /**
      * @var array
@@ -62,46 +61,24 @@ class ControllerActionsWidget extends Widget
         }
 
         return static::widget([
-            'controller' => \Yii::$app->controller,
-            'activeId' => $activeId,
+            'actions'    => \Yii::$app->controller->actions,
+            'activeId'      => $activeId,
         ]);
     }
 
-    public function init()
-    {
-        parent::init();
-
-
-
-        $this->_ensure();
-    }
-
-    /**
-     * Парочка проверок, для целостности
-     * @throws InvalidConfigException
-     */
-    protected function _ensure()
-    {
-        if (!$this->controller)
-        {
-            throw new InvalidConfigException(\Yii::t('skeeks/cms', "Incorrectly configured widget, you must pass an controller object to which is built widget"));
-        }
-
-        if (!$this->controller instanceof IHasInfoActions)
-        {
-            throw new InvalidConfigException(\Yii::t('skeeks/cms', "For this controller can not build action"));
-        }
-    }
 
     /**
      * @return string
      */
     public function run()
     {
-        if (!$actions = $this->controller->actions)
+        $actions = $this->actions;
+
+        if (!$actions)
         {
             return "";
         }
+
 
         $result = $this->renderListLi();
 
@@ -116,7 +93,7 @@ class ControllerActionsWidget extends Widget
     {
         $result = [];
 
-        $actions = $this->controller->actions;
+        $actions = $this->actions;
 
         if (!$actions)
         {
@@ -136,7 +113,7 @@ class ControllerActionsWidget extends Widget
             $result[] = Html::tag("li", $tagA,
                 [
                     "class" => $this->activeId == $action->id ? "active" : "",
-                    "onclick" => "new sx.classes.app.controllerAction({$actionDataJson}).go(); return false;"
+                    "onclick" => "new sx.classes.backend.widgets.Action({$actionDataJson}).go(); return false;"
                 ]
             );
         }

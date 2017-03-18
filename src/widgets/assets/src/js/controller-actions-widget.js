@@ -6,9 +6,9 @@
  */
 (function(sx, $, _)
 {
-    sx.createNamespace('classes.app', sx);
+    sx.createNamespace('classes.backend.widgets', sx);
 
-    sx.classes.app.controllerAction = sx.classes.Component.extend({
+    sx.classes.backend.widgets.Action = sx.classes.Component.extend({
 
         _init: function()
         {

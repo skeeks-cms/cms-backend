@@ -6,11 +6,14 @@
  * @date 05.03.2017
  */
 namespace skeeks\cms\backend\controllers;
+use yii\base\Model;
+use yii\db\ActiveRecord;
 
 /**
  * @property $modelClassName;
  * @property $modelDefaultAction;
  * @property $modelShowAttribute;
+ * @property $modelShowName;
  * @property $modelPkAttribute;
  * @property $requestPkParamName;
  *
@@ -52,4 +55,14 @@ interface IBackendModelController
      */
     public function getRequestPkParamName();
 
+
+    /**
+     * @return string
+     */
+    public function getModelShowName();
+
+    /**
+     * @return string
+     */
+    public function getModelPkValue();
 }
