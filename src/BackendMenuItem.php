@@ -277,7 +277,7 @@ class BackendMenuItem extends Component
     {
         if ($this->permissionNames)
         {
-            foreach ($this->permissionNames as $permissionName)
+            foreach ($this->permissionNames as $permissionName => $permissionLabel)
             {
                 if ($permission = \Yii::$app->authManager->getPermission($permissionName))
                 {

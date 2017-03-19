@@ -10,12 +10,15 @@ namespace skeeks\cms\backend;
 use skeeks\cms\backend\BackendComponent;
 use skeeks\cms\helpers\UrlHelper;
 use skeeks\cms\IHasInfo;
+use skeeks\cms\IHasPermissions;
 use skeeks\cms\IHasUrl;
 use skeeks\cms\modules\admin\widgets\ControllerActions;
 use skeeks\cms\traits\THasInfo;
+use skeeks\cms\traits\THasPermissions;
 use skeeks\cms\traits\THasUrl;
 use yii\base\Action;
 use yii\base\InvalidParamException;
+use yii\filters\AccessControl;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
 use yii\web\Application;
@@ -29,48 +32,12 @@ use \skeeks\cms\modules\admin\controllers\AdminController;
  * @package skeeks\cms\modules\admin\actions
  */
 class ViewBackendAction extends ViewAction
-    implements IHasInfo, IHasUrl, IBackendAction
+    implements IHasInfo, IHasUrl, IBackendAction, IHasPermissions
 {
     use THasInfo;
     use THasUrl;
-
-    /**
-     * @var bool Показывается в меню или нет
-     */
-    public $visible = true;
-
-    /**
-     * @var int приоритет виляет на сортировку
-     */
-    public $priority = 100;
-
-    /**
-     * @var callable
-     */
-    public $callback;
-
-
-
-
-
-
-    /**
-     * Ask the question before launching this action?
-     * @var string
-     */
-    public $confirm = '';
-
-    /**
-     * @var string
-     */
-    public $method  = 'get';
-
-    /**
-     * @var string
-     */
-    public $request = ''; //ajax
-
-
+    use TBackendAction;
+    use THasPermissions;
 
 
     /**
@@ -83,7 +50,6 @@ class ViewBackendAction extends ViewAction
      * @var string
      */
     public $defaultView = '';
-
 
 
     public function init()
@@ -109,6 +75,32 @@ class ViewBackendAction extends ViewAction
             $this->defaultView = $this->id;
         }
 
+
+        if ($this->permissionNames === null)
+        {
+            $this->permissionNames = [
+                $this->uniqueId => $this->name
+            ];
+        }
+
+
+        $this->controller->attachBehavior('access' . $this->uniqueId,
+        [
+            'class'         => AccessControl::class,
+            'only'          => [$this->id],
+            'rules'         =>
+            [
+                [
+                    'allow'         => true,
+                    'matchCallback' => function($rule, $action)
+                    {
+                        return $this->isAllow;
+                    }
+                ],
+            ],
+        ]);
+
+        $this->_initUrl();
         parent::init();
     }
 
@@ -123,26 +115,5 @@ class ViewBackendAction extends ViewAction
         }
 
         return parent::run();
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        if ($this->_url)
-        {
-            return $this->_url;
-        }
-
-        if ($this->controller->module instanceof Application)
-        {
-            $this->_url = Url::to(['/' . $this->controller->id . '/' . $this->id]);
-        } else
-        {
-            $this->_url = $this->_url = Url::to(['/' . $this->controller->module->id . '/' . $this->controller->id . '/' . $this->id]);
-        }
-
-        return $this->_url;
     }
 }

@@ -12,6 +12,7 @@ use skeeks\cms\IHasInfo;
 use yii\base\Action;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
+use yii\base\Object;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 
@@ -172,7 +173,7 @@ trait TBackendModelController
             return '';
         }
 
-        return (string) ($this->model->hasAttribute($this->modelShowAttribute) ? $this->model->getAttribute($this->modelShowAttribute) : '');
+        return isset($this->model->{$this->modelShowAttribute}) ? $this->model->{$this->modelShowAttribute} : '';
     }
 
     /**
@@ -185,7 +186,7 @@ trait TBackendModelController
             return '';
         }
 
-        return $this->model->hasAttribute($this->modelPkAttribute) ? $this->model->getAttribute($this->modelPkAttribute) : '';
+        return isset($this->model->{$this->modelPkAttribute}) ? $this->model->{$this->modelPkAttribute} : '';
     }
 
 
@@ -217,7 +218,7 @@ trait TBackendModelController
      * @param Model|ActiveRecord $model
      * @return $this
      */
-    public function setModel(Model $model)
+    public function setModel(Object $model)
     {
         $this->_model   = $model;
         return $this;
@@ -250,12 +251,23 @@ trait TBackendModelController
             {
                 $action = $this->createAction($id);
 
-                if ($this->model && !$this->model->isNewRecord && $action instanceof IBackendModelAction)
+                if ($action->isVisible)
                 {
-                    if ($action->visible)
+                    if (method_exists($this->model, 'getIsNewRecord'))
                     {
-                        $this->_modelActions[$action->id] = $action;
+                        if ($this->model && !$this->model->isNewRecord && $action instanceof IBackendModelAction)
+                        {
+                            $this->_modelActions[$action->id] = $action;
+                        }
+                    } else
+                    {
+                        if ($this->model && $action instanceof IBackendModelAction)
+                        {
+                            $this->_modelActions[$action->id] = $action;
+                        }
                     }
+
+
                 }
             }
         } else
@@ -297,7 +309,7 @@ trait TBackendModelController
 
                 if ($action instanceof IBackendModelMultiAction)
                 {
-                    if ($action->visible)
+                    if ($action->isVisible)
                     {
                         $this->_modelMultiActions[$action->id] = $action;
                     }
@@ -361,7 +373,7 @@ trait TBackendModelController
 
                 if (!$action instanceof IBackendModelAction && !$action instanceof IBackendModelMultiAction)
                 {
-                    if ($action->visible)
+                    if ($action->isVisible)
                     {
                         $this->_actions[$id]    = $action;
                     }

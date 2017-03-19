@@ -33,41 +33,7 @@ class BackendAction extends Action
 {
     use THasInfo;
     use THasUrl;
-
-    /**
-     * @var bool Показывается в меню или нет
-     */
-    public $visible = true;
-
-    /**
-     * @var int приоритет виляет на сортировку
-     */
-    public $priority = 100;
-
-    /**
-     * @var callable
-     */
-    public $callback;
-
-
-
-    /**
-     * Ask the question before launching this action?
-     * @var string
-     */
-    public $confirm = '';
-
-    /**
-     * @var string
-     */
-    public $method  = 'get';
-
-    /**
-     * @var string
-     */
-    public $request = ''; //ajax
-
-
+    use TBackendAction;
 
     public function init()
     {
@@ -87,6 +53,7 @@ class BackendAction extends Action
             throw new InvalidConfigException('"' . static::class . '::callback Should be a valid callback"');
         }
 
+        $this->_initUrl();
         parent::init();
     }
 
@@ -101,26 +68,5 @@ class BackendAction extends Action
         }
 
         return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getUrl()
-    {
-        if ($this->_url)
-        {
-            return $this->_url;
-        }
-
-        if ($this->controller->module instanceof Application)
-        {
-            $this->_url = Url::to(['/' . $this->controller->id . '/' . $this->id]);
-        } else
-        {
-            $this->_url = $this->_url = Url::to(['/' . $this->controller->module->id . '/' . $this->controller->id . '/' . $this->id]);
-        }
-
-        return $this->_url;
     }
 }

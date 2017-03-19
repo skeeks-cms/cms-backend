@@ -16,6 +16,7 @@ use skeeks\cms\IHasPermissions;
 use skeeks\cms\IHasUrl;
 use skeeks\cms\rbac\CmsManager;
 use skeeks\cms\traits\THasInfo;
+use skeeks\cms\traits\THasPermissions;
 use yii\base\Action;
 use yii\filters\AccessControl;
 use yii\helpers\Inflector;
@@ -25,7 +26,7 @@ use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 
 /**
- * @property string $permissionName read-only;
+ * @property BackendAction[] $allActions;
  *
  * Class BackendController
  * @package skeeks\cms\backend
@@ -34,6 +35,7 @@ abstract class BackendController extends Controller
     implements IHasPermissions, IHasInfo, IHasUrl, IHasInfoActions, IHasMenu, IHasBreadcrumbs
 {
     use THasInfo;
+    use THasPermissions;
 
     /**
      * @return array
@@ -41,17 +43,8 @@ abstract class BackendController extends Controller
     public function getPermissionNames()
     {
         return [
-            $this->permissionName
+            $this->getUniqueId() => $this->name
         ];
-    }
-
-    /**
-     * The name of the privilege of access to this controller
-     * @return string
-     */
-    public function getPermissionName()
-    {
-        return $this->getUniqueId();
     }
 
     /**
@@ -71,33 +64,7 @@ abstract class BackendController extends Controller
                         'matchCallback' => function($rule, $action)
                         {
                             //Creating and Assigning Privileges for the Root User
-                            if ($this->permissionNames)
-                            {
-                                foreach ($this->permissionNames as $permissionName)
-                                {
-                                    //Привилегия доступу к админке
-                                    if (!$permission = \Yii::$app->authManager->getPermission($permissionName))
-                                    {
-                                        $permission = \Yii::$app->authManager->createPermission($permissionName);
-                                        $permission->description = $this->name;
-                                        \Yii::$app->authManager->add($permission);
-
-                                        if ($roleRoot = \Yii::$app->authManager->getRole(CmsManager::ROLE_ROOT))
-                                        {
-                                            \Yii::$app->authManager->addChild($roleRoot, $permission);
-                                        }
-                                    }
-
-                                    if (!\Yii::$app->user->can($permissionName))
-                                    {
-                                        return false;
-                                    }
-                                }
-
-                                return true;
-                            }
-
-                            return false;
+                            return $this->isAllow;
                         }
                     ],
                 ]
@@ -205,9 +172,14 @@ abstract class BackendController extends Controller
 
 
     /**
-     * @var Action[]
+     * @var BackendAction[]
      */
-    protected $_actions    = null;
+    protected $_actions         = null;
+
+    /**
+     * @var BackendAction[]
+     */
+    protected $_allActions      = null;
 
     /**
      * @return BackendAction[]
@@ -234,6 +206,33 @@ abstract class BackendController extends Controller
         }
 
         return $this->_actions;
+    }
+
+    /**
+     * @return BackendAction[]
+     */
+    public function getAllActions()
+    {
+        if ($this->_allActions !== null)
+        {
+            return $this->_allActions;
+        }
+
+        $actions = $this->actions();
+
+        if ($actions)
+        {
+            foreach ($actions as $id => $data)
+            {
+                $action = $this->createAction($id);
+                $this->_allActions[$action->id] = $action;
+            }
+        } else
+        {
+            $this->_allActions = [];
+        }
+
+        return $this->_allActions;
     }
 
     /**
