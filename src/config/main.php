@@ -9,9 +9,17 @@ return
 [
     'components' =>
     [
-        /*'cmsBackends' =>
-        [
-            'class' => 'skeeks\cms\backend\Backends'
-        ]*/
+        'i18n' => [
+            'translations' =>
+            [
+                'skeeks/backend' => [
+                    'class'             => 'yii\i18n\PhpMessageSource',
+                    'basePath'          => '@skeeks/cms/backend/messages',
+                    'fileMap' => [
+                        'skeeks/backend' => 'main.php',
+                    ],
+                ]
+            ]
+        ]
     ]
 ];

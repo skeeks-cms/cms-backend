@@ -102,7 +102,7 @@ class ControllerActionsWidget extends Widget
 
         foreach ($actions as $id => $action)
         {
-            if (!$action->visible)
+            if (!$action->isVisible)
             {
                 continue;
             }
@@ -145,7 +145,7 @@ class ControllerActionsWidget extends Widget
      */
     public function renderActionTagA($action, $tagOptions = [])
     {
-        if (!$action->visible)
+        if (!$action->isVisible)
         {
             return "";
         }

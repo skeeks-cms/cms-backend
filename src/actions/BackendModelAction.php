@@ -9,6 +9,7 @@ namespace skeeks\cms\backend\actions;
 use skeeks\cms\backend\controllers\IBackendModelController;
 use skeeks\cms\backend\ViewBackendAction;
 use skeeks\cms\rbac\CmsManager;
+use yii\helpers\ArrayHelper;
 use yii\web\Application;
 
 /**
@@ -65,8 +66,14 @@ class BackendModelAction extends ViewBackendAction
         {
             $this->permissionNames = [
                 $this->permission       => $this->name,
-                $this->ownPermission    => $this->name . " (только свои)",
             ];
+
+            $className = $this->controller->modelClassName;
+            $model = new $className();
+            if ($model->hasAttribute('created_by'))
+            {
+                $this->permissionNames = ArrayHelper::merge($this->permissionNames, [$this->ownPermission =>  $this->name . " (" . \Yii::t('skeeks/backend', 'Only your') . ")"]);
+            }
         }
 
         parent::init();
@@ -164,35 +171,43 @@ class BackendModelAction extends ViewBackendAction
         }
 
 
-        //Привилегия доступу к админке
-        $permissionOwnName = $this->getOwnPermission();
-        if (!$permissionOwn = \Yii::$app->authManager->getPermission($permissionOwnName))
+        $className = $this->controller->modelClassName;
+        $model = new $className();
+        if ($model->hasAttribute('created_by'))
         {
-            $permissionOwn = \Yii::$app->authManager->createPermission($permissionOwnName);
-            $permissionOwn->description = $this->name . ' (только свои записи)';
-            $permissionOwn->ruleName = (new \skeeks\cms\rbac\AuthorRule())->name;
-            \Yii::$app->authManager->add($permissionOwn);
-        }
-
-        if (!$permissionOwn->ruleName)
-        {
-            $permissionOwn->ruleName = (new \skeeks\cms\rbac\AuthorRule())->name;
-            \Yii::$app->authManager->update($permissionOwn->name, $permissionOwn);
-        }
-
-        if ($roleRoot = \Yii::$app->authManager->getRole(CmsManager::ROLE_ROOT))
-        {
-            if (!\Yii::$app->authManager->hasChild($roleRoot, $permissionOwn))
+            $permissionOwnName = $this->getOwnPermission();
+            if (!$permissionOwn = \Yii::$app->authManager->getPermission($permissionOwnName))
             {
-                \Yii::$app->authManager->addChild($roleRoot, $permissionOwn);
+                $permissionOwn = \Yii::$app->authManager->createPermission($permissionOwnName);
+                $permissionOwn->description = $this->name . ' (' . \Yii::t('skeeks/backend', 'Only your') . ')';
+                $permissionOwn->ruleName = (new \skeeks\cms\rbac\AuthorRule())->name;
+                \Yii::$app->authManager->add($permissionOwn);
+            }
+
+            if (!$permissionOwn->ruleName)
+            {
+                $permissionOwn->ruleName = (new \skeeks\cms\rbac\AuthorRule())->name;
+                \Yii::$app->authManager->update($permissionOwn->name, $permissionOwn);
             }
         }
 
-        if (!\Yii::$app->authManager->hasChild($permissionOwn, $permission))
-        {
-            \Yii::$app->authManager->addChild($permissionOwn, $permission);
-        }
 
+
+        if ($model->hasAttribute('created_by'))
+        {
+            if ($roleRoot = \Yii::$app->authManager->getRole(CmsManager::ROLE_ROOT))
+            {
+                if (!\Yii::$app->authManager->hasChild($roleRoot, $permissionOwn))
+                {
+                    \Yii::$app->authManager->addChild($roleRoot, $permissionOwn);
+                }
+            }
+
+            if (!\Yii::$app->authManager->hasChild($permissionOwn, $permission))
+            {
+                \Yii::$app->authManager->addChild($permissionOwn, $permission);
+            }
+        }
 
         foreach ([$this->getPermission() => $this->name] as $permissionName => $permissionLabel)
         {

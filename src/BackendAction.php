@@ -14,6 +14,7 @@ use skeeks\cms\IHasPermissions;
 use skeeks\cms\IHasUrl;
 use skeeks\cms\modules\admin\widgets\ControllerActions;
 use skeeks\cms\traits\THasInfo;
+use skeeks\cms\traits\THasPermissions;
 use skeeks\cms\traits\THasUrl;
 use yii\base\Action;
 use yii\base\InvalidParamException;
