@@ -6,16 +6,18 @@
  * @date 05.03.2017
  */
 namespace skeeks\cms\backend\controllers;
+use skeeks\cms\backend\actions\BackendModelAction;
 use yii\base\Model;
 use yii\db\ActiveRecord;
 
 /**
- * @property $modelClassName;
- * @property $modelDefaultAction;
- * @property $modelShowAttribute;
- * @property $modelShowName;
- * @property $modelPkAttribute;
- * @property $requestPkParamName;
+ * @property sting $modelClassName;
+ * @property sting $modelDefaultAction;
+ * @property sting $modelShowAttribute;
+ * @property sting $modelShowName;
+ * @property sting $modelPkAttribute;
+ * @property sting $requestPkParamName;
+ * @property BackendModelAction[] $modelActions;
  *
  * Interface BackendModelControllerInterface
  * @package skeeks\cms\backend
@@ -65,4 +67,9 @@ interface IBackendModelController
      * @return string
      */
     public function getModelPkValue();
+
+    /**
+     * @return BackendModelAction[]
+     */
+    public function getModelActions();
 }

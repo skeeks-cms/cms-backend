@@ -10,6 +10,7 @@ namespace skeeks\cms\backend;
 use skeeks\cms\backend\BackendComponent;
 use skeeks\cms\helpers\UrlHelper;
 use skeeks\cms\IHasInfo;
+use skeeks\cms\IHasPermissions;
 use skeeks\cms\IHasUrl;
 use skeeks\cms\modules\admin\widgets\ControllerActions;
 use skeeks\cms\traits\THasInfo;
@@ -29,11 +30,12 @@ use \skeeks\cms\modules\admin\controllers\AdminController;
  * @package skeeks\cms\modules\admin\actions
  */
 class BackendAction extends Action
-    implements IHasInfo, IHasUrl, IBackendAction
+    implements IHasInfo, IHasUrl, IBackendAction, IHasPermissions
 {
     use THasInfo;
     use THasUrl;
     use TBackendAction;
+    use THasPermissions;
 
     public function init()
     {
@@ -53,7 +55,15 @@ class BackendAction extends Action
             throw new InvalidConfigException('"' . static::class . '::callback Should be a valid callback"');
         }
 
-        $this->_initUrl();
+        if ($this->permissionNames === null)
+        {
+            $this->permissionNames = [
+                $this->uniqueId => $this->name
+            ];
+        }
+
+
+        $this->_initUrl()->_initAccess();
         parent::init();
     }
 

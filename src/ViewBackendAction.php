@@ -83,24 +83,7 @@ class ViewBackendAction extends ViewAction
             ];
         }
 
-
-        $this->controller->attachBehavior('access' . $this->uniqueId,
-        [
-            'class'         => AccessControl::class,
-            'only'          => [$this->id],
-            'rules'         =>
-            [
-                [
-                    'allow'         => true,
-                    'matchCallback' => function($rule, $action)
-                    {
-                        return $this->isAllow;
-                    }
-                ],
-            ],
-        ]);
-
-        $this->_initUrl();
+        $this->_initUrl()->_initAccess();
         parent::init();
     }
 

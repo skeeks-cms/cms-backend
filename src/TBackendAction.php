@@ -16,6 +16,7 @@ use skeeks\cms\traits\THasInfo;
 use skeeks\cms\traits\THasUrl;
 use yii\base\Action;
 use yii\base\InvalidParamException;
+use yii\filters\AccessControl;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
 use yii\web\Application;
@@ -23,6 +24,7 @@ use yii\web\ViewAction;
 use \skeeks\cms\modules\admin\controllers\AdminController;
 
 /**
+ * @property string $accessClassName;
  * @property bool $isVisible;
  *
  * Class TBackendAction
@@ -40,10 +42,6 @@ trait TBackendAction
      * @var callable
      */
     public $callback;
-
-
-
-
 
 
     /**
@@ -85,6 +83,30 @@ trait TBackendAction
         return $this;
     }
 
+    /**
+     * @return $this
+     */
+    protected function _initAccess()
+    {
+        $this->controller->attachBehavior('access' . $this->uniqueId,
+        [
+            'class'         => $this->accessClassName,
+            'only'          => [$this->id],
+            'rules'         =>
+            [
+                [
+                    'allow'         => true,
+                    'matchCallback' => function($rule, $action)
+                    {
+                        return $this->isAllow;
+                    }
+                ],
+            ],
+        ]);
+
+        return $this;
+    }
+
 
     /**
      * @return bool
@@ -112,6 +134,35 @@ trait TBackendAction
     public function setIsVisible(bool $isVisible)
     {
         $this->_isVisible = $isVisible;
+        return $this;
+    }
+
+
+    /**
+     * @var null
+     */
+    protected $_accessClassName = null;
+
+    /**
+     * @return string
+     */
+    public function getAccessClassName()
+    {
+        if ($this->_accessClassName === null)
+        {
+            $this->_accessClassName = AccessControl::class;
+        }
+
+        return (string) $this->_accessClassName;
+    }
+
+    /**
+     * @param $className
+     * @return $this
+     */
+    public function setAccessClassName($className)
+    {
+        $this->_accessClassName = $className;
         return $this;
     }
 }
