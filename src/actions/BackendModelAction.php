@@ -70,7 +70,7 @@ class BackendModelAction extends ViewBackendAction
 
             $className = $this->controller->modelClassName;
             $model = new $className();
-            if ($model->hasAttribute('created_by'))
+            if (method_exists($model, 'hasAttribute') && $model->hasAttribute('created_by'))
             {
                 $this->permissionNames = ArrayHelper::merge($this->permissionNames, [$this->ownPermission =>  $this->name . " (" . \Yii::t('skeeks/backend', 'Only your') . ")"]);
             }
@@ -173,7 +173,7 @@ class BackendModelAction extends ViewBackendAction
 
         $className = $this->controller->modelClassName;
         $model = new $className();
-        if ($model->hasAttribute('created_by'))
+        if (method_exists($model, 'hasAttribute') && $model->hasAttribute('created_by'))
         {
             $permissionOwnName = $this->getOwnPermission();
             if (!$permissionOwn = \Yii::$app->authManager->getPermission($permissionOwnName))
@@ -193,7 +193,7 @@ class BackendModelAction extends ViewBackendAction
 
 
 
-        if ($model->hasAttribute('created_by'))
+        if (method_exists($model, 'hasAttribute') && $model->hasAttribute('created_by'))
         {
             if ($roleRoot = \Yii::$app->authManager->getRole(CmsManager::ROLE_ROOT))
             {

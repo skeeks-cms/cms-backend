@@ -10,6 +10,8 @@ use skeeks\cms\backend\controllers\IBackendModelController;
 use skeeks\cms\backend\ViewBackendAction;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\IHasUrl;
+use skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab;
+use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -19,7 +21,10 @@ use yii\helpers\ArrayHelper;
  * @package skeeks\cms\backend\actions
  */
 class BackendModelCreateAction extends ViewBackendAction
+    implements IHasActiveForm
 {
+    use THasActiveForm;
+
     /**
      * @var bool
      */
@@ -35,6 +40,9 @@ class BackendModelCreateAction extends ViewBackendAction
      */
     public $defaultView = "_form";
 
+    /**
+     * @return $this|array|mixed
+     */
     public function run()
     {
         if ($this->callback)

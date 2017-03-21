@@ -18,7 +18,9 @@ use skeeks\cms\IHasUrl;
  * @package skeeks\cms\backend\actions
  */
 class BackendModelUpdateAction extends BackendModelAction
+    implements IHasActiveForm
 {
+    use THasActiveForm;
     /**
      * @var bool
      */
