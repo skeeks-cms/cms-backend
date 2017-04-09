@@ -251,7 +251,7 @@ trait TBackendModelController
             {
                 $action = $this->createAction($id);
 
-                if ($action->isVisible)
+                if (isset($action->isVisible) && $action->isVisible)
                 {
                     if (method_exists($this->model, 'getIsNewRecord'))
                     {
