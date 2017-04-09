@@ -14,8 +14,8 @@ use yii\web\Application;
 
 /**
  * @property IHasInfoActions|IBackendModelController    $controller
- * @property string $ownPermission;
- * @property string $permission;
+ * @property string $ownPermissionName;
+ * @property string $permissionName;
  *
  * Class BackendModelAction
  * @package skeeks\cms\backend\actions
@@ -26,37 +26,22 @@ class BackendModelAction extends ViewBackendAction
     /**
      * @return string
      */
-    public function getOwnPermission()
+    public function getOwnPermissionName()
     {
-        return $this->permission . '/own';
+        return $this->permissionName . '/own';
     }
-
-    /**
-     * @var string
-     */
-    protected $_permissionName = '';
 
     /**
      * @return string
      */
-    public function getPermission()
+    public function getPermissionName()
     {
-        if (!$this->_permissionName)
+        if ($this->_permissionName !== false)
         {
-            return $this->uniqueId;
+            return $this->controller->permissionName . "/" . $this->id;
         }
 
         return $this->_permissionName;
-    }
-
-    /**
-     * @param $permissionName
-     * @return $this
-     */
-    public function setPermission($permissionName)
-    {
-        $this->_permissionName = $permissionName;
-        return $this;
     }
 
 
@@ -65,14 +50,14 @@ class BackendModelAction extends ViewBackendAction
         if ($this->permissionNames === null)
         {
             $this->permissionNames = [
-                $this->permission       => $this->name,
+                $this->permissionName       => $this->name,
             ];
 
             $className = $this->controller->modelClassName;
             $model = new $className();
             if (method_exists($model, 'hasAttribute') && $model->hasAttribute('created_by'))
             {
-                $this->permissionNames = ArrayHelper::merge($this->permissionNames, [$this->ownPermission =>  $this->name . " (" . \Yii::t('skeeks/backend', 'Only your') . ")"]);
+                $this->permissionNames = ArrayHelper::merge($this->permissionNames, [$this->ownPermissionName =>  $this->name . " (" . \Yii::t('skeeks/backend', 'Only your') . ")"]);
             }
         }
 
@@ -154,7 +139,7 @@ class BackendModelAction extends ViewBackendAction
     public function getIsAllow()
     {
         //Привилегия доступу к админке
-        $permissionName = $this->getPermission();
+        $permissionName = $this->permissionName;
         if (!$permission = \Yii::$app->authManager->getPermission($permissionName))
         {
             $permission = \Yii::$app->authManager->createPermission($permissionName);
@@ -175,7 +160,7 @@ class BackendModelAction extends ViewBackendAction
         $model = new $className();
         if (method_exists($model, 'hasAttribute') && $model->hasAttribute('created_by'))
         {
-            $permissionOwnName = $this->getOwnPermission();
+            $permissionOwnName = $this->ownPermissionName;
             if (!$permissionOwn = \Yii::$app->authManager->getPermission($permissionOwnName))
             {
                 $permissionOwn = \Yii::$app->authManager->createPermission($permissionOwnName);
@@ -209,7 +194,7 @@ class BackendModelAction extends ViewBackendAction
             }
         }
 
-        foreach ([$this->getPermission() => $this->name] as $permissionName => $permissionLabel)
+        foreach ([$this->permissionName => $this->name] as $permissionName => $permissionLabel)
         {
             if (!\Yii::$app->user->can($permissionName, ['model' => $this->controller->model]))
             {

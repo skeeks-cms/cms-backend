@@ -43,8 +43,16 @@ abstract class BackendController extends Controller
     public function getPermissionNames()
     {
         return [
-            $this->getUniqueId() => $this->name
+            $this->permissionName => $this->name
         ];
+    }
+
+    /**
+     * @return string
+     */
+    public function getPermissionName()
+    {
+        return $this->uniqueId;
     }
 
     /**
