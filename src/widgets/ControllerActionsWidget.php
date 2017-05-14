@@ -8,6 +8,7 @@
 
 namespace skeeks\cms\backend\widgets;
 
+use skeeks\cms\backend\BackendAction;
 use skeeks\cms\backend\IHasInfoActions;
 use skeeks\cms\backend\widgets\assets\ControllerActionsWidgetAsset;
 use skeeks\cms\helpers\UrlHelper;
@@ -128,7 +129,7 @@ class ControllerActionsWidget extends Widget
     public function getActionData($action)
     {
         $actionData = array_merge($this->clientOptions, [
-            "url"               => $action->url,
+            "url"               => $this->getActionUrl($action),
 
             //TODO:// is deprecated
             "isOpenNewWindow"   => $this->isOpenNewWindow,
@@ -141,7 +142,7 @@ class ControllerActionsWidget extends Widget
     }
 
     /**
-     * @param AdminAction $action
+     * @param BackendAction $action
      */
     public function renderActionTagA($action, $tagOptions = [])
     {
@@ -156,34 +157,25 @@ class ControllerActionsWidget extends Widget
             $icon = Html::tag('span', '', ['class' => $action->icon]);
         }
 
-        return Html::a($icon . '  ' . $action->name, $action->url, $tagOptions);
+        return Html::a($icon . '  ' . $action->name, $this->getActionUrl($action), $tagOptions);
     }
 
-
-
-
-
-
-
-
-
-
-
-
     /**
-     * //TODO:// is deprecated
-     * @param AdminAction $action
-     * @return UrlHelper
+     * @param $action
+     *
+     * @return array
      */
-    /*public function getActionUrl($action)
+    public function getActionUrl($action)
     {
-        $url = $action->url;
-
-        if ($this->isOpenNewWindow)
+        if (is_array($action->urlData) && $this->isOpenNewWindow)
         {
-            $url->setSystemParam(\skeeks\cms\modules\admin\Module::SYSTEM_QUERY_EMPTY_LAYOUT, 'true');
-        }
+            $action->url = UrlHelper::construct($action->urlData)
+                ->setSystemParam(\skeeks\cms\modules\admin\Module::SYSTEM_QUERY_EMPTY_LAYOUT, 'true')
+                ->setSystemParam(\skeeks\cms\modules\admin\Module::SYSTEM_QUERY_NO_ACTIONS_MODEL, 'true')
+                ->toArray()
+            ;
+        };
 
-        return $url;
-    }*/
+        return $action->url;
+    }
 }

@@ -66,7 +66,7 @@ class DropdownControllerActionsWidget extends ControllerActionsWidget
                 "title"     => $firstAction->name
             ];
 
-            $firstActionString = Html::a($this->getSpanIcon($firstAction), $firstAction->url, $tagOptions);
+            $firstActionString = Html::a($this->getSpanIcon($firstAction), $this->getActionUrl($firstAction), $tagOptions);
             $style = 'min-width: 43px;';
         }
 
