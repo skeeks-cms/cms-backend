@@ -78,6 +78,6 @@ class BackendAction extends Action
             return call_user_func($this->callback, $this);
         }
 
-        return $this;
+        return $this->controller->render($this->id);
     }
 }
