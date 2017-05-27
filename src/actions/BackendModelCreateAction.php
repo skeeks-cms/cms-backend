@@ -40,6 +40,23 @@ class BackendModelCreateAction extends ViewBackendAction
      */
     public $defaultView = "_form";
 
+
+    public function init()
+    {
+        if (!$this->icon)
+        {
+            $this->icon = "glyphicon glyphicon-plus";
+        }
+
+
+        if (!$this->name)
+        {
+            $this->name = \Yii::t('skeeks/backend', "Add");
+        }
+
+        parent::init();
+    }
+
     /**
      * @return $this|array|mixed
      */

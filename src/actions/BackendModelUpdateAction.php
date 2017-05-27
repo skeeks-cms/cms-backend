@@ -21,6 +21,7 @@ class BackendModelUpdateAction extends BackendModelAction
     implements IHasActiveForm
 {
     use THasActiveForm;
+
     /**
      * @var bool
      */
@@ -35,6 +36,26 @@ class BackendModelUpdateAction extends BackendModelAction
      * @var string
      */
     public $defaultView = "_form";
+
+    public function init()
+    {
+        if (!$this->icon)
+        {
+            $this->icon = "glyphicon glyphicon-pencil";
+        }
+
+        if (!$this->priority)
+        {
+            $this->priority = 10;
+        }
+
+        if (!$this->name)
+        {
+            $this->name = \Yii::t('skeeks/backend', "Edit");
+        }
+
+        parent::init();
+    }
 
     public function run()
     {
