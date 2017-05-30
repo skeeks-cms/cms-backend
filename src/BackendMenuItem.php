@@ -74,7 +74,6 @@ class BackendMenuItem extends Component
      */
     public $accessCallback = null;
 
-
     /**
      * @return bool
      */
@@ -275,6 +274,11 @@ class BackendMenuItem extends Component
      */
     public function getIsAllow()
     {
+        if ($this->_getController() && $this->_getController() instanceof IHasPermissions && !$this->_getController()->isAllow)
+        {
+            return false;
+        }
+
         if ($this->permissionNames)
         {
             foreach ($this->permissionNames as $permissionName => $permissionLabel)
