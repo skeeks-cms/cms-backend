@@ -136,7 +136,7 @@ class BackendModelAction extends ViewBackendAction
     }
 
 
-    public function getIsAllow()
+    public function _isAllow()
     {
         //Привилегия доступу к админке
         $permissionName = $this->permissionName;
@@ -176,8 +176,6 @@ class BackendModelAction extends ViewBackendAction
             }
         }
 
-
-
         if (method_exists($model, 'hasAttribute') && $model->hasAttribute('created_by'))
         {
             if ($roleRoot = \Yii::$app->authManager->getRole(CmsManager::ROLE_ROOT))
@@ -202,6 +200,6 @@ class BackendModelAction extends ViewBackendAction
             }
         }
 
-        return parent::getIsAllow();
+        return parent::_isAllow();
     }
 }

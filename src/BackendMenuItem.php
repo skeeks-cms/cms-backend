@@ -274,6 +274,20 @@ class BackendMenuItem extends Component
      */
     public function getIsAllow()
     {
+        if ($this->accessCallback && is_callable($this->accessCallback))
+        {
+            $callback = $this->accessCallback;
+            return (bool) call_user_func($callback, $this);
+        }
+
+        return $this->_isAllow();
+    }
+
+    /**
+     * @return bool
+     */
+    protected function _isAllow()
+    {
         if ($this->_getController() && $this->_getController() instanceof IHasPermissions && !$this->_getController()->isAllow)
         {
             return false;
@@ -296,27 +310,6 @@ class BackendMenuItem extends Component
             }
         }
 
-
-        return $this->_accessCallback();
-    }
-
-    /**
-     * @return bool
-     */
-    protected function _accessCallback()
-    {
-        if ($this->accessCallback && is_callable($this->accessCallback))
-        {
-            $callback = $this->accessCallback;
-            return (bool) call_user_func($callback, $this);
-        }
-
         return true;
     }
-
-
-
-
-
-
 }

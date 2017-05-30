@@ -104,21 +104,8 @@ class BackendModelUpdateAction extends BackendModelAction
                 }
 
                 $model->refresh();
-
             } else
-            {
-                $errors = [];
-
-                if ($model->getErrors())
-                {
-                    foreach ($model->getErrors() as $error)
-                    {
-                        $errors[] = implode(', ', $error);
-                    }
-                }
-
-                \Yii::$app->getSession()->setFlash('error', \Yii::t('skeeks/cms','Could not save') . $errors);
-            }
+            {}
         }
 
 
