@@ -202,6 +202,6 @@ class BackendModelAction extends ViewBackendAction
             }
         }
 
-        return true;
+        return parent::getIsAllow();
     }
 }
