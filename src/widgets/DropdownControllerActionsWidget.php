@@ -75,9 +75,9 @@ class DropdownControllerActionsWidget extends ControllerActionsWidget
         $content = "
                     <div class=\"btn-group\" role=\"group\" style='{$style}'>
                         {$firstActionString}
-                        <button type=\"button\" class='btn btn-xs btn-default sx-btn-caret-action' data-toggle=\"dropdown\">
+                        <a type=\"button\" class='btn btn-xs btn-default sx-btn-caret-action' data-toggle=\"dropdown\">
                            <span class=\"caret\"></span>
-                        </button>" .
+                        </a>" .
                     parent::run()
 
                 . "
