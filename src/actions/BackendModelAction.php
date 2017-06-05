@@ -53,6 +53,9 @@ class BackendModelAction extends ViewBackendAction
                 $this->permissionName       => $this->name,
             ];
 
+            /*print_r($this->controller);
+            print_r($this->permissionNames);die;*/
+
             $className = $this->controller->modelClassName;
             $model = new $className();
             if (method_exists($model, 'hasAttribute') && $model->hasAttribute('created_by'))
@@ -136,7 +139,7 @@ class BackendModelAction extends ViewBackendAction
     }
 
 
-    public function _isAllow()
+    protected function _isAllow()
     {
         //Привилегия доступу к админке
         $permissionName = $this->permissionName;
@@ -196,10 +199,12 @@ class BackendModelAction extends ViewBackendAction
         {
             if (!\Yii::$app->user->can($permissionName, ['model' => $this->controller->model]))
             {
+
                 return false;
             }
         }
 
-        return parent::_isAllow();
+        return true;
+        //return parent::_isAllow();
     }
 }
