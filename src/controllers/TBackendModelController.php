@@ -15,6 +15,7 @@ use yii\base\Model;
 use yii\base\Object;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\web\Application;
 
 /**
  * @property $modelClassName;
@@ -200,7 +201,7 @@ trait TBackendModelController
      */
     public function getModel()
     {
-        if ($this->_model === null)
+        if ($this->_model === null && \Yii::$app instanceof Application)
         {
             $pk             = \Yii::$app->request->get($this->requestPkParamName);
 
