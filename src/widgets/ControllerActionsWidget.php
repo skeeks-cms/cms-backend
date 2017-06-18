@@ -23,12 +23,13 @@ use yii\helpers\Url;
  *
  * echo \skeeks\cms\backend\widgets\ControllerActionsWidget::widget([
         'actions' => ['create' => $actionCreate],
+        'clientOptions'     => ['pjax-id' => $pjax->id],
         'isOpenNewWindow'   => true,
         'tag'               => 'div',
         'itemWrapperTag'    => 'span',
         'itemTag'           => 'button',
         'itemOptions'       => ['class' => 'btn btn-default'],
-        'options'           => ['class' => 'padding-bottom-20'],
+        'options'           => ['class' => 'sx-controll-actions'],
     ]);
 *
  * Class ControllerActionsWidget
