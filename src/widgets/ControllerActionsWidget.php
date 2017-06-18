@@ -19,6 +19,21 @@ use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\Url;
 
+/**
+ *
+ * echo \skeeks\cms\backend\widgets\ControllerActionsWidget::widget([
+        'actions' => ['create' => $actionCreate],
+        'isOpenNewWindow'   => true,
+        'tag'               => 'div',
+        'itemWrapperTag'    => 'span',
+        'itemTag'           => 'button',
+        'itemOptions'       => ['class' => 'btn btn-default'],
+        'options'           => ['class' => 'padding-bottom-20'],
+    ]);
+*
+ * Class ControllerActionsWidget
+ * @package skeeks\cms\backend\widgets
+ */
 class ControllerActionsWidget extends Widget
 {
     /**
@@ -38,6 +53,33 @@ class ControllerActionsWidget extends Widget
     [
         "class" => "nav nav-pills sx-nav"
     ];
+
+    /**
+     * @var string
+     */
+    public $tag               = "ul";
+
+
+
+    /**
+     * @var string
+     */
+    public $itemWrapperTag               = "li";
+    /**
+     * @var array
+     */
+    public $itemWrapperOptions           = [];
+
+
+    /**
+     * @var string
+     */
+    public $itemTag               = "a";
+    /**
+     * @var array
+     */
+    public $itemOptions           = [];
+
 
     /**
      * @var array
@@ -80,11 +122,10 @@ class ControllerActionsWidget extends Widget
             return "";
         }
 
-
         $result = $this->renderListLi();
 
         ControllerActionsWidgetAsset::register($this->getView());
-        return Html::tag("ul", implode($result), $this->options);
+        return Html::tag($this->tag, implode($result), $this->options);
     }
 
     /**
@@ -109,14 +150,17 @@ class ControllerActionsWidget extends Widget
             }
 
             $tagA = $this->renderActionTagA($action);
-
             $actionDataJson = Json::encode($this->getActionData($action));
-            $result[] = Html::tag("li", $tagA,
-                [
-                    "class" => $this->activeId == $action->id ? "active" : "",
-                    "onclick" => "new sx.classes.backend.widgets.Action({$actionDataJson}).go(); return false;"
-                ]
-            );
+
+            $options = $this->itemWrapperOptions;
+            $options['onclick'] = "new sx.classes.backend.widgets.Action({$actionDataJson}).go(); return false;";
+
+            if ($this->activeId == $action->id)
+            {
+                Html::addCssClass($options, 'active');
+            }
+
+            $result[] = Html::tag($this->itemWrapperTag, $tagA, $options);
         }
 
         return $result;
@@ -151,13 +195,16 @@ class ControllerActionsWidget extends Widget
             return "";
         }
 
+        $options = $this->itemOptions;
+        $options['href'] = $this->getActionUrl($action);
+
         $icon = '';
         if ($action->icon)
         {
             $icon = Html::tag('span', '', ['class' => $action->icon]);
         }
 
-        return Html::a($icon . '  ' . $action->name, $this->getActionUrl($action), $tagOptions);
+        return Html::tag($this->itemTag, $icon . '  ' . $action->name, $options);
     }
 
     /**
