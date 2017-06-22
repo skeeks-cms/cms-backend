@@ -32,12 +32,24 @@ Configuration app
 
 
 ```php
-
-'components' =>
 [
-
-];
-
+    'bootstrap'     => ['backendAdmin'],
+    'components'    =>
+    [
+        'backendAdmin' =>
+        [
+            'class'             => 'skeeks\cms\backend\BackendComponent',
+            'controllerPrefix'  => 'admin',
+            'urlRule'           => [
+                'urlPrefix' => '~admin'
+            ],
+            'allowedIPs' => [
+                '91.*',
+                '92.219.167.252',
+            ]
+        ],
+    ],
+]
 ```
 
 ##Links

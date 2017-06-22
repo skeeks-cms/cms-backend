@@ -25,6 +25,16 @@ class BackendComponent extends Component
     implements IBackendComponent, BootstrapInterface
 {
     const EVENT_BEFORE_RUN = 'beforeRun';
+    const EVENT_RUN = 'run';
+
+    /**
+     * @var array the list of IPs that are allowed to access this module.
+     * Each array element represents a single IP filter which can be either an IP address
+     * or an address with wildcard (e.g. 192.168.0.*) to represent a network segment.
+     * The default value is `['127.0.0.1', '::1']`, which means the module can only be accessed
+     * by localhost.
+     */
+    public $allowedIPs = ['*'];
 
     /**
      * @var BackendComponent
@@ -81,17 +91,20 @@ class BackendComponent extends Component
     {
         if ($application instanceof \yii\web\Application)
         {
-            /**
-             * Adding routing rules
-             */
-            $this->urlRule = ArrayHelper::merge([
-                'class' => 'skeeks\cms\backend\BackendUrlRule'
-            ], $this->urlRule, [
-                'controllerPrefix'  => $this->controllerPrefix,
-                'backend'           => $this
-            ]);
+            if ($this->_checkAccess())
+            {
+                /**
+                 * Adding routing rules
+                 */
+                $this->urlRule = ArrayHelper::merge([
+                    'class' => 'skeeks\cms\backend\BackendUrlRule'
+                ], $this->urlRule, [
+                    'controllerPrefix'  => $this->controllerPrefix,
+                    'backend'           => $this
+                ]);
 
-            $application->urlManager->addRules([$this->urlRule]);
+                $application->urlManager->addRules([$this->urlRule]);
+            }
         }
     }
 
@@ -106,16 +119,26 @@ class BackendComponent extends Component
      */
     public function run()
     {
-        if ($this->_isRunning === false)
+        if ($this->_isRunning === false && $this->_checkAccess())
         {
             $this->_isRunning           = true;
             static::$_runningBakcend    = $this;
 
             $event = new Event();
             $this->trigger(self::EVENT_BEFORE_RUN, $event);
+
+            $this->_run();
+
+            $event = new Event();
+            $this->trigger(self::EVENT_RUN, $event);
         }
         
         return $this;
+    }
+
+    protected function _run()
+    {
+        //Backend run code
     }
 
 
@@ -293,5 +316,29 @@ class BackendComponent extends Component
         } else {
             return false;
         }
+    }
+
+
+    /**
+     * @return boolean whether the module can be accessed by the current user
+     */
+    protected function _checkAccess()
+    {
+        if (\Yii::$app instanceof \yii\web\Application)
+        {
+            $ip = \Yii::$app->getRequest()->getUserIP();
+
+            foreach ($this->allowedIPs as $filter) {
+                if ($filter === '*' || $filter === $ip || (($pos = strpos($filter, '*')) !== false && !strncmp($ip, $filter, $pos))) {
+                    return true;
+                }
+            }
+
+            \Yii::warning('Access to Backend is denied due to IP address restriction. The requested IP is ' . $ip, __METHOD__);
+
+            return false;
+        }
+
+        return true;
     }
 }

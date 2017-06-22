@@ -38,16 +38,6 @@ abstract class BackendController extends Controller
     use THasPermissions;
 
     /**
-     * @return array
-     */
-    public function getPermissionNames()
-    {
-        return [
-            $this->permissionName => $this->name
-        ];
-    }
-
-    /**
      * @return string
      */
     public function getPermissionName()
@@ -88,6 +78,15 @@ abstract class BackendController extends Controller
         {
             $this->name = Inflector::humanize(static::class);
         }
+
+        if (!$this->permissionNames)
+        {
+            $this->permissionNames =
+            [
+                $this->permissionName => $this->name
+            ];
+        }
+
     }
 
     /**
