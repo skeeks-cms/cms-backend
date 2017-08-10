@@ -131,7 +131,7 @@ trait TBackendAction
      * @param bool $isVisible
      * @return $this
      */
-    public function setIsVisible(bool $isVisible)
+    public function setIsVisible($isVisible)
     {
         $this->_isVisible = $isVisible;
         return $this;
