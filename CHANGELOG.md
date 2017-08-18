@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.0.0-alpha5.pre
+-----------------
+ * Dialog select elements
+ 
 1.0.0-alpha4
 -----------------
  * Fixed bugs

@@ -6,7 +6,9 @@
  * @date 05.03.2017
  */
 namespace skeeks\cms\backend;
+use skeeks\cms\backend\helpers\BackendUrlHelper;
 use skeeks\cms\helpers\StringHelper;
+use skeeks\cms\helpers\UrlHelper;
 use \yii\base\InvalidConfigException;
 use yii\helpers\ArrayHelper;
 
@@ -67,6 +69,11 @@ class BackendUrlRule
      */
     public function createUrl($manager, $route, $params)
     {
+        if ($systemParams = \Yii::$app->request->get(BackendUrlHelper::BACKEND_PARAM_NAME))
+        {
+            $params = BackendUrlHelper::createByParams($params)->setBackendParamsByCurrentRequest()->params;
+        }
+
         $routeData = explode("/", $route);
         $isRoute   = false;
 

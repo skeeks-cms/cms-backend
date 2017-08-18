@@ -9,6 +9,7 @@
 namespace skeeks\cms\backend\widgets;
 
 use skeeks\cms\backend\BackendAction;
+use skeeks\cms\backend\helpers\BackendUrlHelper;
 use skeeks\cms\backend\IHasInfoActions;
 use skeeks\cms\backend\widgets\assets\ControllerActionsWidgetAsset;
 use skeeks\cms\helpers\UrlHelper;
@@ -217,10 +218,10 @@ class ControllerActionsWidget extends Widget
     {
         if (is_array($action->urlData) && $this->isOpenNewWindow)
         {
-            $action->url = UrlHelper::construct($action->urlData)
-                ->setSystemParam(\skeeks\cms\modules\admin\Module::SYSTEM_QUERY_EMPTY_LAYOUT, 'true')
-                ->setSystemParam(\skeeks\cms\modules\admin\Module::SYSTEM_QUERY_NO_ACTIONS_MODEL, 'true')
-                ->toArray()
+            $action->url = BackendUrlHelper::createByParams($action->urlData)
+                ->enableEmptyLayout()
+                ->enableNoActions()
+                ->params
             ;
         };
 
