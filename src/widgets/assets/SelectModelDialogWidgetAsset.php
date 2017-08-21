@@ -3,26 +3,22 @@
  * @author Semenov Alexander <semenov@skeeks.com>
  * @link https://skeeks.com/
  * @copyright (c) 2010 SkeekS
- * @date 16.03.2017
+ * @date 21.08.2017
  */
-
 namespace skeeks\cms\backend\widgets\assets;
 use yii\web\AssetBundle;
-
 /**
- * Class ControllerActionsWidgetAsset
+ * Class SelectModelDialogWidgetAsset
  *
- * @package skeeks\cms\backend\widgets
+ * @package skeeks\widget\SelectModelDialog\assets
  */
-class ControllerActionsWidgetAsset extends AssetBundle
+class SelectModelDialogWidgetAsset extends AssetBundle
 {
-
     public $sourcePath = '@skeeks/cms/backend/widgets/assets/src';
-
-    public $css = [
-    ];
-    public $js = [
-        'js/controller-actions-widget.js',
+    public $css = [];
+    public $js =
+    [
+        'js/select-model-dialog.js',
     ];
     public $depends = [
         'yii\web\YiiAsset',
