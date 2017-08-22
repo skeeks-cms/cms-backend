@@ -30,15 +30,31 @@ $widget = $this->context;
                     <? endif; ?>
                 </span>
 
-                <a class="btn btn-default sx-btn-create sx-btn-create" title="Выбрать">
-                    <i class="glyphicon glyphicon-th-list" title="Выбрать"></i>
-                </a>
-                <? if ($widget->allowDeselect) : ?>
-                    <a class="btn btn-default btn-danger sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Убрать выбранное">
-                        <i class="glyphicon glyphicon-remove"></i>
+                <? if (!$widget->multiple) : ?>
+                    <a class="btn btn-default sx-btn-create sx-btn-create" title="Выбрать">
+                        <i class="glyphicon glyphicon-th-list" title="Выбрать"></i>
                     </a>
+                    <? if ($widget->allowDeselect) : ?>
+                        <a class="btn btn-default btn-danger sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </a>
+                    <? endif; ?>
                 <? endif; ?>
             </div>
+
+            <? if ($widget->multiple) : ?>
+                <div class="col-lg-12">
+                    <a class="btn btn-default sx-btn-create sx-btn-create" title="Добавить значение">
+                        <i class="glyphicon glyphicon-th-list" aria-hidden="true"></i>
+                    </a>
+                    <? if ($widget->allowDeselect) : ?>
+                        <a class="btn btn-default btn-danger sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </a>
+                    <? endif; ?>
+                </div>
+            <? endif; ?>
+
         </div>
     </div>
 </div>

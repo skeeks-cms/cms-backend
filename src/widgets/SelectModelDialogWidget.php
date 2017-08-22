@@ -46,6 +46,7 @@ JS
 *
 *
  * @property string $url
+ * @property string|array $inputValue
  * @property string $callbackEventName
  * @property string $previewValue
  *
@@ -78,6 +79,11 @@ class SelectModelDialogWidget extends InputWidget
     public $visibleInput = true;
 
     /**
+     * @var bool
+     */
+    public $multiple = false;
+
+    /**
      * @var null|callable
      */
     public $previewValueCallback = null;
@@ -89,7 +95,6 @@ class SelectModelDialogWidget extends InputWidget
 
 
     public $viewFile  = 'select-model-dialog';
-
 
     public function init()
     {
@@ -128,16 +133,31 @@ class SelectModelDialogWidget extends InputWidget
         $input = '';
         if ($this->model)
         {
-            $input = \yii\helpers\Html::activeTextInput($this->model, $this->attribute, [
-                'class' => 'form-control'
-            ]);
+            if ($this->multiple)
+            {
+                $this->options['multiple'] = true;
+                $input = \yii\helpers\Html::activeListBox($this->model, $this->attribute, $this->inputValue, $this->options);
+            } else
+            {
+                Html::addCssClass($this->options, 'form-control');
+                $input = \yii\helpers\Html::activeTextInput($this->model, $this->attribute, $this->options);
+            }
+
         } else
         {
-            $input = \yii\helpers\Html::textInput($this->id, $this->attribute, [
-                'class' => 'form-control'
-            ]);
+            if ($this->multiple)
+            {
+                $this->options['multiple'] = true;
+                $input = \yii\helpers\Html::listBox($this->id, $this->attribute, $this->inputValue, $this->options);
+            } else
+            {
+                Html::addCssClass($this->options, 'form-control');
+                $input = \yii\helpers\Html::textInput($this->id, $this->attribute, $this->options);
+            }
+
         }
 
+        $this->clientOptions['multiple'] = $this->multiple;
         $this->clientOptions['callbackEventName'] = $this->callbackEventName;
         $this->clientOptions['url'] = $this->url;
         $this->clientOptions['closeDialogAfterSelect'] = $this->closeDialogAfterSelect;
@@ -146,6 +166,7 @@ class SelectModelDialogWidget extends InputWidget
         {
             $this->clientOptions['previewValueClientCallback'] = $this->previewValueClientCallback;
         }
+
         return $this->render($this->viewFile, [
             'input' => $input
         ]);
@@ -171,6 +192,20 @@ class SelectModelDialogWidget extends InputWidget
         } else
         {
             return (bool) $this->value;
+        }
+    }
+
+    /**
+     * @return mixed|string
+     */
+    public function getInputValue()
+    {
+        if ($this->hasModel())
+        {
+            return $this->model->{$this->attribute};
+        } else
+        {
+            return $this->value;
         }
     }
 

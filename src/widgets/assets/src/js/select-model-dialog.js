@@ -25,7 +25,16 @@
             var self = this;
 
             this.jQueryCreateBtn        = $(".sx-btn-create", this.jQuryWrapper());
-            this.jQueryInput            = $("input", this.jQuryWrapper());
+
+            if (this.get('multiple'))
+            {
+                this.jQueryInput            = $("input", this.jQuryWrapper());
+            } else
+            {
+                this.jQueryInput            = $("select", this.jQuryWrapper());
+            }
+
+
             this.jQueryContentWrapper   = $(".sx-view-cms-content", this.jQuryWrapper());
             this.jQueryDeselectBtn      = $(".sx-btn-deselect", this.jQuryWrapper());
 
@@ -90,7 +99,7 @@
         */
         setVal: function(id)
         {
-            $("input", this.jQuryWrapper()).val(id).change();
+            this.jQueryInput.val(id).change();
         },
 
         /**
