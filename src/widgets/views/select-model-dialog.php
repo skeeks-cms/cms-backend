@@ -14,7 +14,7 @@ $widget = $this->context;
     <div class="col-lg-12">
         <div class="row sx-one-input">
             <? if ($widget->visibleInput) : ?>
-                <div class="col-lg-3">
+                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
                     <?= $input; ?>
                 </div>
             <? else : ?>
@@ -22,7 +22,7 @@ $widget = $this->context;
                     <?= $input; ?>
                 </div>
             <? endif; ?>
-            <div class="col-lg-6">
+            <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
 
                 <span class="sx-view-cms-content">
                     <? if ($widget->previewValue) : ?>
@@ -30,7 +30,7 @@ $widget = $this->context;
                     <? endif; ?>
                 </span>
 
-                <a class="btn btn-default sx-btn-create" title="Выбрать">
+                <a class="btn btn-default sx-btn-create sx-btn-create" title="Выбрать">
                     <i class="glyphicon glyphicon-th-list" title="Выбрать"></i>
                 </a>
                 <? if ($widget->allowDeselect) : ?>

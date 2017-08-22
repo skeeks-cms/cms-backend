@@ -53,7 +53,7 @@ JS
  */
 class SelectModelDialogWidget extends InputWidget
 {
-    public static $autoIdPrefix = 'SelectModelDialogInput';
+    public static $autoIdPrefix = 'SelectModelDialogWidget';
     /**
      * @var array
      */
@@ -93,11 +93,15 @@ class SelectModelDialogWidget extends InputWidget
 
     public function init()
     {
-        if (!$this->hasModel())
+        /*if (!$this->hasModel())
         {
             throw new InvalidConfigException('Only model');
+        }*/
+        if (!$this->id)
+        {
+           $this->id = $this->id . "-" . \Yii::$app->security->generateRandomString(10);
         }
-        $this->id = $this->id . "-" . \Yii::$app->security->generateRandomString(10);
+
         $this->clientOptions['id'] = $this->id;
         parent::init();
     }

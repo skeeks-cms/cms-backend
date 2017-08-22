@@ -12,6 +12,8 @@
         {
             var self = this;
 
+            this.Window = null;
+
             sx.EventManager.bind(this.get('callbackEventName'), function(e, data)
             {
                 self.update(data);
@@ -60,7 +62,11 @@
 
             if (this.get('closeDialogAfterSelect'))
             {
-                this.Window.close();
+                if (this.Window)
+                {
+                    this.Window.close();
+                }
+
             }
 
             self.trigger('change', model);
