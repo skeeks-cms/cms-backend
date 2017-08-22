@@ -3,7 +3,7 @@ ul.sx-view-cms-content > li
     padding: 5px;
     font-size: 14px;
     font-weight: bold;
-
+    line-height: 50px;
 }
 
 ul.sx-view-cms-content > li:hover
@@ -14,4 +14,15 @@ ul.sx-view-cms-content
 {
     padding-left: 0px;
     list-style: none;
+}
+
+ul.sx-view-cms-content > li .sx-close-btn
+{
+    color: red;
+    display: none;
+    line-height: 50px;
+}
+ul.sx-view-cms-content > li:hover .sx-close-btn
+{
+    display: block;
 }

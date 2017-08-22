@@ -185,7 +185,21 @@
                     self.renderItem(itemData)
                 )
 
-                <a href="#" class="sx-close-btn pull-right"><i class="glyphicon glyphicon-remove"></i></a>
+                jLiCloseBtm = $("<a>", {
+                    'href' : '#',
+                    'class' : 'sx-close-btn pull-right',
+                }).append('<i class="glyphicon glyphicon-remove"></i>').appendTo(jLi);
+
+                jLiCloseBtm.on('click', function()
+                {
+                    jLi.slideUp();
+
+                    _.delay(function(){
+                        jLi.remove()
+                    }, 500);
+
+                    return false;
+                });
 
                 self.jQueryContentWrapper.append(jLi);
 
@@ -199,7 +213,6 @@
                 }
 
                 val = _.uniq(val);
-                console.log(val);
                 self.setVal(val);
                 this.jQueryDeselectBtn.show();
             }
