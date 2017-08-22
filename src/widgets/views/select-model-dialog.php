@@ -13,36 +13,21 @@ $widget = $this->context;
 <div class="row" id="<?= $widget->id; ?>">
     <div class="col-lg-12">
         <div class="row sx-one-input">
-            <? if ($widget->visibleInput) : ?>
-                <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
-                    <?= $input; ?>
-                </div>
-            <? else : ?>
+
+
+            <? if ($widget->multiple) : ?>
+
                 <div style="display: none;">
                     <?= $input; ?>
                 </div>
-            <? endif; ?>
-            <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
+                <div class="col-lg-12">
+                    <ul class="sx-view-cms-content">
+                        <? if ($widget->previewValue) : ?>
+                            <?= $widget->previewValue; ?>
+                        <? endif; ?>
+                    </ul>
+                </div>
 
-                <span class="sx-view-cms-content">
-                    <? if ($widget->previewValue) : ?>
-                        <?= $widget->previewValue; ?>
-                    <? endif; ?>
-                </span>
-
-                <? if (!$widget->multiple) : ?>
-                    <a class="btn btn-default sx-btn-create sx-btn-create" title="Выбрать">
-                        <i class="glyphicon glyphicon-th-list" title="Выбрать"></i>
-                    </a>
-                    <? if ($widget->allowDeselect) : ?>
-                        <a class="btn btn-default btn-danger sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
-                            <i class="glyphicon glyphicon-remove"></i>
-                        </a>
-                    <? endif; ?>
-                <? endif; ?>
-            </div>
-
-            <? if ($widget->multiple) : ?>
                 <div class="col-lg-12">
                     <a class="btn btn-default sx-btn-create sx-btn-create" title="Добавить значение">
                         <i class="glyphicon glyphicon-th-list" aria-hidden="true"></i>
@@ -53,18 +38,77 @@ $widget = $this->context;
                         </a>
                     <? endif; ?>
                 </div>
+
+            <? else : ?>
+
+                <? if ($widget->visibleInput) : ?>
+                    <div class="col-lg-3 col-md-3 col-sm-6 col-xs-6">
+                        <?= $input; ?>
+                    </div>
+                <? else : ?>
+                    <div style="display: none;">
+                        <?= $input; ?>
+                    </div>
+                <? endif; ?>
+                <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
+
+                    <span class="sx-view-cms-content">
+                        <? if ($widget->previewValue) : ?>
+                            <?= $widget->previewValue; ?>
+                        <? endif; ?>
+                    </span>
+
+                    <a class="btn btn-default sx-btn-create sx-btn-create" title="Выбрать">
+                        <i class="glyphicon glyphicon-th-list" title="Выбрать"></i>
+                    </a>
+                    <? if ($widget->allowDeselect) : ?>
+                        <a class="btn btn-default btn-danger sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
+                            <i class="glyphicon glyphicon-remove"></i>
+                        </a>
+                    <? endif; ?>
+                </div>
+
+
+                <? if ($widget->multiple) : ?>
+                    <div class="col-lg-12">
+                        <a class="btn btn-default sx-btn-create sx-btn-create" title="Добавить значение">
+                            <i class="glyphicon glyphicon-th-list" aria-hidden="true"></i>
+                        </a>
+                        <? if ($widget->allowDeselect) : ?>
+                            <a class="btn btn-default btn-danger sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
+                                <i class="glyphicon glyphicon-remove"></i>
+                            </a>
+                        <? endif; ?>
+                    </div>
+                <? endif; ?>
+
             <? endif; ?>
+
 
         </div>
     </div>
 </div>
 <?
 $jsonOptions = \yii\helpers\Json::encode($widget->clientOptions);
-$this->registerJs(<<<JS
-(function(sx, $, _)
+
+if ($widget->multiple)
 {
-    new sx.classes.SelectModelDialog({$jsonOptions});
-})(sx, sx.$, sx._);
+    $this->registerJs(<<<JS
+    (function(sx, $, _)
+    {
+        new sx.classes.SelectModelDialogMultiple({$jsonOptions});
+    })(sx, sx.$, sx._);
 JS
-)
+    );
+} else
+{
+    $this->registerJs(<<<JS
+    (function(sx, $, _)
+    {
+        new sx.classes.SelectModelDialog({$jsonOptions});
+    })(sx, sx.$, sx._);
+JS
+    );
+}
+
 ?>

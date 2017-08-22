@@ -6,6 +6,7 @@
  */
 (function(sx, $, _)
 {
+
     sx.classes.SelectModelDialog = sx.classes.Component.extend({
 
          _init: function()
@@ -17,6 +18,14 @@
             sx.EventManager.bind(this.get('callbackEventName'), function(e, data)
             {
                 self.update(data);
+                if (self.get('multiple'))
+                {
+                    self.add(data);
+                } else
+                {
+                    self.update(data);
+                }
+
             });
         },
 
@@ -25,16 +34,7 @@
             var self = this;
 
             this.jQueryCreateBtn        = $(".sx-btn-create", this.jQuryWrapper());
-
-            if (this.get('multiple'))
-            {
-                this.jQueryInput            = $("input", this.jQuryWrapper());
-            } else
-            {
-                this.jQueryInput            = $("select", this.jQuryWrapper());
-            }
-
-
+            this.jQueryInput            = $("input", this.jQuryWrapper());
             this.jQueryContentWrapper   = $(".sx-view-cms-content", this.jQuryWrapper());
             this.jQueryDeselectBtn      = $(".sx-btn-deselect", this.jQuryWrapper());
 
@@ -51,22 +51,26 @@
             });
         },
 
-        update: function(model)
+
+
+        update: function(data)
         {
             var self = this;
 
-            self.setVal();
             this.jQueryContentWrapper.empty();
             this.jQueryDeselectBtn.hide();
 
-            if (_.size(model) > 0)
+            if (_.size(data) > 0)
             {
                 this.jQueryContentWrapper.append(
-                    this.renderItem(model)
+                    this.renderItem(data)
                 );
 
-                self.setVal(model.id);
+                self.setVal(data.id);
                 this.jQueryDeselectBtn.show();
+            } else
+            {
+                self.setVal();
             }
 
             if (this.get('closeDialogAfterSelect'))
@@ -78,7 +82,7 @@
 
             }
 
-            self.trigger('change', model);
+            self.trigger('change', data);
 
             return this;
         },
@@ -95,12 +99,16 @@
         },
 
         /**
-        * @param id
-        */
+         *
+         * @param id
+         * @returns {sx.classes.SelectModelDialog}
+         */
         setVal: function(id)
         {
             this.jQueryInput.val(id).change();
+            return this;
         },
+
 
         /**
         *
@@ -122,4 +130,126 @@
             return $('#' + this.get('id'));
         }
     });
+
+    sx.classes.SelectModelDialogMultiple = sx.classes.SelectModelDialog.extend({
+
+        _init: function()
+        {
+            var self = this;
+
+            this.Window = null;
+
+            sx.EventManager.bind(this.get('callbackEventName'), function(e, data)
+            {
+                self.add(data);
+            });
+        },
+
+        _onDomReady: function()
+        {
+            var self = this;
+
+            this.jQueryCreateBtn        = $(".sx-btn-create", this.jQuryWrapper());
+            this.jQueryInput            = $("select", this.jQuryWrapper());
+
+
+            this.jQueryContentWrapper   = $(".sx-view-cms-content", this.jQuryWrapper());
+            this.jQueryDeselectBtn      = $(".sx-btn-deselect", this.jQuryWrapper());
+
+            this.jQueryCreateBtn.on("click", function()
+            {
+                self.openModalWindow();
+                return this;
+            });
+
+            this.jQueryDeselectBtn.on("click", function()
+            {
+                self.update({});
+                return this;
+            });
+        },
+
+        /**
+         * @param itemData
+         * @returns {sx.classes.SelectModelDialogMultiple}
+         */
+        add: function(itemData)
+        {
+            var self = this;
+
+            if (_.size(itemData) > 0)
+            {
+                var jLi = $('<li>');
+
+                jLi.append(
+                    self.renderItem(itemData)
+                )
+
+                <a href="#" class="sx-close-btn pull-right"><i class="glyphicon glyphicon-remove"></i></a>
+
+                self.jQueryContentWrapper.append(jLi);
+
+                var val = this.getVal();
+                if (val)
+                {
+                    val.push(String(itemData.id));
+                } else
+                {
+                    val = [itemData.id];
+                }
+
+                val = _.uniq(val);
+                console.log(val);
+                self.setVal(val);
+                this.jQueryDeselectBtn.show();
+            }
+
+            if (this.get('closeDialogAfterSelect'))
+            {
+                if (this.Window)
+                {
+                    this.Window.close();
+                }
+
+            }
+
+            self.trigger('change', itemData);
+
+            return this;
+        },
+
+
+        /**
+         * @returns {*}
+         */
+        getVal: function()
+        {
+            return this.jQueryInput.val();
+        },
+
+        /**
+         *
+         * @param id
+         * @returns {sx.classes.SelectModelDialog}
+         */
+        setVal: function(data)
+        {
+            var self = this;
+            self.jQueryInput.empty();
+
+            _.each(data, function(id, key){
+                self.jQueryInput.append(
+                    $('<option>', {
+                        'value' : id,
+                        'selected' : 'selected'
+                    }).append(id)
+                )
+            });
+            this.jQueryInput.change();
+            return this;
+        },
+
+
+    });
+
 })(sx, sx.$, sx._);

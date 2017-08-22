@@ -1,0 +1,17 @@
+ul.sx-view-cms-content > li
+{
+    padding: 5px;
+    font-size: 14px;
+    font-weight: bold;
+
+}
+
+ul.sx-view-cms-content > li:hover
+{
+    background: rgba(192, 192, 192, 0.14);
+}
+ul.sx-view-cms-content
+{
+    padding-left: 0px;
+    list-style: none;
+}

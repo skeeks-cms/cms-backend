@@ -15,7 +15,9 @@ use yii\web\AssetBundle;
 class SelectModelDialogWidgetAsset extends AssetBundle
 {
     public $sourcePath = '@skeeks/cms/backend/widgets/assets/src';
-    public $css = [];
+    public $css = [
+        'css/select-model-dialog.css',
+    ];
     public $js =
     [
         'js/select-model-dialog.js',
