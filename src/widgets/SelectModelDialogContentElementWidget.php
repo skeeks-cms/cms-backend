@@ -78,7 +78,7 @@ JS
         {
             if ($contentElement = $this->contentElement)
             {
-                $imageSrc = $contentElement->image ? $contentElement->image : Image::getCapSrc();
+                $imageSrc = $contentElement->image ? $contentElement->image->src : Image::getCapSrc();
                 $image = Html::img($imageSrc, [
                     'style' => 'max-width: 50px; max-height: 50px;'
                 ]);

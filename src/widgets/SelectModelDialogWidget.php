@@ -136,7 +136,17 @@ class SelectModelDialogWidget extends InputWidget
             if ($this->multiple)
             {
                 $this->options['multiple'] = true;
-                $input = \yii\helpers\Html::activeListBox($this->model, $this->attribute, $this->inputValue, $this->options);
+
+                $items = [];
+                if ($this->inputValue)
+                {
+                    foreach (array_values($this->inputValue) as $id)
+                    {
+                        $items[$id] = $id;
+                    }
+                }
+
+                $input = \yii\helpers\Html::activeListBox($this->model, $this->attribute, $items, $this->options);
             } else
             {
                 Html::addCssClass($this->options, 'form-control');
@@ -148,7 +158,15 @@ class SelectModelDialogWidget extends InputWidget
             if ($this->multiple)
             {
                 $this->options['multiple'] = true;
-                $input = \yii\helpers\Html::listBox($this->id, $this->attribute, $this->inputValue, $this->options);
+                $items = [];
+                if ($this->inputValue)
+                {
+                    foreach (array_values($this->inputValue) as $id)
+                    {
+                        $items[$id] = $id;
+                    }
+                }
+                $input = \yii\helpers\Html::listBox($this->id, $this->attribute, $items, $this->options);
             } else
             {
                 Html::addCssClass($this->options, 'form-control');
