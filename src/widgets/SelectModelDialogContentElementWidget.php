@@ -25,8 +25,6 @@ use yii\widgets\InputWidget;
 use Yii;
 
 /**
- * @property CmsContentElement $contentElement
- *
  * Class SelectModelDialogContentElementWidget
  * @package skeeks\cms\backend\widgets
  */
@@ -37,6 +35,8 @@ class SelectModelDialogContentElementWidget extends SelectModelDialogWidget
      */
     public $content_id = null;
 
+    public $modelClassName = 'skeeks\cms\models\CmsContentElement';
+
     public $dialogRoute = ['/cms/admin-cms-content-element'];
 
     public function init()
@@ -45,6 +45,17 @@ class SelectModelDialogContentElementWidget extends SelectModelDialogWidget
         {
             //throw new InvalidConfigException('Need content_id');
             $this->dialogRoute = ArrayHelper::merge($this->dialogRoute, ['content_id' => $this->content_id]);
+        }
+
+        if (!$this->initClientDataModelCallback)
+        {
+            $this->initClientDataModelCallback = function(CmsContentElement $cmsContentElement)
+            {
+                return ArrayHelper::merge($cmsContentElement->toArray(), [
+                    'image' => $cmsContentElement->image ? $cmsContentElement->image->src : '',
+                    'url' => $cmsContentElement->url,
+                ]);
+            };
         }
 
         if (!$this->previewValueClientCallback)
@@ -68,47 +79,4 @@ JS
 
         parent::init();
     }
-
-    /**
-     * @return string
-     */
-    public function getPreviewValue()
-    {
-        if (!parent::getPreviewValue())
-        {
-            if ($contentElement = $this->contentElement)
-            {
-                $imageSrc = $contentElement->image ? $contentElement->image->src : Image::getCapSrc();
-                $image = Html::img($imageSrc, [
-                    'style' => 'max-width: 50px; max-height: 50px;'
-                ]);
-                return $image . " " . Html::a($contentElement->name, $contentElement->url, [
-                    'data-pjax' => 0,
-                    'target' => '_blank'
-                ]);
-            }
-
-        }
-
-        return '';
-    }
-
-    /**
-     * @return null|CmsContentElement
-     */
-    public function getContentElement()
-    {
-        if ($this->hasModel() && $this->model->{$this->attribute})
-        {
-            return CmsContentElement::findOne($this->model->{$this->attribute});
-        }
-
-        if ($this->value)
-        {
-            return CmsContentElement::findOne($this->value);
-        }
-
-        return null;
-    }
-
 }

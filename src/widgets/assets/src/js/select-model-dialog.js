@@ -49,6 +49,12 @@
                 self.update({});
                 return this;
             });
+
+
+            if (this.get('initClientData'))
+            {
+                self.update(this.get('initClientData'));
+            }
         },
 
 
@@ -167,6 +173,13 @@
                 self.update({});
                 return this;
             });
+
+            if (this.get('initClientData'))
+            {
+                _.each(this.get('initClientData'), function(data, key){
+                    self.add(data);
+                });
+            }
         },
 
         /**

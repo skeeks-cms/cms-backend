@@ -48,7 +48,8 @@ JS
  * @property string $url
  * @property string|array $inputValue
  * @property string $callbackEventName
- * @property string $previewValue
+ *
+ * @property array $initClientData
  *
  * @package skeeks\widget\SelectModelDialog
  */
@@ -86,40 +87,44 @@ class SelectModelDialogWidget extends InputWidget
     /**
      * @var null|callable
      */
-    public $previewValueCallback = null;
-
-    /**
-     * @var null|string
-     */
     public $previewValueClientCallback = null;
 
+    /**
+     * @var null|callable
+     */
+    public $initClientDataModelCallback = null;
 
-    public $viewFile  = 'select-model-dialog';
+    /**
+     * @var null
+     */
+    public $modelClassName = null;
+
+
+    public $viewFile = 'select-model-dialog';
 
     public function init()
     {
-        /*if (!$this->hasModel())
-        {
-            throw new InvalidConfigException('Only model');
-        }*/
-        if (!$this->id)
-        {
-           $this->id = $this->id . "-" . \Yii::$app->security->generateRandomString(10);
+        if (!$this->modelClassName) {
+            throw new InvalidConfigException('Model class name is required');
+        }
+
+        if (!$this->id) {
+            $this->id = $this->id . "-" . \Yii::$app->security->generateRandomString(10);
         }
 
         $this->clientOptions['id'] = $this->id;
         parent::init();
     }
+
     /**
      * @return string
      */
     public function getUrl()
     {
         $additionalData = BackendUrlHelper::createByParams($this->dialogRoute)
-                ->enableEmptyLayout()
-                ->setCallbackEventName($this->callbackEventName)
-                ->params
-            ;
+            ->enableEmptyLayout()
+            ->setCallbackEventName($this->callbackEventName)
+            ->params;
         return Url::to($additionalData);
     }
 
@@ -131,44 +136,34 @@ class SelectModelDialogWidget extends InputWidget
         SelectModelDialogWidgetAsset::register($this->view);
 
         $input = '';
-        if ($this->model)
-        {
-            if ($this->multiple)
-            {
+        if ($this->model) {
+            if ($this->multiple) {
                 $this->options['multiple'] = true;
 
                 $items = [];
-                if ($this->inputValue)
-                {
-                    foreach (array_values($this->inputValue) as $id)
-                    {
+                if ($this->inputValue) {
+                    foreach (array_values($this->inputValue) as $id) {
                         $items[$id] = $id;
                     }
                 }
 
                 $input = \yii\helpers\Html::activeListBox($this->model, $this->attribute, $items, $this->options);
-            } else
-            {
+            } else {
                 Html::addCssClass($this->options, 'form-control');
                 $input = \yii\helpers\Html::activeTextInput($this->model, $this->attribute, $this->options);
             }
 
-        } else
-        {
-            if ($this->multiple)
-            {
+        } else {
+            if ($this->multiple) {
                 $this->options['multiple'] = true;
                 $items = [];
-                if ($this->inputValue)
-                {
-                    foreach (array_values($this->inputValue) as $id)
-                    {
+                if ($this->inputValue) {
+                    foreach (array_values($this->inputValue) as $id) {
                         $items[$id] = $id;
                     }
                 }
                 $input = \yii\helpers\Html::listBox($this->id, $this->attribute, $items, $this->options);
-            } else
-            {
+            } else {
                 Html::addCssClass($this->options, 'form-control');
                 $input = \yii\helpers\Html::textInput($this->id, $this->attribute, $this->options);
             }
@@ -180,9 +175,11 @@ class SelectModelDialogWidget extends InputWidget
         $this->clientOptions['url'] = $this->url;
         $this->clientOptions['closeDialogAfterSelect'] = $this->closeDialogAfterSelect;
 
-        if ($this->previewValueClientCallback)
-        {
+        if ($this->previewValueClientCallback) {
             $this->clientOptions['previewValueClientCallback'] = $this->previewValueClientCallback;
+        }
+        if ($initClientData = $this->initClientData) {
+            $this->clientOptions['initClientData'] = $initClientData;
         }
 
         return $this->render($this->viewFile, [
@@ -204,12 +201,10 @@ class SelectModelDialogWidget extends InputWidget
      */
     public function hasValue()
     {
-        if ($this->hasModel())
-        {
-            return (bool) $this->model->{$this->attribute};
-        } else
-        {
-            return (bool) $this->value;
+        if ($this->hasModel()) {
+            return (bool)$this->model->{$this->attribute};
+        } else {
+            return (bool)$this->value;
         }
     }
 
@@ -218,26 +213,44 @@ class SelectModelDialogWidget extends InputWidget
      */
     public function getInputValue()
     {
-        if ($this->hasModel())
-        {
+        if ($this->hasModel()) {
             return $this->model->{$this->attribute};
-        } else
-        {
+        } else {
             return $this->value;
         }
     }
 
     /**
-     * @return string
+     * @return array
      */
-    public function getPreviewValue()
+    public function getInitClientData()
     {
-        if ($this->previewValueCallback && is_callable($this->previewValueCallback))
-        {
-            $previewModelCallback = $this->previewValueCallback;
-            return $previewModelCallback($this);
+        $result = [];
+        $modelClassName = $this->modelClassName;
+
+        if ($this->inputValue) {
+            if (is_array($this->inputValue)) {
+                $result = [];
+                $models = $modelClassName::find()->andWhere(['id' => $this->inputValue])->all();
+                foreach ($models as $model) {
+                    if ($initClientDataModelCallback = $this->initClientDataModelCallback) {
+                        $result[] = (array)$initClientDataModelCallback($model);
+                    } else {
+                        $result[] = $model->toArray();
+                    }
+
+                }
+            } else {
+                $model = $modelClassName::find()->andWhere(['id' => $this->inputValue])->one();
+
+                if ($initClientDataModelCallback = $this->initClientDataModelCallback) {
+                    $result = (array)$initClientDataModelCallback($model);
+                } else {
+                    $result = $model->toArray();
+                }
+            }
         }
 
-        return '';
+        return $result;
     }
 }

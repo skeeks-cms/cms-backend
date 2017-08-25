@@ -9,6 +9,7 @@ namespace skeeks\cms\backend\widgets;
 use skeeks\cms\backend\helpers\BackendUrlHelper;
 use skeeks\cms\backend\widgets\assets\SelectModelDialogWidgetAsset;
 use skeeks\cms\Exception;
+use skeeks\cms\helpers\Image;
 use skeeks\cms\models\CmsContentElement;
 use skeeks\cms\models\CmsUser;
 use skeeks\cms\models\Publication;
@@ -32,45 +33,42 @@ use Yii;
 class SelectModelDialogUserWidget extends SelectModelDialogWidget
 {
 
+    public $modelClassName = 'skeeks\cms\models\CmsUser';
+
+    public $dialogRoute = ['/cms/admin-user'];
+
     public function init()
     {
-        $this->dialogRoute = ['/cms/admin-user'];
+        if (!$this->initClientDataModelCallback)
+        {
+            $this->initClientDataModelCallback = function(CmsUser $cmsUser)
+            {
+                return ArrayHelper::merge($cmsUser->toArray(), [
+                    'image' => $cmsUser->image ? $cmsUser->image->src : '',
+                    //'url' => $cmsUser->url,
+                    'displayName' => $cmsUser->displayName,
+                ]);
+            };
+        }
+
+        if (!$this->previewValueClientCallback)
+        {
+            $imageSrc = Image::getCapSrc();
+            $this->previewValueClientCallback = new \yii\web\JsExpression(<<<JS
+            function(data)
+            {
+                var imagesrc = '{$imageSrc}';
+                if (data.image)
+                {
+                    imagesrc = data.image;
+                }
+                
+                return '<img src="' + imagesrc + '" style="max-width: 50px; max-height: 50px;" /> <a href="#" target="_blank" data-pjax="0">' + data.displayName + '</a>'
+            }
+JS
+            );
+        }
+
         parent::init();
     }
-
-    /**
-     * @return string
-     */
-    public function getPreviewValue()
-    {
-        if (!parent::getPreviewValue())
-        {
-            if ($this->user)
-            {
-                return Html::a($this->user->displayName, '#');
-            }
-
-        }
-
-        return '';
-    }
-
-    /**
-     * @return null|CmsContentElement
-     */
-    public function getUser()
-    {
-        if ($this->hasModel() && $this->model->{$this->attribute})
-        {
-            return CmsUser::findOne($this->model->{$this->attribute});
-        }
-
-        if ($this->value)
-        {
-            return CmsUser::findOne($this->value);
-        }
-
-        return null;
-    }
-
 }

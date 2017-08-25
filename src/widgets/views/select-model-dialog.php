@@ -22,9 +22,7 @@ $widget = $this->context;
                 </div>
                 <div class="col-lg-12">
                     <ul class="sx-view-cms-content">
-                        <? if ($widget->previewValue) : ?>
-                            <?= $widget->previewValue; ?>
-                        <? endif; ?>
+
                     </ul>
                 </div>
 
@@ -53,9 +51,7 @@ $widget = $this->context;
                 <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
 
                     <span class="sx-view-cms-content">
-                        <? if ($widget->previewValue) : ?>
-                            <?= $widget->previewValue; ?>
-                        <? endif; ?>
+
                     </span>
 
                     <a class="btn btn-default sx-btn-create sx-btn-create" title="Выбрать">
