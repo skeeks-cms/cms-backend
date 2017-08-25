@@ -192,7 +192,9 @@
 
             if (_.size(itemData) > 0)
             {
-                var jLi = $('<li>');
+                var jLi = $('<li>', {
+                    'data-id' : itemData.id
+                });
 
                 jLi.append(
                     self.renderItem(itemData)
@@ -206,6 +208,12 @@
                 jLiCloseBtm.on('click', function()
                 {
                     jLi.slideUp();
+
+                    var id = jLi.data('id');
+                    var value = self.getVal();
+                    value = _.without(value, String(id));
+
+                    self.setVal(value);
 
                     _.delay(function(){
                         jLi.remove()
@@ -271,6 +279,7 @@
                     }).append(id)
                 )
             });
+
             this.jQueryInput.change();
             return this;
         },
