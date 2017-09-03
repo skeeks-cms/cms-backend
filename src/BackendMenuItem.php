@@ -7,7 +7,6 @@
  */
 namespace skeeks\cms\backend;
 
-use skeeks\cms\backend\controllers\BackendController;
 use skeeks\cms\IHasInfo;
 use skeeks\cms\IHasPermissions;
 use skeeks\cms\IHasUrl;
@@ -109,12 +108,12 @@ class BackendMenuItem extends Component
     }
 
     /**
-     * @var null|BackendController
+     * @var null|\skeeks\cms\backend\BackendController
      */
     protected $_controller = null;
 
     /**
-     * @return BackendController
+     * @return \skeeks\cms\backend\BackendController
      */
     protected function _getController()
     {

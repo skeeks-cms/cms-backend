@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.0.0-rc
+-----------------
+ * Fixed
+ 
 1.0.0-beta
 -----------------
  * Dialog select elements
