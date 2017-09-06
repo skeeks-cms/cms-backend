@@ -18,6 +18,7 @@ $controller = $widget->controller;
             'permissionDescription' => $permissionLabel,
             'label'                 => $permissionLabel,
         ]); ?>
+        <!--<p><?/*= $parmissionName; */?></p>-->
     <? endforeach; ?>
 
     <? if ($controller->allActions) : ?>
@@ -32,6 +33,7 @@ $controller = $widget->controller;
                                 'permissionDescription' => $permissionLabel,
                                 'label'                 => $permissionLabel,
                             ]); ?>
+                            <!--<p><?/*= $parmissionName; */?></p>-->
                         <? endforeach; ?>
                     <? endif; ?>
                 </div>

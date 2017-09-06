@@ -51,6 +51,18 @@ class ViewBackendAction extends ViewAction
      */
     public $defaultView = '';
 
+    /**
+     * @return string
+     */
+    public function getPermissionName()
+    {
+        if ($this->_permissionName !== false)
+        {
+            return $this->controller->permissionName . "/" . $this->id;
+        }
+
+        return $this->_permissionName;
+    }
 
     public function init()
     {
@@ -79,7 +91,7 @@ class ViewBackendAction extends ViewAction
         if ($this->permissionNames === null)
         {
             $this->permissionNames = [
-                $this->uniqueId => $this->name
+                $this->permissionName => $this->name
             ];
         }
 

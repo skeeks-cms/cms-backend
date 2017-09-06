@@ -39,8 +39,7 @@ class BackendModelCreateAction extends ViewBackendAction
      * @var string
      */
     public $defaultView = "_form";
-
-
+    
     public function init()
     {
         if (!$this->icon)
