@@ -10,9 +10,9 @@ use skeeks\cms\backend\actions\IBackendModelAction;
 use skeeks\cms\backend\actions\IBackendModelMultiAction;
 use skeeks\cms\IHasInfo;
 use yii\base\Action;
+use yii\base\BaseObject;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
-use yii\base\Object;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\web\Application;
@@ -219,7 +219,7 @@ trait TBackendModelController
      * @param Model|ActiveRecord $model
      * @return $this
      */
-    public function setModel(Object $model = null)
+    public function setModel(BaseObject $model = null)
     {
         $this->_model   = $model;
         return $this;
