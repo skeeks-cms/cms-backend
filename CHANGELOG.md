@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.0.2
+-----------------
+ * Recursive menu building
+ 
 1.0.1
 -----------------
  * Compatibility with yii 2.0.13

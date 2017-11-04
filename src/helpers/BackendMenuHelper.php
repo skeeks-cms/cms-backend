@@ -43,25 +43,28 @@ class BackendMenuHelper extends Component
         {
             foreach ($this->menu->items as $item)
             {
-                $result[$item->id] = [
-                    'label' => $item->name,
-                    'url' => $item->url,
-                ];
+                $result[$item->id] = $this->getRecursiveData($item);;
+            }
+        }
 
-                if ($item->items)
-                {
-                    $childItems = [];
+        return $result;
+    }
 
-                    foreach ($item->items as $childItem)
-                    {
-                        $childItems[] = [
-                            'label' => $childItem->name,
-                            'url'   => $childItem->url,
-                        ];
-                    }
+    protected function getRecursiveData($item) {
 
-                    $result[$item->id]['items'] = $childItems;
-                }
+        $result = [];
+
+        $result['label'] = $item->name;
+
+        if ($item->url) {
+            $result['url'] = $item->url;
+        }
+
+        if ($item->items) {
+            $items = [];
+            foreach ($item->items as $childItem)
+            {
+                $result['items'][] = $this->getRecursiveData($childItem);
             }
         }
 
