@@ -1,6 +1,14 @@
 CHANGELOG
 ==============
 
+1.0.1
+-----------------
+ * Compatibility with yii 2.0.13
+ 
+1.0.0
+-----------------
+ * Stable release
+ 
 1.0.0-rc2
 -----------------
  * Fixed
