@@ -17,11 +17,17 @@
 		}
 	],
 	"require": {
-		"skeeks/cms": "*"
+		"skeeks/cms": "~4"
 	},
     "autoload": {
         "psr-4": {
             "skeeks\\cms\\backend\\": "src/"
+        }
+    },
+	"extra": {
+        "config-plugin": {
+            "web": "src/config/main.php",
+            "console": "src/config/main.php",
         }
     }
 }
