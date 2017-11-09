@@ -100,7 +100,7 @@ class SelectModelDialogWidget extends InputWidget
     public $modelClassName = null;
 
 
-    public $viewFile = 'select-model-dialog';
+    public $viewFile = '@skeeks/cms/backend/widgets/views/select-model-dialog';
 
     public function init()
     {
@@ -143,7 +143,12 @@ class SelectModelDialogWidget extends InputWidget
                 $items = [];
                 if ($this->inputValue) {
                     foreach (array_values($this->inputValue) as $id) {
-                        $items[$id] = $id;
+                        if (is_object($id)) {
+                            //TODO: не всегда id
+                            $items[$id->id] = $id->id;
+                        } else {
+                            $items[$id] = $id;
+                        }
                     }
                 }
 
@@ -159,7 +164,12 @@ class SelectModelDialogWidget extends InputWidget
                 $items = [];
                 if ($this->inputValue) {
                     foreach (array_values($this->inputValue) as $id) {
-                        $items[$id] = $id;
+                        if (is_object($id)) {
+                            //TODO: не всегда id
+                            $items[$id->id] = $id->id;
+                        } else {
+                            $items[$id] = $id;
+                        }
                     }
                 }
                 $input = \yii\helpers\Html::listBox($this->id, $this->attribute, $items, $this->options);

@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.1.1.pre
+-----------------
+ * Update SelectDialogWidget
+ 
 1.1.0
 -----------------
  * Using composer-config-plugin
