@@ -5,7 +5,9 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 30.05.2015
  */
+
 namespace skeeks\cms\backend\actions;
+
 use skeeks\cms\backend\controllers\IBackendModelController;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\IHasModel;
@@ -39,18 +41,15 @@ class BackendModelUpdateAction extends BackendModelAction
 
     public function init()
     {
-        if (!$this->icon)
-        {
+        if (!$this->icon) {
             $this->icon = "glyphicon glyphicon-pencil";
         }
 
-        if (!$this->priority)
-        {
+        if (!$this->priority) {
             $this->priority = 10;
         }
 
-        if (!$this->name)
-        {
+        if (!$this->name) {
             $this->name = \Yii::t('skeeks/backend', "Edit");
         }
 
@@ -59,53 +58,50 @@ class BackendModelUpdateAction extends BackendModelAction
 
     public function run()
     {
-        if ($this->callback)
-        {
+        if ($this->callback) {
             return call_user_func($this->callback, $this);
         }
 
-        $model          = $this->controller->model;
+        $model = $this->controller->model;
 
         $scenarios = [];
-        if (method_exists($model, 'scenarios'))
-        {
-            $scenarios      = $model->scenarios();
+        if (method_exists($model, 'scenarios')) {
+            $scenarios = $model->scenarios();
         }
 
-        if ($scenarios && $this->modelScenario)
-        {
-            if (isset($scenarios[$this->modelScenario]))
-            {
+        if ($scenarios && $this->modelScenario) {
+            if (isset($scenarios[$this->modelScenario])) {
                 $model->scenario = $this->modelScenario;
             }
         }
 
         $rr = new RequestResponse();
 
-        if (\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax)
-        {
+        if (\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax) {
             return $rr->ajaxValidateForm($model);
         }
 
-        if ($rr->isRequestPjaxPost())
-        {
-            if ($model->load(\Yii::$app->request->post()) && $model->save($this->modelValidate))
-            {
-                \Yii::$app->getSession()->setFlash('success', \Yii::t('skeeks/cms','Saved'));
+        if ($post = \Yii::$app->request->post()) {
+            $model->load(\Yii::$app->request->post());
+        }
 
-                if (\Yii::$app->request->post('submit-btn') == 'apply')
-                {
+        if ($rr->isRequestPjaxPost()) {
+            if (!\Yii::$app->request->post($this->reloadFormParam)) {
+                if ($model->load(\Yii::$app->request->post()) && $model->save($this->modelValidate)) {
+                    \Yii::$app->getSession()->setFlash('success', \Yii::t('skeeks/cms', 'Saved'));
 
-                } else
-                {
-                    return $this->controller->redirect(
-                        $this->controller->url
-                    );
+                    if (\Yii::$app->request->post('submit-btn') == 'apply') {
+
+                    } else {
+                        return $this->controller->redirect(
+                            $this->controller->url
+                        );
+                    }
+
+                    $model->refresh();
+                } else {
                 }
-
-                $model->refresh();
-            } else
-            {}
+            }
         }
 
 

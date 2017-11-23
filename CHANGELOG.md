@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.1.2.pre
+-----------------
+ * Reload dynamic form
+ 
 1.1.1
 -----------------
  * Update SelectDialogWidget

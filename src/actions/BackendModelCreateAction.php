@@ -5,13 +5,13 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 30.05.2015
  */
+
 namespace skeeks\cms\backend\actions;
+
 use skeeks\cms\backend\controllers\IBackendModelController;
 use skeeks\cms\backend\ViewBackendAction;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\IHasUrl;
-use skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab;
-use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 
 /**
@@ -39,17 +39,15 @@ class BackendModelCreateAction extends ViewBackendAction
      * @var string
      */
     public $defaultView = "_form";
-    
+
     public function init()
     {
-        if (!$this->icon)
-        {
+        if (!$this->icon) {
             $this->icon = "glyphicon glyphicon-plus";
         }
 
 
-        if (!$this->name)
-        {
+        if (!$this->name) {
             $this->name = \Yii::t('skeeks/backend', "Add");
         }
 
@@ -61,19 +59,16 @@ class BackendModelCreateAction extends ViewBackendAction
      */
     public function run()
     {
-        if ($this->callback)
-        {
+        if ($this->callback) {
             return call_user_func($this->callback, $this);
         }
 
         $modelClassName = $this->controller->modelClassName;
-        $model          = new $modelClassName();
-        $scenarios      = $model->scenarios();
+        $model = new $modelClassName();
+        $scenarios = $model->scenarios();
 
-        if ($scenarios && $this->modelScenario)
-        {
-            if (isset($scenarios[$this->modelScenario]))
-            {
+        if ($scenarios && $this->modelScenario) {
+            if (isset($scenarios[$this->modelScenario])) {
                 $model->scenario = $this->modelScenario;
             }
         }
@@ -82,46 +77,44 @@ class BackendModelCreateAction extends ViewBackendAction
 
         $rr = new RequestResponse();
 
-        if (\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax)
-        {
+        if (\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax) {
             return $rr->ajaxValidateForm($model);
         }
 
-        if ($rr->isRequestPjaxPost())
-        {
-            if ($model->load(\Yii::$app->request->post()) && $model->save($this->modelValidate))
-            {
-                \Yii::$app->getSession()->setFlash('success', \Yii::t('skeeks/cms','Saved'));
+        if ($post = \Yii::$app->request->post()) {
+            $model->load(\Yii::$app->request->post());
+        }
 
-                if (\Yii::$app->request->post('submit-btn') == 'apply')
-                {
-                    $url = '';
-                    $this->controller->model = $model;
+        if ($rr->isRequestPjaxPost()) {
+            if (!\Yii::$app->request->post($this->reloadFormParam)) {
+                if ($model->load(\Yii::$app->request->post()) && $model->save($this->modelValidate)) {
+                    \Yii::$app->getSession()->setFlash('success', \Yii::t('skeeks/cms', 'Saved'));
 
-                    if ($this->controller->modelActions)
-                    {
-                        if ($action = ArrayHelper::getValue($this->controller->modelActions, $this->controller->modelDefaultAction))
-                        {
-                            $url = $action->url;
+                    if (\Yii::$app->request->post('submit-btn') == 'apply') {
+                        $url = '';
+                        $this->controller->model = $model;
+
+                        if ($this->controller->modelActions) {
+                            if ($action = ArrayHelper::getValue($this->controller->modelActions,
+                                $this->controller->modelDefaultAction)) {
+                                $url = $action->url;
+                            }
                         }
+
+                        if (!$url) {
+                            $url = $this->controller->url;
+                        }
+
+                        return $this->controller->redirect($url);
+                    } else {
+                        return $this->controller->redirect(
+                            $this->controller->url
+                        );
                     }
 
-                    if (!$url)
-                    {
-                        $url = $this->controller->url;
-                    }
-
-                    return $this->controller->redirect($url);
-                } else
-                {
-                    return $this->controller->redirect(
-                        $this->controller->url
-                    );
+                } else {
+                    \Yii::$app->getSession()->setFlash('error', \Yii::t('skeeks/cms', 'Could not save'));
                 }
-
-            } else
-            {
-                \Yii::$app->getSession()->setFlash('error', \Yii::t('skeeks/cms','Could not save'));
             }
         }
 
