@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS
  * @date 06.03.2017
  */
+
 namespace skeeks\cms\backend;
 
 use skeeks\cms\backend\BackendUrlRule;
@@ -19,6 +20,7 @@ use skeeks\cms\traits\THasInfo;
 use skeeks\cms\traits\THasPermissions;
 use yii\base\Action;
 use yii\filters\AccessControl;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 use yii\helpers\Url;
 use yii\web\Application;
@@ -37,6 +39,13 @@ abstract class BackendController extends Controller
     use THasInfo;
     use THasPermissions;
 
+    public $actionsMap = [];
+
+    public function actions()
+    {
+        return ArrayHelper::merge(parent::actions(), $this->actionsMap);
+    }
+
     /**
      * @return string
      */
@@ -51,40 +60,37 @@ abstract class BackendController extends Controller
     public function behaviors()
     {
         return
-        [
-            'access' =>
             [
-                'class'         => AccessControl::className(),
-                'rules' =>
-                [
+                'access' =>
                     [
-                        'allow'         => true,
-                        'matchCallback' => function($rule, $action)
-                        {
-                            //Creating and Assigning Privileges for the Root User
-                            return $this->isAllow;
-                        }
+                        'class' => AccessControl::className(),
+                        'rules' =>
+                            [
+                                [
+                                    'allow' => true,
+                                    'matchCallback' => function($rule, $action) {
+                                        //Creating and Assigning Privileges for the Root User
+                                        return $this->isAllow;
+                                    }
+                                ],
+                            ]
                     ],
-                ]
-            ],
-        ];
+            ];
     }
 
     public function init()
     {
         parent::init();
 
-        if (!$this->name)
-        {
+        if (!$this->name) {
             $this->name = Inflector::humanize(static::class);
         }
 
-        if (!$this->permissionNames)
-        {
+        if (!$this->permissionNames) {
             $this->permissionNames =
-            [
-                $this->permissionName => $this->name
-            ];
+                [
+                    $this->permissionName => $this->name
+                ];
         }
 
     }
@@ -109,19 +115,15 @@ abstract class BackendController extends Controller
      */
     protected function _ensureUrl()
     {
-        if (\Yii::$app->urlManager->rules)
-        {
-            foreach (\Yii::$app->urlManager->rules as $rule)
-            {
-                if ($rule instanceof BackendUrlRule)
-                {
-                    $request        = \Yii::$app->request;
-                    $pathInfo       = $request->getPathInfo();
-                    $params         = $request->getQueryParams();
-                    $firstPrefix    = StringHelper::substr($pathInfo, 0, StringHelper::strlen($rule->urlPrefix));
+        if (\Yii::$app->urlManager->rules) {
+            foreach (\Yii::$app->urlManager->rules as $rule) {
+                if ($rule instanceof BackendUrlRule) {
+                    $request = \Yii::$app->request;
+                    $pathInfo = $request->getPathInfo();
+                    $params = $request->getQueryParams();
+                    $firstPrefix = StringHelper::substr($pathInfo, 0, StringHelper::strlen($rule->urlPrefix));
 
-                    if ($firstPrefix == $rule->urlPrefix)
-                    {
+                    if ($firstPrefix == $rule->urlPrefix) {
                         return true;
                     }
                 }
@@ -140,8 +142,7 @@ abstract class BackendController extends Controller
         $data[] = \Yii::$app->name;
         $data[] = $this->name;
 
-        if ($this->action && $this->action instanceof IHasInfo)
-        {
+        if ($this->action && $this->action instanceof IHasInfo) {
             $data[] = $this->action->name;
         }
         $this->view->title = implode(" / ", $data);
@@ -157,12 +158,11 @@ abstract class BackendController extends Controller
 
         $result[] = [
             'label' => $this->name,
-            'url'   => $this->url
+            'url' => $this->url
         ];
 
-        if ($this->action && $this->action instanceof IHasInfo)
-        {
-             $result[] = $this->action->name;
+        if ($this->action && $this->action instanceof IHasInfo) {
+            $result[] = $this->action->name;
         }
 
         return $result;
@@ -174,41 +174,37 @@ abstract class BackendController extends Controller
     public function getUrl()
     {
         $baseRoute = $this->module instanceof Application ? $this->id : ("/" . $this->module->id . "/" . $this->id);
-        return Url::to([$baseRoute. '/' . $this->defaultAction]);
+        return Url::to([$baseRoute . '/' . $this->defaultAction]);
     }
 
 
     /**
      * @var BackendAction[]
      */
-    protected $_actions         = null;
+    protected $_actions = null;
 
     /**
      * @var BackendAction[]
      */
-    protected $_allActions      = null;
+    protected $_allActions = null;
 
     /**
      * @return BackendAction[]
      */
     public function getActions()
     {
-        if ($this->_actions !== null)
-        {
+        if ($this->_actions !== null) {
             return $this->_actions;
         }
 
         $actions = $this->actions();
 
-        if ($actions)
-        {
-            foreach ($actions as $id => $data)
-            {
+        if ($actions) {
+            foreach ($actions as $id => $data) {
                 $action = $this->createAction($id);
                 $this->_actions[$action->id] = $action;
             }
-        } else
-        {
+        } else {
             $this->_actions = [];
         }
 
@@ -220,22 +216,18 @@ abstract class BackendController extends Controller
      */
     public function getAllActions()
     {
-        if ($this->_allActions !== null)
-        {
+        if ($this->_allActions !== null) {
             return $this->_allActions;
         }
 
         $actions = $this->actions();
 
-        if ($actions)
-        {
-            foreach ($actions as $id => $data)
-            {
+        if ($actions) {
+            foreach ($actions as $id => $data) {
                 $action = $this->createAction($id);
                 $this->_allActions[$action->id] = $action;
             }
-        } else
-        {
+        } else {
             $this->_allActions = [];
         }
 
