@@ -51,6 +51,7 @@ JS
  *
  * @property array $initClientData
  *
+ * @property string $selectBtn
  * @package skeeks\widget\SelectModelDialog
  */
 class SelectModelDialogWidget extends InputWidget
@@ -102,6 +103,15 @@ class SelectModelDialogWidget extends InputWidget
 
     public $viewFile = '@skeeks/cms/backend/widgets/views/select-model-dialog';
 
+    protected $_selectBtn = [
+        'tag' => 'a',
+        'content' => '<i class="glyphicon glyphicon-th-list" aria-hidden="true"></i>',
+        'options' => [
+            'class' => 'btn btn-default sx-btn-create',
+            'title' => 'Выбрать значение'
+        ]
+    ];
+
     public function init()
     {
         if (!$this->modelClassName) {
@@ -114,6 +124,25 @@ class SelectModelDialogWidget extends InputWidget
 
         $this->clientOptions['id'] = $this->id;
         parent::init();
+    }
+
+    /**
+     * @param array $selectBtn
+     * @return $this
+     */
+    public function setSelectBtn($selectBtn = []) {
+        $this->_selectBtn = ArrayHelper::merge($this->_selectBtn, $selectBtn);
+
+        Html::addCssClass($this->_selectBtn['options'], 'sx-btn-create');
+        return $this;
+
+    }
+
+    /**
+     * @return array
+     */
+    public function getSelectBtn() {
+        return $this->_selectBtn;
     }
 
     /**
