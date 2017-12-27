@@ -33,11 +33,6 @@ class BackendModelCreateAction extends ViewBackendAction
     /**
      * @var string
      */
-    public $modelScenario = "";
-
-    /**
-     * @var string
-     */
     public $defaultView = "_form";
 
     public function init()
@@ -65,13 +60,6 @@ class BackendModelCreateAction extends ViewBackendAction
 
         $modelClassName = $this->controller->modelClassName;
         $model = new $modelClassName();
-        $scenarios = $model->scenarios();
-
-        if ($scenarios && $this->modelScenario) {
-            if (isset($scenarios[$this->modelScenario])) {
-                $model->scenario = $this->modelScenario;
-            }
-        }
 
         $model->loadDefaultValues();
 

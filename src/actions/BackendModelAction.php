@@ -9,6 +9,7 @@ namespace skeeks\cms\backend\actions;
 use skeeks\cms\backend\controllers\IBackendModelController;
 use skeeks\cms\backend\ViewBackendAction;
 use skeeks\cms\rbac\CmsManager;
+use yii\base\Model;
 use yii\helpers\ArrayHelper;
 use yii\web\Application;
 
@@ -16,6 +17,8 @@ use yii\web\Application;
  * @property IHasInfoActions|IBackendModelController    $controller
  * @property string $ownPermissionName;
  * @property string $permissionName;
+ * @property Model $model;
+ * @property string $modelClassName;
  *
  * Class BackendModelAction
  * @package skeeks\cms\backend\actions
@@ -44,6 +47,21 @@ class BackendModelAction extends ViewBackendAction
         return $this->_permissionName;
     }
 
+    /**
+     * @return Model
+     */
+    public function getModel() {
+        return $this->controller->model;
+    }
+
+    /**
+     * @return \skeeks\cms\backend\controllers\sting
+     */
+    public function getModelClassName() {
+        return $this->controller->modelClassName;
+    }
+
+
 
     public function init()
     {
@@ -56,7 +74,7 @@ class BackendModelAction extends ViewBackendAction
             /*print_r($this->controller);
             print_r($this->permissionNames);die;*/
 
-            $className = $this->controller->modelClassName;
+            $className = $this->modelClassName;
             $model = new $className();
             if (method_exists($model, 'hasAttribute') && $model->hasAttribute('created_by'))
             {
@@ -72,7 +90,7 @@ class BackendModelAction extends ViewBackendAction
     {
         if (!$this->_url)
         {
-            if (!$this->controller->model)
+            if (!$this->model)
             {
                 return $this;
             }
@@ -100,7 +118,7 @@ class BackendModelAction extends ViewBackendAction
     {
         if (parent::beforeRun())
         {
-            if (!$this->controller->model)
+            if (!$this->model)
             {
                 $this->controller->redirect($this->controller->url);
                 return false;
@@ -117,7 +135,7 @@ class BackendModelAction extends ViewBackendAction
             return call_user_func($this->callback, $this);
         }
 
-        if (!$this->controller->model)
+        if (!$this->model)
         {
             return $this->controller->redirect($this->controller->url);
         }
@@ -159,7 +177,7 @@ class BackendModelAction extends ViewBackendAction
         }
 
 
-        $className = $this->controller->modelClassName;
+        $className = $this->modelClassName;
         $model = new $className();
         if (method_exists($model, 'hasAttribute') && $model->hasAttribute('created_by'))
         {
@@ -197,7 +215,7 @@ class BackendModelAction extends ViewBackendAction
 
         foreach ([$this->permissionName => $this->name] as $permissionName => $permissionLabel)
         {
-            if (!\Yii::$app->user->can($permissionName, ['model' => $this->controller->model]))
+            if (!\Yii::$app->user->can($permissionName, ['model' => $this->model]))
             {
 
                 return false;

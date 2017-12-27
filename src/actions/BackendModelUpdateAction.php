@@ -12,6 +12,8 @@ use skeeks\cms\backend\controllers\IBackendModelController;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\IHasModel;
 use skeeks\cms\IHasUrl;
+use yii\base\Exception;
+use yii\widgets\ActiveForm;
 
 /**
  * @property IBackendModelController|IHasUrl|IHasModel $controller
@@ -32,12 +34,12 @@ class BackendModelUpdateAction extends BackendModelAction
     /**
      * @var string
      */
-    public $modelScenario = "";
+    public $defaultView = "_form";
 
     /**
-     * @var string
+     * @var array
      */
-    public $defaultView = "_form";
+    public $fields = [];
 
     public function init()
     {
@@ -56,38 +58,59 @@ class BackendModelUpdateAction extends BackendModelAction
         parent::init();
     }
 
+    public $formModels = [];
+
+    const EVENT_INIT_FORM_MODELS = 'initFormModels';
+
     public function run()
     {
         if ($this->callback) {
             return call_user_func($this->callback, $this);
         }
 
-        $model = $this->controller->model;
-
-        $scenarios = [];
-        if (method_exists($model, 'scenarios')) {
-            $scenarios = $model->scenarios();
-        }
-
-        if ($scenarios && $this->modelScenario) {
-            if (isset($scenarios[$this->modelScenario])) {
-                $model->scenario = $this->modelScenario;
-            }
-        }
+        $this->formModels['model'] = $this->model;
+        $this->trigger(self::EVENT_INIT_FORM_MODELS);
 
         $rr = new RequestResponse();
 
         if (\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax) {
-            return $rr->ajaxValidateForm($model);
+            foreach ($this->formModels as $model) {
+                $model->load(\Yii::$app->request->post());
+            }
+            return ActiveForm::validateMultiple($this->formModels);
         }
 
         if ($post = \Yii::$app->request->post()) {
-            $model->load(\Yii::$app->request->post());
+            foreach ($this->formModels as $model) {
+                $model->load(\Yii::$app->request->post());
+            }
         }
 
         if ($rr->isRequestPjaxPost()) {
-            if (!\Yii::$app->request->post($this->reloadFormParam)) {
-                if ($model->load(\Yii::$app->request->post()) && $model->save($this->modelValidate)) {
+
+            try {
+                if (!\Yii::$app->request->post($this->reloadFormParam)) {
+                    foreach ($this->formModels as $model) {
+                        $model->load(\Yii::$app->request->post());
+                        
+                    }
+
+                    foreach ($this->formModels as $model) {
+                        if ($model->validate()) {
+                            
+                        } else {
+                            throw new Exception("Не удалось сохранить данные: " . print_r($model->errors, true));
+                        }
+                    }
+                    
+                    foreach ($this->formModels as $model) {
+                        if ($model->save($this->modelValidate)) {
+                            $model->refresh();
+                        } else {
+                            throw new Exception("Не удалось сохранить данные: " . print_r($model->errors, true));
+                        }
+                    }
+
                     \Yii::$app->getSession()->setFlash('success', \Yii::t('skeeks/cms', 'Saved'));
 
                     if (\Yii::$app->request->post('submit-btn') == 'apply') {
@@ -97,13 +120,19 @@ class BackendModelUpdateAction extends BackendModelAction
                             $this->controller->url
                         );
                     }
-
-                    $model->refresh();
-                } else {
                 }
+            } catch (\Exception $e) {
+                //\Yii::$app->getSession()->setFlash('error', $e->getMessage());
             }
         }
 
+        if ($this->fields) {
+            return $this->controller->render('@skeeks/cms/backend/actions/views/model-update', [
+                'model' => $this->model,
+                'formModels' => $this->formModels,
+            ]);
+            //return $this->render('@skeeks/cms/backend/actions/views/model-update');
+        }
 
         return parent::run();
     }
@@ -116,6 +145,6 @@ class BackendModelUpdateAction extends BackendModelAction
      */
     protected function render($viewName)
     {
-        return $this->controller->render($viewName, ['model' => $this->controller->model]);
+        return $this->controller->render($viewName, ['model' => $this->model]);
     }
 }
