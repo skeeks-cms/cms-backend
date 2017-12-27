@@ -92,17 +92,16 @@ class BackendModelUpdateAction extends BackendModelAction
                 if (!\Yii::$app->request->post($this->reloadFormParam)) {
                     foreach ($this->formModels as $model) {
                         $model->load(\Yii::$app->request->post());
-                        
                     }
 
                     foreach ($this->formModels as $model) {
                         if ($model->validate()) {
-                            
+
                         } else {
                             throw new Exception("Не удалось сохранить данные: " . print_r($model->errors, true));
                         }
                     }
-                    
+
                     foreach ($this->formModels as $model) {
                         if ($model->save($this->modelValidate)) {
                             $model->refresh();
