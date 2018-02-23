@@ -13,6 +13,7 @@ use skeeks\cms\backend\ViewBackendAction;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\IHasUrl;
 use yii\helpers\ArrayHelper;
+use yii\widgets\ActiveForm;
 
 /**
  * @property IBackendModelController|IHasUrl $controller
@@ -35,6 +36,11 @@ class BackendModelCreateAction extends ViewBackendAction
      */
     public $defaultView = "_form";
 
+    /**
+     * @var array
+     */
+    public $fields = [];
+
     public function init()
     {
         if (!$this->icon) {
@@ -49,9 +55,11 @@ class BackendModelCreateAction extends ViewBackendAction
         parent::init();
     }
 
-    /**
-     * @return $this|array|mixed
-     */
+    public $formModels = [];
+    public $model;
+
+    const EVENT_INIT_FORM_MODELS = 'initFormModels';
+
     public function run()
     {
         if ($this->callback) {
@@ -61,21 +69,52 @@ class BackendModelCreateAction extends ViewBackendAction
         $modelClassName = $this->controller->modelClassName;
         $model = new $modelClassName();
 
+        $this->model = $model;
+
         $model->loadDefaultValues();
+
+        $this->formModels['model'] = $model;
+        $this->trigger(self::EVENT_INIT_FORM_MODELS);
 
         $rr = new RequestResponse();
 
         if (\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax) {
-            return $rr->ajaxValidateForm($model);
+            foreach ($this->formModels as $model) {
+                $model->load(\Yii::$app->request->post());
+            }
+            return ActiveForm::validateMultiple($this->formModels);
         }
 
         if ($post = \Yii::$app->request->post()) {
-            $model->load(\Yii::$app->request->post());
+            foreach ($this->formModels as $fmodel) {
+                $fmodel->load(\Yii::$app->request->post());
+            }
         }
 
         if ($rr->isRequestPjaxPost()) {
-            if (!\Yii::$app->request->post($this->reloadFormParam)) {
-                if ($model->load(\Yii::$app->request->post()) && $model->save($this->modelValidate)) {
+
+            try {
+                if (!\Yii::$app->request->post($this->reloadFormParam)) {
+                    foreach ($this->formModels as $fmodel) {
+                        $fmodel->load(\Yii::$app->request->post());
+                    }
+
+                    foreach ($this->formModels as $fmodel) {
+                        if ($fmodel->validate()) {
+
+                        } else {
+                            throw new Exception("Не удалось сохранить данные: " . print_r($fmodel->errors, true));
+                        }
+                    }
+
+                    foreach ($this->formModels as $fmodel) {
+                        if ($fmodel->save($this->modelValidate)) {
+                            $fmodel->refresh();
+                        } else {
+                            throw new Exception("Не удалось сохранить данные: " . print_r($fmodel->errors, true));
+                        }
+                    }
+
                     \Yii::$app->getSession()->setFlash('success', \Yii::t('skeeks/cms', 'Saved'));
 
                     if (\Yii::$app->request->post('submit-btn') == 'apply') {
@@ -99,17 +138,24 @@ class BackendModelCreateAction extends ViewBackendAction
                             $this->controller->url
                         );
                     }
-
-                } else {
-                    \Yii::$app->getSession()->setFlash('error', \Yii::t('skeeks/cms', 'Could not save'));
                 }
+            } catch (\Exception $e) {
+                //\Yii::$app->getSession()->setFlash('error', $e->getMessage());
             }
         }
 
-        $this->controller->model = $model;
+        if ($this->fields) {
+            return $this->controller->render('@skeeks/cms/backend/actions/views/model-update', [
+                'model' => $model,
+                'formModels' => $this->formModels,
+            ]);
+            //return $this->render('@skeeks/cms/backend/actions/views/model-update');
+        }
 
         return parent::run();
     }
+
+
 
     /**
      * Renders a view
@@ -119,6 +165,6 @@ class BackendModelCreateAction extends ViewBackendAction
      */
     protected function render($viewName)
     {
-        return $this->controller->render($viewName, ['model' => $this->controller->model]);
+        return $this->controller->render($viewName, ['model' => $this->model]);
     }
 }
