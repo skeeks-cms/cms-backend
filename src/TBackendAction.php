@@ -5,6 +5,7 @@
  * @copyright (c) 2010 SkeekS
  * @date 16.03.2017
  */
+
 namespace skeeks\cms\backend;
 
 use skeeks\cms\backend\BackendComponent;
@@ -53,7 +54,7 @@ trait TBackendAction
     /**
      * @var string
      */
-    public $method  = 'get';
+    public $method = 'get';
 
     /**
      * @var string
@@ -69,13 +70,10 @@ trait TBackendAction
      */
     protected function _initUrl()
     {
-        if ($this->_url === null)
-        {
-            if ($this->controller->module instanceof Application)
-            {
+        if ($this->_url === null) {
+            if ($this->controller->module instanceof Application) {
                 $this->_url = ['/' . $this->controller->id . '/' . $this->id];
-            } else
-            {
+            } else {
                 $this->_url = ['/' . $this->controller->module->id . '/' . $this->controller->id . '/' . $this->id];
             }
         }
@@ -89,20 +87,19 @@ trait TBackendAction
     protected function _initAccess()
     {
         $this->controller->attachBehavior('access' . $this->uniqueId,
-        [
-            'class'         => $this->accessClassName,
-            'only'          => [$this->id],
-            'rules'         =>
             [
-                [
-                    'allow'         => true,
-                    'matchCallback' => function($rule, $action)
-                    {
-                        return $this->isAllow;
-                    }
-                ],
-            ],
-        ]);
+                'class' => $this->accessClassName,
+                'only' => [$this->id],
+                'rules' =>
+                    [
+                        [
+                            'allow' => true,
+                            'matchCallback' => function($rule, $action) {
+                                return $this->isAllow;
+                            }
+                        ],
+                    ],
+            ]);
 
         return $this;
     }
@@ -113,14 +110,12 @@ trait TBackendAction
      */
     public function getIsVisible()
     {
-        if ($this->_isVisible === false)
-        {
+        if ($this->_isVisible === false) {
             return false;
         }
 
         //Проверить разрешения
-        if (!$this->isAllow)
-        {
+        if (!$this->isAllow) {
             return false;
         }
 
@@ -147,12 +142,11 @@ trait TBackendAction
      */
     public function getAccessClassName()
     {
-        if ($this->_accessClassName === null)
-        {
+        if ($this->_accessClassName === null) {
             $this->_accessClassName = AccessControl::class;
         }
 
-        return (string) $this->_accessClassName;
+        return (string)$this->_accessClassName;
     }
 
     /**
