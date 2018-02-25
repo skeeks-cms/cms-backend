@@ -1,7 +1,7 @@
 CHANGELOG
 ==============
 
-1.1.2.pre
+1.1.3
 -----------------
  * BackendController actionsMap
  * Reload dynamic form
