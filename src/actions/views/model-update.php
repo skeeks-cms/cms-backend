@@ -12,6 +12,13 @@
 $controller = $this->context;
 $action = $controller->action;
 ?>
+<? if ($action->preContent) : ?>
+    <div class="sx-box sx-p-10 sx-bg-primary" style="margin-bottom: 10px;">
+        <? echo $action->preContent; ?>
+    </div>
+<? endif; ?>
+
+
 <?php $form = $action->beginActiveForm(); ?>
     <?= $form->errorSummary($formModels); ?>
 

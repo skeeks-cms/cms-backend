@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.1.4.pre
+-----------------
+ * Update
+ 
 1.1.3
 -----------------
  * BackendController actionsMap

@@ -12,6 +12,7 @@ use skeeks\cms\backend\controllers\IBackendModelController;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\IHasModel;
 use skeeks\cms\IHasUrl;
+use yii\base\DynamicModel;
 use yii\base\Exception;
 use yii\widgets\ActiveForm;
 
@@ -26,21 +27,41 @@ class BackendModelUpdateAction extends BackendModelAction
 {
     use THasActiveForm;
 
+    const EVENT_INIT_FORM_MODELS = 'initFormModels';
+    const EVENT_BEFORE_SAVE = 'beforeSave';
     /**
      * @var bool
      */
     public $modelValidate = true;
-
     /**
      * @var string
      */
     public $defaultView = "_form";
+    /**
+     * @var bool
+     */
+    public $isSaveFormModels = true;
 
     /**
-     * @var array
+     * @var string
+     */
+    public $preContent = '';
+
+    /**
+     * @var string
+     */
+    public $afterSaveUrl = '';
+
+    /**
+     * @var string
+     */
+    public $successMessage = '';
+
+    /**
+     * @var array|callable
      */
     public $fields = [];
-
+    public $formModels = [];
     public function init()
     {
         if (!$this->icon) {
@@ -57,11 +78,6 @@ class BackendModelUpdateAction extends BackendModelAction
 
         parent::init();
     }
-
-    public $formModels = [];
-
-    const EVENT_INIT_FORM_MODELS = 'initFormModels';
-
     public function run()
     {
         if ($this->callback) {
@@ -86,48 +102,77 @@ class BackendModelUpdateAction extends BackendModelAction
             }
         }
 
+        $isValid = true;
+
         if ($rr->isRequestPjaxPost()) {
 
             try {
                 if (!\Yii::$app->request->post($this->reloadFormParam)) {
+
                     foreach ($this->formModels as $model) {
                         $model->load(\Yii::$app->request->post());
                     }
 
+
+
+                    /**
+                     * @var $model DynamicModel
+                     */
                     foreach ($this->formModels as $model) {
                         if ($model->validate()) {
 
                         } else {
-                            throw new Exception("Не удалось сохранить данные: " . print_r($model->errors, true));
+                            $isValid = false;
+                            //throw new Exception("Не удалось сохранить данные: ".print_r($model->errors, true));
                         }
                     }
 
-                    foreach ($this->formModels as $model) {
-                        if ($model->save($this->modelValidate)) {
-                            $model->refresh();
+                    if ($isValid) {
+                        $this->trigger(self::EVENT_BEFORE_SAVE);
+
+                        if ($this->isSaveFormModels) {
+                            foreach ($this->formModels as $model) {
+                                if (method_exists($model, 'save') && $model->save($this->modelValidate)) {
+                                    $model->refresh();
+                                } else {
+                                    throw new Exception("Не удалось сохранить данные: ".print_r($model->errors, true));
+                                }
+                            }
+                        }
+
+                        if (!$this->successMessage) {
+                            $this->successMessage = \Yii::t('skeeks/cms', 'Saved');
+                        }
+
+                        \Yii::$app->getSession()->setFlash('success', $this->successMessage);
+
+                        if (\Yii::$app->request->post('submit-btn') == 'apply') {
+
                         } else {
-                            throw new Exception("Не удалось сохранить данные: " . print_r($model->errors, true));
+                            if (!$this->afterSaveUrl) {
+                                $this->afterSaveUrl = $this->controller->url;
+                            }
                         }
-                    }
 
-                    \Yii::$app->getSession()->setFlash('success', \Yii::t('skeeks/cms', 'Saved'));
-
-                    if (\Yii::$app->request->post('submit-btn') == 'apply') {
-
-                    } else {
                         return $this->controller->redirect(
-                            $this->controller->url
+                            $this->afterSaveUrl
                         );
                     }
+
                 }
             } catch (\Exception $e) {
-                //\Yii::$app->getSession()->setFlash('error', $e->getMessage());
+                \Yii::$app->getSession()->setFlash('error', $e->getMessage());
             }
         }
 
         if ($this->fields) {
+            if (is_callable($this->fields)) {
+                $fields = $this->fields;
+                $this->fields = call_user_func($fields, $this);
+            }
+
             return $this->controller->render('@skeeks/cms/backend/actions/views/model-update', [
-                'model' => $this->model,
+                'model'      => $this->model,
                 'formModels' => $this->formModels,
             ]);
             //return $this->render('@skeeks/cms/backend/actions/views/model-update');
