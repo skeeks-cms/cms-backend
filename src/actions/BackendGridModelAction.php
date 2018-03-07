@@ -13,7 +13,7 @@ use yii\helpers\ArrayHelper;
 /**
  *
  * @property [] $columns
- * @property [] $grid
+ *
  * @property string $gridClassName
  * @property [] $gridClassConfig
  *
@@ -24,33 +24,7 @@ use yii\helpers\ArrayHelper;
  */
 class BackendGridModelAction extends BackendBaseListModelAction
 {
-    /**
-     * @var array
-     */
-    public $gridConfig = [];
-
-    /**
-     * @var string
-     */
-    public $gridClassName;
-
-    /**
-     * @var array
-     */
-    public $columns = [];
-
-    /**
-     * @var array
-     */
-    public $anabledColumns = [];
-
-    public function init()
-    {
-        if (!$this->gridClassName) {
-            $this->gridClassName = GridViewWidget::class;
-        }
-    }
-
+    protected $_grid = [];
 
     public function run()
     {
@@ -58,14 +32,50 @@ class BackendGridModelAction extends BackendBaseListModelAction
             return call_user_func($this->callback, $this);
         }
 
-        $this->gridConfig['columns'] = $this->columns;
-        $this->gridConfig['dataProvider'] = $this->dataProvider;
-
         return $this->controller->render('@skeeks/cms/backend/actions/views/grid');
+
+        return parent::run();
     }
 
+    public function getGrid()
+    {
+        return $this->_grid;
+    }
 
-    public $defaultEnabledColumns = [];
+    /**
+     * @param array $gridData
+     * @return $this
+     */
+    public function setGrid($gridData = [])
+    {
+        if ($this->_grid === null) {
+            $this->_grid = $gridData;
+        }
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGridClassName()
+    {
+        return (string) ArrayHelper::getValue($this->grid, 'class', GridViewWidget::class);
+    }
+
+    /**
+     * @return []
+     */
+    public function getGridConfig()
+    {
+        $gridConfig = ArrayHelper::getValue($this->grid, 'class');
+        ArrayHelper::remove($gridConfig, 'class');
+        $gridConfig['columns'] = $this->columns;
+        $gridConfig['dataProvider'] = $this->dataProvider;
+
+        return (array) $gridConfig;
+    }
+
+    public $enabledColumns = [];
 
     public function getColumns()
     {
@@ -75,7 +85,7 @@ class BackendGridModelAction extends BackendBaseListModelAction
         if (is_array($model) || is_object($model)) {
             foreach ($model as $name => $value) {
                 if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
-                    $this->columns[] = (string) $name;
+                    $columns[] = (string) $name;
                 }
             }
         }
