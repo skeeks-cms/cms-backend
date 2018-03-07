@@ -29,6 +29,6 @@ $action = $controller->action;
             'fields' => $action->fields,
         ]))->render(); ?>
 
-    <?= $form->buttonsCreateOrUpdate($model); ?>
+    <?= $form->buttonsStandart($model); ?>
     <?= $form->errorSummary($formModels); ?>
 <?php $action->endActiveForm(); ?>

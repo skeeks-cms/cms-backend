@@ -5,21 +5,19 @@
  * @copyright 2010 SkeekS
  * @date 08.03.2017
  */
-return
-[
-    'components' =>
-    [
+return [
+    'components' => [
         'i18n' => [
             'translations' =>
-            [
-                'skeeks/backend' => [
-                    'class'             => 'yii\i18n\PhpMessageSource',
-                    'basePath'          => '@skeeks/cms/backend/messages',
-                    'fileMap' => [
-                        'skeeks/backend' => 'main.php',
+                [
+                    'skeeks/backend' => [
+                        'class'    => 'yii\i18n\PhpMessageSource',
+                        'basePath' => '@skeeks/cms/backend/messages',
+                        'fileMap'  => [
+                            'skeeks/backend' => 'main.php',
+                        ],
                     ],
-                ]
-            ]
-        ]
-    ]
+                ],
+        ],
+    ],
 ];
