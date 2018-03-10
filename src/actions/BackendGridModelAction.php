@@ -9,7 +9,9 @@
 namespace skeeks\cms\backend\actions;
 
 use skeeks\cms\backend\BackendAction;
+use skeeks\cms\backend\widgets\GridViewWidget;
 use skeeks\cms\cmsWidgets\gridView\GridViewCmsWidget;
+use yii\helpers\ArrayHelper;
 /**
  * @property string $gridClassName
  * @property [] $gridConfig
@@ -41,6 +43,23 @@ class BackendGridModelAction extends BackendAction
         }
 
         $this->gridConfig['modelClassName'] = $this->modelClassName;
+
+        if (!isset($this->gridConfig['gridClassName'])) {
+            $this->gridConfig['gridClassName'] = GridViewWidget::class;
+        }
+
+        if (isset($this->gridConfig['columns'])) {
+            $this->gridConfig['columns'] = ArrayHelper::merge([
+                'checkbox' => [
+                    'class' => 'skeeks\cms\grid\CheckboxColumn'
+                ],
+                /*'actions' => [
+                    'class'                 => \skeeks\cms\modules\admin\grid\ActionColumn::class,
+                    'controller'            => $this->controller,
+                    'isOpenNewWindow'       => true
+                ]*/
+            ], $this->gridConfig['columns']);
+        }
 
         parent::init();
     }
