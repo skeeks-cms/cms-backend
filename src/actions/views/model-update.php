@@ -22,7 +22,7 @@ $action = $controller->action;
 <?php $form = $action->beginActiveForm(); ?>
     <?= $form->errorSummary($formModels); ?>
 
-        <? echo (new \skeeks\yii2\form\FormFieldsBuilder([
+        <? echo (new \skeeks\yii2\form\FormBuilder([
             'model' => $model,
             'models' => $formModels,
             'activeForm' => $form,

@@ -10,15 +10,17 @@
 $controller = $this->context;
 $action = $controller->action;
 ?>
-<?php $pjax = \yii\widgets\Pjax::begin(); ?>
+<?php $pjax = \skeeks\cms\widgets\Pjax::begin(); ?>
 
 <?php /*echo $this->render('_search', [
     'searchModel' => $searchModel,
     'dataProvider' => $dataProvider,
 ]); */?>
-<?
-$gridClassName = $action->gridClassName;
-?>
-<?= $gridClassName::widget($action->gridConfig); ?>
 
-<?php \yii\widgets\Pjax::end(); ?>
+<?
+$widgetClassName = $action->gridClassName;
+?>
+<?
+echo $widgetClassName::widget((array) $action->gridConfig);
+?>
+<?php \skeeks\cms\widgets\Pjax::end(); ?>

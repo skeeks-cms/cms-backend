@@ -8,23 +8,42 @@
 
 namespace skeeks\cms\backend\actions;
 
-use skeeks\cms\backend\widgets\GridViewWidget;
-use yii\helpers\ArrayHelper;
+use skeeks\cms\backend\BackendAction;
+use skeeks\cms\cmsWidgets\gridView\GridViewCmsWidget;
 /**
- *
- * @property [] $columns
- *
  * @property string $gridClassName
- * @property [] $gridClassConfig
+ * @property [] $gridConfig
  *
  * ***
  *
  * Class BackendGridModelAction
  * @package skeeks\cms\backend\actions
  */
-class BackendGridModelAction extends BackendBaseListModelAction
+class BackendGridModelAction extends BackendAction
 {
-    protected $_grid = [];
+    public $gridClassName;
+    public $gridConfig = [];
+
+    protected $_modelClassName;
+
+    /**
+     * @return string
+     */
+    public function getModelClassName()
+    {
+        return (string)$this->controller->modelClassName;
+    }
+
+    public function init()
+    {
+        if (!$this->gridClassName) {
+            $this->gridClassName = GridViewCmsWidget::class;
+        }
+
+        $this->gridConfig['modelClassName'] = $this->modelClassName;
+
+        parent::init();
+    }
 
     public function run()
     {
@@ -33,82 +52,5 @@ class BackendGridModelAction extends BackendBaseListModelAction
         }
 
         return $this->controller->render('@skeeks/cms/backend/actions/views/grid');
-
-        return parent::run();
     }
-
-    public function getGrid()
-    {
-        return $this->_grid;
-    }
-
-    /**
-     * @param array $gridData
-     * @return $this
-     */
-    public function setGrid($gridData = [])
-    {
-        if ($this->_grid === null) {
-            $this->_grid = $gridData;
-        }
-        return $this;
-    }
-
-    /**
-     * @return string
-     */
-    public function getGridClassName()
-    {
-        return (string) ArrayHelper::getValue($this->grid, 'class', GridViewWidget::class);
-    }
-
-    /**
-     * @return []
-     */
-    public function getGridConfig()
-    {
-        $gridConfig = ArrayHelper::getValue($this->grid, 'class');
-        ArrayHelper::remove($gridConfig, 'class');
-        $gridConfig['columns'] = $this->columns;
-        $gridConfig['dataProvider'] = $this->dataProvider;
-
-        return (array) $gridConfig;
-    }
-
-    public $enabledColumns = [];
-
-    public function getColumns()
-    {
-        $columns = [];
-        $modelClassName = $this->modelClassName;
-        $model = new $modelClassName();
-        if (is_array($model) || is_object($model)) {
-            foreach ($model as $name => $value) {
-                if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
-                    $columns[] = (string) $name;
-                }
-            }
-        }
-
-        print_r($columns);die;
-    }
-
-    /**
-     * This function tries to guess the columns to show from the given data
-     * if [[columns]] are not explicitly specified.
-     */
-    protected function guessColumns()
-    {
-        $models = $this->dataProvider->getModels();
-        $model = reset($models);
-        if (is_array($model) || is_object($model)) {
-            foreach ($model as $name => $value) {
-                if ($value === null || is_scalar($value) || is_callable([$value, '__toString'])) {
-                    $this->columns[] = (string) $name;
-                }
-            }
-        }
-    }
-
-
 }
