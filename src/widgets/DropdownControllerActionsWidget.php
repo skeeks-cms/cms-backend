@@ -56,7 +56,7 @@ class DropdownControllerActionsWidget extends ControllerActionsWidget
         $style = '';
         $firstActionString = '';
 
-        if ($firstAction && $this->renderFirstAction)
+        if ($firstAction && $this->renderFirstAction && ($firstAction->icon || $firstAction->image))
         {
             $actionDataJson = Json::encode($this->getActionData($firstAction));
 

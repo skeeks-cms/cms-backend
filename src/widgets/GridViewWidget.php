@@ -18,7 +18,7 @@ use yii\helpers\Html;
  */
 class GridViewWidget extends \yii\grid\GridView
 {
-    public $tableOptions = ['class' => 'table table-striped table-bordered sx-table'];
+    public $tableOptions = ['class' => 'table table-striped sx-table'];
     public $options = ['class' => 'grid-view sx-grid-view'];
     /**
      * @var string
