@@ -9,6 +9,7 @@
 namespace skeeks\cms\backend\widgets;
 
 use skeeks\cms\modules\admin\assets\AdminGridAsset;
+use skeeks\cms\widgets\GridView;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
@@ -16,7 +17,7 @@ use yii\helpers\Html;
  * Class GridViewWidget
  * @package skeeks\cms\backend\widgets
  */
-class GridViewWidget extends \yii\grid\GridView
+class GridViewWidget extends GridView
 {
     public $tableOptions = ['class' => 'table table-striped sx-table'];
     public $options = ['class' => 'grid-view sx-grid-view'];
