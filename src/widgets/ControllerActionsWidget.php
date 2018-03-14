@@ -119,7 +119,7 @@ class ControllerActionsWidget extends Widget
     {
         $actions = $this->actions;
 
-        if (!$actions)
+        if (!$actions || count($actions) <= 1)
         {
             return "";
         }

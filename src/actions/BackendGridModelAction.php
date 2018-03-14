@@ -9,10 +9,12 @@
 namespace skeeks\cms\backend\actions;
 
 use skeeks\cms\backend\BackendAction;
+use skeeks\cms\backend\grid\ControllerActionsColumn;
 use skeeks\cms\backend\models\BackendShowing;
 use skeeks\cms\backend\widgets\GridViewWidget;
 use skeeks\cms\cmsWidgets\gridView\GridViewCmsWidget;
 use skeeks\cms\widgets\DynamicFiltersWidget;
+use skeeks\cms\widgets\FiltersWidget;
 use skeeks\yii2\config\DynamicConfigModel;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
@@ -32,6 +34,10 @@ class BackendGridModelAction extends BackendAction
      * @var
      */
     public $grid;
+
+    /**
+     * @var FiltersWidget
+     */
     public $filters;
 
     public $backendShowingParam = 'sx-backend-showing';
@@ -53,6 +59,7 @@ class BackendGridModelAction extends BackendAction
     {
         return (string)$this->controller->modelClassName;
     }
+
     public function init()
     {
         $defaultGrid = [
@@ -64,12 +71,21 @@ class BackendGridModelAction extends BackendAction
             'columns'        => [
                 'checkbox' => [
                     'class' => 'skeeks\cms\grid\CheckboxColumn',
+                    'headerOptions' => [
+                        'class' => 'sx-grid-checkbox'
+                    ],
                 ],
-                /*'actions'  => [
+                'actions'  => [
                     'class'           => ControllerActionsColumn::class,
-                    'controller'      => $this->controller,
+                    'controller'      => function($action) {
+                        return $this->controller;
+                    },
+                    'label' => \Yii::t('skeeks/backend', 'Actions'),
+                    'headerOptions' => [
+                        'class' => 'sx-grid-actions'
+                    ],
                     'isOpenNewWindow' => true,
-                ],*/
+                ],
                 'serial'   => [
                     'class'   => 'yii\grid\SerialColumn',
                     'visible' => false,
@@ -78,18 +94,29 @@ class BackendGridModelAction extends BackendAction
         ];
 
         $defaultFilters = [
-            'class' => DynamicConfigModel::class
+            'class' => FiltersWidget::class
         ];
 
         $this->grid = (array)ArrayHelper::merge($defaultGrid, (array)$this->grid);
         $this->filters = (array)ArrayHelper::merge($defaultFilters, (array)$this->filters);
 
-        $this->filters = \Yii::createObject($this->filters);
-
         parent::init();
 
 
     }
+
+    public function getFiltersConfig()
+    {
+        $filters = $this->filters;
+        ArrayHelper::remove($filters, 'class');
+        return (array)$filters;
+    }
+
+    public function getFiltersClassName()
+    {
+        return (string)ArrayHelper::getValue($this->filters, 'class');
+    }
+
     public function getGridClassName()
     {
         return (string)ArrayHelper::getValue($this->grid, 'class');

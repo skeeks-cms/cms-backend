@@ -24,10 +24,13 @@ class ControllerActionsColumn extends DataColumn
     static public $grids = [];
     public $filter = false;
     /**
-     * @var BackendModelController
+     * @var BackendModelController|callable
      */
-    public $controller = null;
+    public $_controller = null;
 
+    /**
+     * @var null
+     */
     public $isOpenNewWindow = null;
 
     /**
@@ -46,6 +49,20 @@ class ControllerActionsColumn extends DataColumn
         }
     }
 
+    public function setController($controller)
+    {
+        $this->_controller = $controller;
+        return $this;
+    }
+
+    public function getController()
+    {
+        if (is_callable($this->_controller)) {
+            $this->_controller = call_user_func($this->_controller, $this);
+        }
+
+        return $this->_controller;
+    }
     /**
      * @inheritdoc
      */
