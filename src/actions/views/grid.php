@@ -7,33 +7,51 @@
  */
 /* @var $this yii\web\View */
 /* @var $action \skeeks\cms\backend\actions\BackendGridModelAction */
+/* @var $backendShowing \skeeks\cms\backend\models\BackendShowing */
 $controller = $this->context;
 $action = $controller->action;
 ?>
-<?= $action->backendShowing->displayName; ?>
 
 <?php $pjax = \skeeks\cms\widgets\Pjax::begin(); ?>
 
 
-<?
-$widgetClassName = $action->gridClassName;
-$widgetFiltersClassName = $action->filtersClassName;
-?>
+<? if ($backendShowings = $action->backendShowings) : ?>
+    <ul class="nav nav-tabs">
+        <? foreach ($backendShowings as $backendShowing) : ?>
+            <li class="sx-tab <?= $backendShowing->id == $action->backendShowing->id ? "active" : ""; ?>">
+                <a href=#"><?= $backendShowing->displayName; ?></a>
+            </li>
+        <? endforeach; ?>
+        <li>
+            <a href="#w0-modal-create-filter" class="sx-btn-filter-create">
+                <i class="glyphicon glyphicon-plus"></i>
+            </a>
+        </li>
+    </ul>
+<? endif; ?>
 
-<?
-/**
- *
- */
-$grid = $widgetClassName::begin((array)$action->gridConfig);
-?>
+    <div class="tab-content">
 
-<?
-$filtersConfig = (array)$action->filtersConfig;
-$filtersConfig['dataProvider'] = $grid->dataProvider;
 
-$component = $widgetFiltersClassName::begin($filtersConfig);
-$widgetFiltersClassName::end();
-?>
+        <?
+        $widgetClassName = $action->gridClassName;
+        $widgetFiltersClassName = $action->filtersClassName;
+        ?>
+
+        <?
+        /**
+         *
+         */
+        $grid = $widgetClassName::begin((array)$action->gridConfig);
+        ?>
+
+        <?
+        $filtersConfig = (array)$action->filtersConfig;
+        $filtersConfig['dataProvider'] = $grid->dataProvider;
+
+        $component = $widgetFiltersClassName::begin($filtersConfig);
+        $widgetFiltersClassName::end();
+        ?>
 
 
         <!--
@@ -65,10 +83,14 @@ $widgetFiltersClassName::end();
 --><?php /*\skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab::end(); */ ?>
 
 
-<?
-$widgetClassName::end();
-?>
-<? if (YII_ENV === 'dev') : ?>
-    <pre><?= $component->dataProvider->query->createCommand()->rawSql; ?></pre>
-<? endif; ?>
+        <?
+        $widgetClassName::end();
+        ?>
+        <? if (YII_ENV === 'dev') : ?>
+            <pre><?= $component->dataProvider->query->createCommand()->rawSql; ?></pre>
+        <? endif; ?>
+
+    </div>
+
+
 <?php \skeeks\cms\widgets\Pjax::end(); ?>

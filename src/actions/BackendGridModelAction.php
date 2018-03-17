@@ -8,6 +8,7 @@
 
 namespace skeeks\cms\backend\actions;
 
+use skeeks\cms\backend\actions\assets\BackendGridModelActionAsset;
 use skeeks\cms\backend\BackendAction;
 use skeeks\cms\backend\grid\ControllerActionsColumn;
 use skeeks\cms\backend\models\BackendShowing;
@@ -17,6 +18,7 @@ use skeeks\cms\widgets\DynamicFiltersWidget;
 use skeeks\cms\widgets\FiltersWidget;
 use skeeks\yii2\config\DynamicConfigModel;
 use yii\base\Exception;
+use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 /**
@@ -93,12 +95,40 @@ class BackendGridModelAction extends BackendAction
             ],
         ];
 
+        $fieldControlls = <<<HTML
+<div class="col-sm-3">
+    <div class="sx-field-config-controll pull-right">
+        <a href="#" class="btn btn-xs sx-move" title="Поменять порядок">
+            <i class="glyphicon glyphicon-resize-vertical"></i>
+        </a>
+        
+        <a href="#" class="btn btn-xs sx-remove" title="Удалить фильтр">
+            <i class="glyphicon glyphicon-remove"></i>
+        </a>
+        
+    </div>
+</div>
+HTML;
+
         $defaultFilters = [
-            'class' => FiltersWidget::class
+            'class' => FiltersWidget::class,
+            'activeForm' => [
+                'class' => ActiveForm::class,
+                'layout' => 'horizontal',
+                'options' => [
+                    'class' => 'sx-backend-filters-form'
+                ],
+                'fieldConfig' => [
+                    'template' => "{label}\n{beginWrapper}\n{input}\n{hint}\n{error}\n{endWrapper}{$fieldControlls}"
+                ]
+            ]
+
         ];
 
         $this->grid = (array)ArrayHelper::merge($defaultGrid, (array)$this->grid);
         $this->filters = (array)ArrayHelper::merge($defaultFilters, (array)$this->filters);
+
+        BackendGridModelActionAsset::register(\Yii::$app->view);
 
         parent::init();
 
@@ -157,6 +187,7 @@ class BackendGridModelAction extends BackendAction
 
         return parent::renderBeforeTable();
     }
+
     protected function _initMultiActions()
     {
         if ($this->_initMultiOptions === true) {
