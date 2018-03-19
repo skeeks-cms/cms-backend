@@ -50,3 +50,16 @@
     margin-right: 0px;
     margin-left: 0px;
 }
+
+.sx-grid-checkbox {
+    width: 17px;
+}
+
+.sx-grid-actions {
+    width: 70px;
+}
+
+.sx-form-buttons {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
