@@ -66,6 +66,11 @@ class BackendComponent extends Component
 
 
     /**
+     * @var string
+     */
+    public $backendShowingControllerRoute = '/backend/admin-backend-showing';
+
+    /**
      * @var bool
      */
     public $isMergeControllerMenu = false;

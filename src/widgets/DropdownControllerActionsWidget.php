@@ -73,7 +73,7 @@ class DropdownControllerActionsWidget extends ControllerActionsWidget
         $this->wrapperOptions['title'] = \Yii::t('skeeks/cms','Possible actions');
 
         $content = "
-                    <div class=\"btn-group\" role=\"group\" style='{$style}'>
+                    <span class=\"btn-group\" role=\"group\" style='{$style}'>
                         {$firstActionString}
                         <a type=\"button\" class='btn btn-xs btn-default sx-btn-caret-action' data-toggle=\"dropdown\">
                            <span class=\"caret\"></span>
@@ -81,10 +81,10 @@ class DropdownControllerActionsWidget extends ControllerActionsWidget
                     parent::run()
 
                 . "
-                    </div>
+                    </span>
                 ";
 
-        return Html::tag("div", $content, $this->wrapperOptions);
+        return Html::tag("span", $content, $this->wrapperOptions);
 
     }
 

@@ -5,7 +5,7 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 27.04.2016
  */
-namespace skeeks\cms\backend\actions\assets;
+namespace skeeks\cms\backend\assets;
 
 use skeeks\cms\base\AssetBundle;
 use yii\bootstrap\BootstrapAsset;
@@ -14,15 +14,16 @@ use yii\bootstrap\BootstrapAsset;
  * Class SelectLanguage
  * @package common\widgets\selectLanguage
  */
-class BackendGridModelActionAsset extends AssetBundle
+class BackendAsset extends AssetBundle
 {
-    public $sourcePath = '@skeeks/cms/backend/actions/assets/src';
+    public $sourcePath = '@skeeks/cms/backend/assets/src';
 
     public $css = [
+        'backend.css',
     ];
 
     public $js = [
-        'filters.js',
+        'backend.js',
     ];
 
     public $depends =
@@ -30,6 +31,5 @@ class BackendGridModelActionAsset extends AssetBundle
         'yii\web\YiiAsset',
         'skeeks\sx\assets\Custom',
         'skeeks\sx\assets\ComponentAjaxLoader',
-        'skeeks\cms\backend\assets\BackendAsset',
     ];
 }

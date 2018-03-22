@@ -12,8 +12,14 @@ return [
 
     'Edit'      => 'Редактировать',
     'Add'       => 'Добавить',
+    'Create'    => 'Создать',
+    'Close'    => 'Отмена',
     'Delete'    => 'Удалить',
     'Actions'    => 'Действия',
+    'Showings'    => 'Отображения',
+    'Showing'    => 'Отображение',
+    'Name'    => 'Название',
+    'Visible to everyone'    => 'Доступен всем',
 
     'Are you sure you want to delete this item?' => 'Вы уверены, что хотите удалить этот элемент?',
     'Record deleted successfully' => 'Запись удалена успешно',

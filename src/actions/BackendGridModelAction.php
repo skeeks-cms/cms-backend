@@ -14,13 +14,16 @@ use skeeks\cms\backend\grid\ControllerActionsColumn;
 use skeeks\cms\backend\models\BackendShowing;
 use skeeks\cms\backend\widgets\GridViewWidget;
 use skeeks\cms\cmsWidgets\gridView\GridViewCmsWidget;
+use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\widgets\DynamicFiltersWidget;
 use skeeks\cms\widgets\FiltersWidget;
 use skeeks\yii2\config\DynamicConfigModel;
 use yii\base\Exception;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\helpers\Json;
+use yii\web\JsExpression;
 /**
  * @property string $gridClassName
  * @property [] $gridConfig
@@ -66,6 +69,34 @@ class BackendGridModelAction extends BackendAction
     {
         $defaultGrid = [
             'class'          => GridViewWidget::class,
+            'beforeTableRight' => function(GridViewWidget $gridViewWidget) {
+
+                $editComponent = [
+                    'url' => \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams(['/cms/admin-component-settings/call-edit'])
+                        ->merge([
+                            'callableId'         => $gridViewWidget->id . "-edit",
+                        ])
+                        ->enableEmptyLayout()
+                        ->url
+                    //'pjax' => $this->pjax
+                ];
+
+                $editComponent = Json::encode($editComponent);
+
+                $callableDataInput = Html::textarea('callableData', base64_encode(serialize($gridViewWidget->editData)), [
+                    'id' => $gridViewWidget->id . "-edit",
+                    'style' => 'display: none;'
+                ]);
+
+                return '<div class="sx-grid-settings">' . Html::a('<i class="glyphicon glyphicon-cog"></i>',
+                '#', [
+                    'class' => 'btn btn-sm',
+                    'onclick' => new JsExpression(<<<JS
+            new sx.classes.backend.EditComponent({$editComponent}); return false;
+JS
+                    )
+                ]) . $callableDataInput . "</div>";
+            },
             'modelClassName' => $this->modelClassName,
             'config'         => [
                 'configKey' => $this->uniqueId,
@@ -272,6 +303,8 @@ CSS
 
         return parent::renderAfterTable();
     }
+
+
     public function getBackendShowing()
     {
         if ($this->_backendShowing === null || !$this->_backendShowing instanceof BackendShowing) {
@@ -289,14 +322,14 @@ CSS
             //Defauilt filter
             $backendShowing = BackendShowing::find()
                 ->where(['key' => $this->uniqueId])
-                ->andWhere(['cms_user_id' => \Yii::$app->user->id])
+                //->andWhere(['cms_user_id' => \Yii::$app->user->id])
                 ->andWhere(['is_default' => 1])
                 ->one();
 
             if (!$backendShowing) {
                 $backendShowing = new BackendShowing([
                     'key'         => $this->uniqueId,
-                    'cms_user_id' => \Yii::$app->user->id,
+                    //'cms_user_id' => \Yii::$app->user->id,
                     'is_default'  => 1,
                 ]);
                 $backendShowing->loadDefaultValues();
@@ -314,13 +347,47 @@ CSS
         return $this->_backendShowing;
     }
 
+
+    /**
+     * @param BackendShowing $backendShowing
+     * @return string
+     */
+    public function getShowingUrl(BackendShowing $backendShowing)
+    {
+        $query = [];
+        $url = $this->url;
+
+        if ($pos = strpos($url, "?"))
+        {
+            $url = StringHelper::substr($url, 0, $pos);
+            $stringQuery = StringHelper::substr($url, $pos + 1, StringHelper::strlen($url));
+            parse_str($stringQuery, $query);
+        }
+
+        $query = [];
+        /*if ($filter->values)
+        {
+            $query = (array) $filter->values;
+        }*/
+
+        $query[$this->backendShowingParam] = $backendShowing->id;
+        return $url . "?" . http_build_query($query);
+    }
+
     /**
      * @return array|BackendShowing[]
      */
     public function getBackendShowings()
     {
         return BackendShowing::find()->where([
-            'key' => $this->uniqueId,
-        ])->orderBy(['priority' => SORT_ASC])->all();
+                    'key' => $this->uniqueId,
+                ])
+                ->andWhere([
+                    'or',
+                    ['cms_user_id' => null],
+                    ['cms_user_id' => \Yii::$app->user->id],
+                ])
+                ->orderBy(['priority' => SORT_ASC])
+            ->all();
     }
 }

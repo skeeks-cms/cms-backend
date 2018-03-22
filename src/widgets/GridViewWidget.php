@@ -19,22 +19,28 @@ use yii\helpers\Html;
  */
 class GridViewWidget extends GridView
 {
-    public $tableOptions = ['class' => 'table table-striped sx-table'];
-    public $options = ['class' => 'grid-view sx-grid-view'];
+    public $tableOptions = [
+        'class' => 'table-striped'
+    ];
+
+    public $options = [
+        'class' => 'grid-view'
+    ];
+
     /**
-     * @var string
+     * @var string|callable
      */
     public $afterTableLeft = "";
     /**
-     * @var string
+     * @var string|callable
      */
     public $afterTableRight = "";
     /**
-     * @var string
+     * @var string|callable
      */
     public $beforeTableLeft = "";
     /**
-     * @var string
+     * @var string|callable
      */
     public $beforeTableRight = "";
     /**
@@ -63,6 +69,15 @@ class GridViewWidget extends GridView
                       </div>";
 
 
+    public function init()
+    {
+        parent::init();
+
+        Html::addCssClass($this->tableOptions, 'table');
+        Html::addCssClass($this->tableOptions, 'sx-table');
+
+        Html::addCssClass($this->options, 'sx-grid-view');
+    }
     /**
      * @param string $name
      * @return bool|string
@@ -87,6 +102,14 @@ class GridViewWidget extends GridView
     {
         if ($this->beforeTableLeft || $this->beforeTableRight) {
 
+            if ($this->beforeTableLeft instanceof \Closure) {
+                $this->beforeTableLeft = call_user_func($this->beforeTableLeft, $this);
+            }
+
+            if ($this->beforeTableRight instanceof \Closure) {
+                $this->beforeTableRight = call_user_func($this->beforeTableRight, $this);
+            }
+
             return <<<HTML
         <div class='sx-before-table'>
             <div class='pull-left'>{$this->beforeTableLeft}</div>
@@ -104,6 +127,12 @@ HTML;
     public function renderAfterTable()
     {
         if ($this->afterTableLeft || $this->afterTableRight) {
+            if ($this->afterTableLeft instanceof \Closure) {
+                $this->afterTableLeft = call_user_func($this->afterTableLeft, $this);
+            }
+            if ($this->afterTableRight instanceof \Closure) {
+                $this->afterTableRight = call_user_func($this->afterTableRight, $this);
+            }
             return "<div class='sx-after-table'>
                         <div class='pull-left'>{$this->afterTableLeft}</div>
                         <div class='pull-right'>{$this->afterTableRight}</div>

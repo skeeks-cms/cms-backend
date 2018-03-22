@@ -98,6 +98,15 @@ class BackendShowing extends \skeeks\cms\models\Core
             [['cms_user_id'], 'default', 'value' => null],
             [['name'], 'default', 'value' => null],
             [['is_default'], 'default', 'value' => 0],
+
+            [
+                ['name'],
+                'required',
+                'when'     => function($model) {
+                    return !$model->is_default;
+                },
+            ],
+
         ]);
     }
     /**
@@ -106,15 +115,16 @@ class BackendShowing extends \skeeks\cms\models\Core
     public function attributeLabels()
     {
         return array_merge(parent::attributeLabels(), [
-            'id'          => Yii::t('skeeks/admin', 'ID'),
-            'created_by'  => Yii::t('skeeks/admin', 'Created By'),
-            'updated_by'  => Yii::t('skeeks/admin', 'Updated By'),
-            'created_at'  => Yii::t('skeeks/admin', 'Created At'),
-            'updated_at'  => Yii::t('skeeks/admin', 'Updated At'),
-            'cms_user_id' => Yii::t('skeeks/admin', 'Cms User ID'),
-            'name'        => Yii::t('skeeks/admin', 'Name'),
-            'key'         => Yii::t('skeeks/admin', 'Namespace'),
-            'is_default'  => Yii::t('skeeks/admin', 'Is Default'),
+            'id'          => Yii::t('skeeks/backend', 'ID'),
+            'created_by'  => Yii::t('skeeks/backend', 'Created By'),
+            'updated_by'  => Yii::t('skeeks/backend', 'Updated By'),
+            'created_at'  => Yii::t('skeeks/backend', 'Created At'),
+            'updated_at'  => Yii::t('skeeks/backend', 'Updated At'),
+            'cms_user_id' => Yii::t('skeeks/backend', 'Cms User ID'),
+            'name'        => Yii::t('skeeks/backend', 'Name'),
+            'key'         => Yii::t('skeeks/backend', 'Namespace'),
+            'is_default'  => Yii::t('skeeks/backend', 'Is Default'),
+            'isPublic'  => Yii::t('skeeks/backend', 'Visible to everyone'),
         ]);
     }
     public function getIsPublic()
@@ -137,7 +147,7 @@ class BackendShowing extends \skeeks\cms\models\Core
     public function getDisplayName()
     {
         if (!$this->name) {
-            return \Yii::t('skeeks/admin', 'Showing');
+            return \Yii::t('skeeks/backend', 'Showing');
         }
 
         return $this->name;

@@ -8,16 +8,21 @@
 return [
     'components' => [
         'i18n' => [
-            'translations' =>
-                [
-                    'skeeks/backend' => [
-                        'class'    => 'yii\i18n\PhpMessageSource',
-                        'basePath' => '@skeeks/cms/backend/messages',
-                        'fileMap'  => [
-                            'skeeks/backend' => 'main.php',
-                        ],
+            'translations' => [
+                'skeeks/backend' => [
+                    'class'    => 'yii\i18n\PhpMessageSource',
+                    'basePath' => '@skeeks/cms/backend/messages',
+                    'fileMap'  => [
+                        'skeeks/backend' => 'main.php',
                     ],
                 ],
+            ],
+        ],
+    ],
+
+    'modules' => [
+        'backend' => [
+            'class' => '\skeeks\cms\backend\BackendModule',
         ],
     ],
 ];
