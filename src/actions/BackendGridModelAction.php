@@ -10,6 +10,7 @@ namespace skeeks\cms\backend\actions;
 
 use skeeks\cms\backend\actions\assets\BackendGridModelActionAsset;
 use skeeks\cms\backend\BackendAction;
+use skeeks\cms\backend\BackendComponent;
 use skeeks\cms\backend\grid\ControllerActionsColumn;
 use skeeks\cms\backend\models\BackendShowing;
 use skeeks\cms\backend\widgets\GridViewWidget;
@@ -18,6 +19,7 @@ use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\widgets\DynamicFiltersWidget;
 use skeeks\cms\widgets\FiltersWidget;
 use skeeks\yii2\config\DynamicConfigModel;
+use skeeks\yii2\config\storages\ConfigDbModelStorage;
 use yii\base\Exception;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
@@ -67,18 +69,27 @@ class BackendGridModelAction extends BackendAction
 
     public function init()
     {
+        $r = new \ReflectionClass($this->backendShowing);
+        $backendShowingId = $this->backendShowing->id;
+        $backendShowingClassName = $r->getName();
+
         $defaultGrid = [
             'class'          => GridViewWidget::class,
             'beforeTableRight' => function(GridViewWidget $gridViewWidget) {
 
+                $id = \Yii::$app->controller->action->backendShowing->id;
                 $editComponent = [
-                    'url' => \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams(['/cms/admin-component-settings/call-edit'])
+                    'url' => \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams([
+                        BackendComponent::getCurrent()->backendShowingControllerRoute . '/component-call-edit'
+                    ])
                         ->merge([
-                            'callableId'         => $gridViewWidget->id . "-edit",
+                            'id'  => $id,
+                            'componentClassName'  => $gridViewWidget::className(),
+                            'callable_id'         => $gridViewWidget->id . "-edit",
                         ])
                         ->enableEmptyLayout()
+                        ->enableNoActions()
                         ->url
-                    //'pjax' => $this->pjax
                 ];
 
                 $editComponent = Json::encode($editComponent);
@@ -98,8 +109,14 @@ JS
                 ]) . $callableDataInput . "</div>";
             },
             'modelClassName' => $this->modelClassName,
-            'config'         => [
+            'configBehavior'         => [
                 'configKey' => $this->uniqueId,
+                'configStorage' => [
+                    'class' => ConfigDbModelStorage::class,
+                    'modelClassName' => $backendShowingClassName,
+                    'primaryKey' => $backendShowingId,
+                    'attribute' => 'config_jsoned'
+                ],
             ],
             'columns'        => [
                 'checkbox' => [

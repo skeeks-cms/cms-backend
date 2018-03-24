@@ -77,27 +77,27 @@ JS
 
 
 
-<?
-$action->backendShowing;
-$backendShowings = $action->backendShowings;
-?>
-<? if ($backendShowings && $action->backendShowing) : ?>
-    <ul class="nav nav-tabs sx-backend-showing-tabs">
-        <? foreach ($backendShowings as $backendShowing) : ?>
-            <li class="sx-tab <?= $backendShowing->id == $action->backendShowing->id ? "active" : ""; ?>">
-                <a href="<?= $action->getShowingUrl($backendShowing); ?>"><?= $backendShowing->displayName; ?></a>
-            </li>
-        <? endforeach; ?>
+    <?
+    $action->backendShowing;
+    $backendShowings = $action->backendShowings;
+    ?>
+    <? if ($backendShowings && $action->backendShowing) : ?>
+        <ul class="nav nav-tabs sx-backend-showing-tabs">
+            <? foreach ($backendShowings as $backendShowing) : ?>
+                <li class="sx-tab <?= $backendShowing->id == $action->backendShowing->id ? "active" : ""; ?>">
+                    <a href="<?= $action->getShowingUrl($backendShowing); ?>"><?= $backendShowing->displayName; ?></a>
+                </li>
+            <? endforeach; ?>
 
-        <? if ($actionCreate) : ?>
-            <li>
-                <a href="#sx-modal-create" class="sx-btn-filter-create" data-toggle="modal" data-target="#sx-modal-create">
-                    <i class="glyphicon glyphicon-plus"></i>
-                </a>
-            </li>
-        <? endif; ?>
-    </ul>
-<? endif; ?>
+            <? if ($actionCreate) : ?>
+                <li>
+                    <a href="#sx-modal-create" class="sx-btn-filter-create" data-toggle="modal" data-target="#sx-modal-create">
+                        <i class="glyphicon glyphicon-plus"></i>
+                    </a>
+                </li>
+            <? endif; ?>
+        </ul>
+    <? endif; ?>
 
     <div class="tab-content">
 
@@ -123,12 +123,9 @@ $backendShowings = $action->backendShowings;
         $widgetFiltersClassName = $action->filtersClassName;
         ?>
 
-        <?
-        /**
-         *
-         */
-        $grid = $widgetClassName::begin((array)$action->gridConfig);
-        ?>
+    <?
+    $grid = $widgetClassName::begin((array)$action->gridConfig);
+    ?>
 
         <?
         $filtersConfig = (array)$action->filtersConfig;
@@ -138,76 +135,11 @@ $backendShowings = $action->backendShowings;
         $widgetFiltersClassName::end();
         ?>
 
-
-        <!--
-<? /*$component = $component->configModel; */ ?>
-<?php /*$form = \skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab::begin(); */ ?>
-
-<? /*= $form->errorSummary(\yii\helpers\ArrayHelper::merge(
-        [$component], $component->builderModels()
-)); */ ?>
-
-<? /* if ($fields = $component->builderFields()) : */ ?>
-    <? /* echo (new \skeeks\yii2\form\Builder([
-        'models'     => $component->builderModels(),
-        'model'      => $component,
-        'activeForm' => $form,
-        'fields'     => $fields,
-    ]))->render(); */ ?>
-<? /* elseif ($formContent = $component->renderConfigForm($form)) : */ ?>
-    <? /*= $formContent; */ ?>
-<? /* else : */ ?>
-    Нет редактируемых настроек для данного компонента
-<? /* endif; */ ?>
-
-<? /*= $form->buttonsStandart($component); */ ?>
-<? /*= $form->errorSummary(\yii\helpers\ArrayHelper::merge(
-        [$component], $component->builderModels()
-)); */ ?>
-
---><?php /*\skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab::end(); */ ?>
-
-
-        <?
-        $widgetClassName::end();
-        ?>
+    <?
+    $widgetClassName::end();
+    ?>
         <? if (YII_ENV === 'dev') : ?>
             <pre><?= $component->dataProvider->query->createCommand()->rawSql; ?></pre>
         <? endif; ?>
-
     </div>
-
-
-
-<?/* $component = $grid->configModel;  */?><!--
-<?php /*$form = \skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab::begin();  */?>
-
-<?/*= $form->errorSummary(\yii\helpers\ArrayHelper::merge(
-        [$component], $component->builderModels()
-));  */?>
-
-<?/*  if ($fields = $component->builderFields()) :  */?>
-    <?/*  echo (new \skeeks\yii2\form\Builder([
-        'models'     => $component->builderModels(),
-        'model'      => $component,
-        'activeForm' => $form,
-        'fields'     => $fields,
-    ]))->render();  */?>
-<?/*  elseif ($formContent = $component->renderConfigForm($form)) :  */?>
-    <?/*= $formContent;  */?>
-<?/*  else :  */?>
-    Нет редактируемых настроек для данного компонента
-<?/*  endif;  */?>
-
-<?/*= $form->buttonsStandart($component);  */?>
-<?/*= $form->errorSummary(\yii\helpers\ArrayHelper::merge(
-        [$component], $component->builderModels()
-));  */?>
-
---><?php /*\skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab::end();  */?>
-
-
-
-
-
 <?php \skeeks\cms\widgets\Pjax::end(); ?>

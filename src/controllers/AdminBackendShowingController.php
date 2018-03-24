@@ -108,6 +108,10 @@ class AdminBackendShowingController extends BackendModelController
         );
     }
 
+    /**
+     * Создание представления
+     * @return array|ResponseHelper
+     */
     public function actionCreate()
     {
         $rr = new ResponseHelper();
@@ -126,4 +130,87 @@ class AdminBackendShowingController extends BackendModelController
         return $rr;
     }
 
+
+
+    public function actionComponentEdit()
+    {
+        $className = \Yii::$app->request->get('componentClassName');
+
+        $configBehavior = ArrayHelper::getValue($this->getCallableData(), 'callAttributes.configBehavior');
+        $component = new $className([
+            'configBehavior' => $configBehavior
+        ]);
+        $model = $component->configModel;
+        $error = null;
+        $success = null;
+        try {
+            if (\Yii::$app->request->post()) {
+                if ($model->load(\Yii::$app->request->post())) {
+                    if ($component->saveConfig()) {
+                        $success = "Saved";
+                    }
+                } else {
+                    $error = "Not saved";
+                }
+            }
+        } catch (\Exception $e) {
+            $error = $e->getMessage();
+        }
+
+        return $this->render($this->action->id, [
+            'component' => $component,
+            'error' => $error,
+            'success' => $success,
+        ]);
+    }
+
+    /**
+     * Промежуточный шаг, получение данных из вызываемого окна
+     * отправка их в метод component-save-callable
+     * редирект на редактирование компонента
+     *
+     * @return string
+     */
+    public function actionComponentCallEdit()
+    {
+        $className = \Yii::$app->request->get('componentClassName');
+
+        return $this->render($this->action->id, [
+            'component' => new $className(),
+            'callable_id' => \Yii::$app->request->get('callable_id'),
+        ]);
+    }
+
+    /**
+     * Сохранение данных вызова компонента
+     * @return ResponseHelper
+     */
+    public function actionComponentSaveCallable()
+    {
+        $rr = new ResponseHelper();
+
+        if ($data = \Yii::$app->request->post('data')) {
+            $this->_saveCallableData(unserialize(base64_decode($data)));
+        }
+
+        return $rr;
+    }
+
+    /**
+     * @param Component $component
+     * @param array $data
+     */
+    protected function _saveCallableData($data = [])
+    {
+        \Yii::$app->session->set('current-edit-component', $data);
+    }
+
+    /**
+     * @param Component $component
+     * @param array $data
+     */
+    public function getCallableData()
+    {
+        return (array)\Yii::$app->session->get('current-edit-component');
+    }
 }

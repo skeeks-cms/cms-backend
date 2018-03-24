@@ -70,7 +70,7 @@ class BackendShowing extends \skeeks\cms\models\Core
             [['priority', 'created_by', 'updated_by', 'created_at', 'updated_at', 'cms_user_id', 'is_default'], 'integer'],
             [['key'], 'required'],
 
-            [['config_jsoned'], 'string'],
+            [['config_jsoned'], 'safe'],
             [['name'], 'string', 'max' => 255],
             [['key'], 'string', 'max' => 255],
             [
