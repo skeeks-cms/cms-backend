@@ -91,14 +91,11 @@ class BackendGridModelAction extends BackendAction
                         ->enableNoActions()
                         ->url
                 ];
-
                 $editComponent = Json::encode($editComponent);
-
                 $callableDataInput = Html::textarea('callableData', base64_encode(serialize($gridViewWidget->editData)), [
                     'id' => $gridViewWidget->id . "-edit",
                     'style' => 'display: none;'
                 ]);
-
                 return '<div class="sx-grid-settings">' . Html::a('<i class="glyphicon glyphicon-cog"></i>',
                 '#', [
                     'class' => 'btn btn-sm',
@@ -109,7 +106,7 @@ JS
                 ]) . $callableDataInput . "</div>";
             },
             'modelClassName' => $this->modelClassName,
-            'configBehavior'         => [
+            'configBehaviorData'         => [
                 'configKey' => $this->uniqueId,
                 'configStorage' => [
                     'class' => ConfigDbModelStorage::class,

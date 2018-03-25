@@ -1,9 +1,8 @@
 <?php
 /**
- * @author Semenov Alexander <semenov@skeeks.com>
- * @link http://skeeks.com/
- * @copyright 2010 SkeekS (СкикС)
- * @date 17.11.2015
+ * @link https://cms.skeeks.com/
+ * @copyright Copyright (c) 2010 SkeekS
+ * @license https://cms.skeeks.com/license/
  */
 
 namespace skeeks\cms\backend\controllers;
@@ -17,11 +16,11 @@ use skeeks\cms\backend\models\BackendShowing;
 use skeeks\cms\models\CmsAgent;
 use skeeks\hosting\models\HostingCreateVps;
 use skeeks\sx\helpers\ResponseHelper;
+use skeeks\yii2\config\ConfigComponent;
 use yii\helpers\ArrayHelper;
 
 /**
- * Class AdminVpsController
- * @package skeeks\hosting\controllers
+ * @author Semenov Alexander <semenov@skeeks.com>
  */
 class AdminBackendShowingController extends BackendModelController
 {
@@ -136,11 +135,21 @@ class AdminBackendShowingController extends BackendModelController
     {
         $className = \Yii::$app->request->get('componentClassName');
 
-        $configBehavior = ArrayHelper::getValue($this->getCallableData(), 'callAttributes.configBehavior');
+        $configBehaviorData = ArrayHelper::getValue($this->getCallableData(), 'callAttributes.configBehaviorData');
+
+        /**
+         * @var $component ConfigComponent
+         */
         $component = new $className([
-            'configBehavior' => $configBehavior
+            'configBehaviorData' => $configBehaviorData
         ]);
         $model = $component->configModel;
+
+        ///var_dump($component->configStorage);die;
+        if (!$component->configStorage->exists($component->configBehavior)) {
+            $model->setAttributes((array) ArrayHelper::getValue($this->getCallableData(), 'callAttributes'));
+        }
+
         $error = null;
         $success = null;
         try {
