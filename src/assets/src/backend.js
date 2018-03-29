@@ -1,42 +1,32 @@
-/*!
- * @author Semenov Alexander <semenov@skeeks.com>
- * @link http://skeeks.com/
- * @copyright 2010 SkeekS (СкикС)
- * @date 22.03.2018
- */
-(function(sx, $, _)
-{
+ /**
+  * @link https://cms.skeeks.com/
+  * @copyright Copyright (c) 2010 SkeekS
+  * @license https://cms.skeeks.com/license/
+  * @author Semenov Alexander <semenov@skeeks.com>
+  */
+(function (sx, $, _) {
     sx.createNamespace('classes.backend', sx);
 
     sx.classes.backend.EditComponent = sx.classes.Component.extend({
 
-        _init: function()
-        {
+        _init: function () {
             var self = this;
 
             this.Window = new sx.classes.Window(this.get('url'));
 
-            this.Window.bind('close', function(e, data)
-            {
+            this.Window.bind('close', function (e, data) {
                 self.reload();
             });
 
             this.Window.open();
         },
 
-        reload: function()
-        {
-            if (this.get('enabledPjax'))
-            {
-                var id = null;
-                var pjax = this.get('pjax');
-                if (pjax.options)
-                {
-                    id = pjax.options.id;
-                }
+        reload: function () {
+            var jPjax = $('[data-pjax-container]');
 
-                if (id)
-                {
+            if (jPjax.length) {
+                var id = jPjax.attr('id');
+                if (id) {
                     $.pjax.reload('#' + id, {});
                     return this;
                 }

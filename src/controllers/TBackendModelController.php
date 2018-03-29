@@ -5,11 +5,12 @@
  * @copyright 2010 SkeekS
  * @date 05.03.2017
  */
+
 namespace skeeks\cms\backend\controllers;
+
 use skeeks\cms\backend\actions\IBackendModelAction;
 use skeeks\cms\backend\actions\IBackendModelMultiAction;
-use skeeks\cms\IHasInfo;
-use yii\base\Action;
+use skeeks\cms\IHasName;
 use yii\base\BaseObject;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
@@ -18,16 +19,16 @@ use yii\helpers\ArrayHelper;
 use yii\web\Application;
 
 /**
- * @property $modelClassName;
- * @property $modelDefaultAction;
- * @property $modelShowAttribute;
- * @property $modelPkAttribute;
- * @property $requestPkParamName;
- * @property $modelShowName;
- * @property $modelPkValue;
+ * @property                            $modelClassName;
+ * @property                            $modelDefaultAction;
+ * @property                            $modelShowAttribute;
+ * @property                            $modelPkAttribute;
+ * @property                            $requestPkParamName;
+ * @property                            $modelShowName;
+ * @property                            $modelPkValue;
  *
- * @property Model|ActiveRecord $model;
- * @property IBackendModelAction[] $modelActions;
+ * @property Model|ActiveRecord         $model;
+ * @property IBackendModelAction[]      $modelActions;
  * @property IBackendModelMultiAction[] $modelMultiActions;
  *
  * Class BackendModelControllerTrait
@@ -39,7 +40,34 @@ trait TBackendModelController
      * @var string
      */
     protected $_modelClassName = '';
-
+    /**
+     * @var string
+     */
+    protected $_modelDefaultAction = 'update';
+    /**
+     * @var string
+     */
+    protected $_modelShowAttribute = 'id';
+    /**
+     * @var string
+     */
+    protected $_modelPkAttribute = 'id';
+    /**
+     * @var string
+     */
+    protected $_requestPkParamName = 'pk';
+    /**
+     * @var null|Model|ActiveRecord
+     */
+    protected $_model = null;
+    /**
+     * @var IBackendModelAction[]
+     */
+    protected $_modelActions = null;
+    /**
+     * @var IBackendModelMultiAction[]
+     */
+    protected $_modelMultiActions = null;
     /**
      * Required to fill!
      * The model class with which the controller operates.
@@ -51,7 +79,6 @@ trait TBackendModelController
     {
         return $this->_modelClassName;
     }
-
     /**
      * @param $modelClassName
      * @return $this
@@ -61,13 +88,6 @@ trait TBackendModelController
         $this->_modelClassName = $modelClassName;
         return $this;
     }
-
-
-    /**
-     * @var string
-     */
-    protected $_modelDefaultAction = 'update';
-
     /**
      * Action for controlling the default model
      * @var string
@@ -76,7 +96,6 @@ trait TBackendModelController
     {
         return $this->_modelDefaultAction;
     }
-
     /**
      * @param $modelDefaultAction
      * @return $this
@@ -86,13 +105,6 @@ trait TBackendModelController
         $this->_modelDefaultAction = $modelDefaultAction;
         return $this;
     }
-
-
-    /**
-     * @var string
-     */
-    protected $_modelShowAttribute = 'id';
-
     /**
      * The attribute of the model to be shown in the bread crumbs, and the title of the page.
      * @var string
@@ -101,7 +113,6 @@ trait TBackendModelController
     {
         return $this->_modelShowAttribute;
     }
-
     /**
      * @param $modelShowAttribute
      * @return $this
@@ -111,14 +122,6 @@ trait TBackendModelController
         $this->_modelShowAttribute = $modelShowAttribute;
         return $this;
     }
-
-
-
-    /**
-     * @var string
-     */
-    protected $_modelPkAttribute = 'id';
-
     /**
      * PK will be used to find the model
      * @var string
@@ -127,7 +130,6 @@ trait TBackendModelController
     {
         return $this->_modelPkAttribute;
     }
-
     /**
      * @param $modelPkAttribute
      * @return $this
@@ -137,13 +139,6 @@ trait TBackendModelController
         $this->_modelPkAttribute = $modelPkAttribute;
         return $this;
     }
-
-
-    /**
-     * @var string
-     */
-    protected $_requestPkParamName = 'pk';
-
     /**
      * The names of the parameter PK, in the query
      * @var string
@@ -152,7 +147,6 @@ trait TBackendModelController
     {
         return $this->_requestPkParamName;
     }
-
     /**
      * @param $requestPkParamName
      * @return $this
@@ -162,108 +156,75 @@ trait TBackendModelController
         $this->_requestPkParamName = $requestPkParamName;
         return $this;
     }
-
-
     /**
      * @return string
      */
     public function getModelShowName()
     {
-        if (!$this->model)
-        {
+        if (!$this->model) {
             return '';
         }
 
         return isset($this->model->{$this->modelShowAttribute}) ? $this->model->{$this->modelShowAttribute} : '';
     }
-
     /**
      * @return mixed|string
      */
     public function getModelPkValue()
     {
-        if (!$this->model)
-        {
+        if (!$this->model) {
             return '';
         }
 
         return isset($this->model->{$this->modelPkAttribute}) ? $this->model->{$this->modelPkAttribute} : '';
     }
-
-
-    /**
-     * @var null|Model|ActiveRecord
-     */
-    protected $_model = null;
-
     /**
      * @return Model|ActiveRecord
      */
     public function getModel()
     {
-        if ($this->_model === null && \Yii::$app instanceof Application)
-        {
-            $pk             = \Yii::$app->request->get($this->requestPkParamName);
+        if ($this->_model === null && \Yii::$app instanceof Application) {
+            $pk = \Yii::$app->request->get($this->requestPkParamName);
 
-            if ($pk)
-            {
-                $modelClass     = $this->modelClassName;
-                $this->_model   = $modelClass::findOne($pk);
+            if ($pk) {
+                $modelClass = $this->modelClassName;
+                $this->_model = $modelClass::findOne($pk);
             }
         }
 
         return $this->_model;
     }
-
     /**
      * @param Model|ActiveRecord $model
      * @return $this
      */
     public function setModel(BaseObject $model = null)
     {
-        $this->_model   = $model;
+        $this->_model = $model;
         return $this;
     }
-
-
-
-
-
-    /**
-     * @var IBackendModelAction[]
-     */
-    protected $_modelActions    = null;
-
     /**
      * @return BackendAction[]|IBackendModelAction[]
      */
     public function getModelActions()
     {
-        if ($this->_modelActions !== null)
-        {
+        if ($this->_modelActions !== null) {
             return $this->_modelActions;
         }
 
         $actions = $this->actions();
 
-        if ($actions)
-        {
-            foreach ($actions as $id => $data)
-            {
+        if ($actions) {
+            foreach ($actions as $id => $data) {
                 $action = $this->createAction($id);
 
-                if (isset($action->isVisible) && $action->isVisible)
-                {
-                    if (method_exists($this->model, 'getIsNewRecord'))
-                    {
-                        if ($this->model && !$this->model->isNewRecord && $action instanceof IBackendModelAction)
-                        {
+                if (isset($action->isVisible) && $action->isVisible) {
+                    if (method_exists($this->model, 'getIsNewRecord')) {
+                        if ($this->model && !$this->model->isNewRecord && $action instanceof IBackendModelAction) {
                             $this->_modelActions[$action->id] = $action;
                         }
-                    } else
-                    {
-                        if ($this->model && $action instanceof IBackendModelAction)
-                        {
+                    } else {
+                        if ($this->model && $action instanceof IBackendModelAction) {
                             $this->_modelActions[$action->id] = $action;
                         }
                     }
@@ -271,86 +232,47 @@ trait TBackendModelController
 
                 }
             }
-        } else
-        {
+        } else {
             $this->_modelActions = [];
         }
 
-        if ($this->_modelActions)
-        {
+        if ($this->_modelActions) {
             ArrayHelper::multisort($this->_modelActions, 'priority');
         }
 
         return $this->_modelActions;
     }
-
-
-    /**
-     * @var IBackendModelMultiAction[]
-     */
-    protected $_modelMultiActions    = null;
-
     /**
      * @return array|IBackendModelMultiAction[]
      */
     public function getModelMultiActions()
     {
-        if ($this->_modelMultiActions !== null)
-        {
+        if ($this->_modelMultiActions !== null) {
             return $this->_modelMultiActions;
         }
 
         $actions = $this->actions();
 
-        if ($actions)
-        {
-            foreach ($actions as $id => $data)
-            {
+        if ($actions) {
+            foreach ($actions as $id => $data) {
                 $action = $this->createAction($id);
 
-                if ($action instanceof IBackendModelMultiAction)
-                {
-                    if ($action->isVisible)
-                    {
+                if ($action instanceof IBackendModelMultiAction) {
+                    if ($action->isVisible) {
                         $this->_modelMultiActions[$action->id] = $action;
                     }
                 }
             }
-        } else
-        {
+        } else {
             $this->_modelMultiActions = [];
         }
 
-        if ($this->_modelMultiActions)
-        {
+        if ($this->_modelMultiActions) {
             ArrayHelper::multisort($this->_modelMultiActions, 'priority');
         }
 
         return $this->_modelMultiActions;
     }
-
-
-
-
-    /**
-     * @throws InvalidConfigException
-     */
-    protected function _ensureBackendModelController()
-    {
-        if (!$this->modelClassName)
-        {
-            throw new InvalidConfigException(\Yii::t('skeeks/cms', "For {modelname} must specify the model class",['modelname' => static::class]));
-        }
-
-        if (!class_exists($this->modelClassName))
-        {
-            throw new InvalidConfigException("{$this->modelClassName} " . \Yii::t('skeeks/cms','the class is not found, you must specify the existing class model'));
-        }
-    }
-
-
-
-
     /**
      * Массив объектов действий доступных для текущего контроллера
      * Используется при построении меню.
@@ -359,44 +281,34 @@ trait TBackendModelController
      */
     public function getActions()
     {
-        if ($this->_actions !== null)
-        {
+        if ($this->_actions !== null) {
             return $this->_actions;
         }
 
         $actions = $this->actions();
 
-        if ($actions)
-        {
-            foreach ($actions as $id => $data)
-            {
-                $action                 = $this->createAction($id);
+        if ($actions) {
+            foreach ($actions as $id => $data) {
+                $action = $this->createAction($id);
 
-                if (!$action instanceof IBackendModelAction && !$action instanceof IBackendModelMultiAction)
-                {
-                    if ($action->isVisible)
-                    {
-                        $this->_actions[$id]    = $action;
+                if (!$action instanceof IBackendModelAction && !$action instanceof IBackendModelMultiAction) {
+                    if ($action->isVisible) {
+                        $this->_actions[$id] = $action;
                     }
                 }
             }
-        } else
-        {
+        } else {
             $this->_actions = [];
         }
 
         //Сортировка по приоритетам
-        if ($this->_actions)
-        {
+        if ($this->_actions) {
             ArrayHelper::multisort($this->_actions, 'priority');
 
         }
 
         return $this->_actions;
     }
-
-
-
     /**
      * @return array
      */
@@ -404,33 +316,43 @@ trait TBackendModelController
     {
         $result = [];
 
-        $baseRoute = $this->module instanceof Application ? "/" . $this->id : ("/" . $this->module->id . "/" . $this->id);
+        $baseRoute = $this->module instanceof Application ? "/".$this->id : ("/".$this->module->id."/".$this->id);
 
-        if ($this->name)
-        {
+        if ($this->name) {
             $result[] = [
                 'label' => $this->name,
-                'url' => $this->url
+                'url'   => $this->url,
             ];
         }
 
-        if ($this->action instanceof IBackendModelAction && $this->model)
-        {
+        if ($this->action instanceof IBackendModelAction && $this->model) {
             $result[] = [
                 'label' => $this->modelShowName,
-                'url' => $this->action->url
+                'url'   => $this->action->url,
             ];
         }
 
 
-        if ($this->action && $this->action instanceof IHasInfo)
-        {
-             $result[] = [
-                 'label' => $this->action->name
-             ];
+        if ($this->action && $this->action instanceof IHasName) {
+            $result[] = [
+                'label' => $this->action->name,
+            ];
         }
 
         return $result;
+    }
+    /**
+     * @throws InvalidConfigException
+     */
+    protected function _ensureBackendModelController()
+    {
+        if (!$this->modelClassName) {
+            throw new InvalidConfigException(\Yii::t('skeeks/cms', "For {modelname} must specify the model class", ['modelname' => static::class]));
+        }
+
+        if (!class_exists($this->modelClassName)) {
+            throw new InvalidConfigException("{$this->modelClassName} ".\Yii::t('skeeks/cms', 'the class is not found, you must specify the existing class model'));
+        }
     }
 
 }

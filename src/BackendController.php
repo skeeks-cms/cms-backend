@@ -8,17 +8,16 @@
 
 namespace skeeks\cms\backend;
 
-use skeeks\cms\backend\BackendUrlRule;
-use skeeks\cms\backend\IHasBreadcrumbs;
-use skeeks\cms\backend\IHasMenu;
 use skeeks\cms\helpers\StringHelper;
-use skeeks\cms\IHasInfo;
+use skeeks\cms\IHasIcon;
+use skeeks\cms\IHasImage;
+use skeeks\cms\IHasName;
 use skeeks\cms\IHasPermissions;
 use skeeks\cms\IHasUrl;
-use skeeks\cms\rbac\CmsManager;
-use skeeks\cms\traits\THasInfo;
+use skeeks\cms\traits\THasIcon;
+use skeeks\cms\traits\THasImage;
+use skeeks\cms\traits\THasName;
 use skeeks\cms\traits\THasPermissions;
-use yii\base\Action;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
@@ -34,18 +33,22 @@ use yii\web\NotFoundHttpException;
  * @package skeeks\cms\backend
  */
 abstract class BackendController extends Controller
-    implements IHasPermissions, IHasInfo, IHasUrl, IHasInfoActions, IHasMenu, IHasBreadcrumbs
+    implements IHasPermissions, IHasName, IHasImage, IHasIcon, IHasUrl, IHasInfoActions, IHasMenu, IHasBreadcrumbs
 {
-    use THasInfo;
+    use THasName;
+    use THasImage;
+    use THasIcon;
     use THasPermissions;
 
     public $actionsMap = [];
-
-    public function actions()
-    {
-        return ArrayHelper::merge(parent::actions(), $this->actionsMap);
-    }
-
+    /**
+     * @var BackendAction[]
+     */
+    protected $_actions = null;
+    /**
+     * @var BackendAction[]
+     */
+    protected $_allActions = null;
     /**
      * @return string
      */
@@ -53,7 +56,6 @@ abstract class BackendController extends Controller
     {
         return $this->uniqueId;
     }
-
     /**
      * @return array
      */
@@ -67,17 +69,16 @@ abstract class BackendController extends Controller
                         'rules' =>
                             [
                                 [
-                                    'allow' => true,
-                                    'matchCallback' => function($rule, $action) {
+                                    'allow'         => true,
+                                    'matchCallback' => function ($rule, $action) {
                                         //Creating and Assigning Privileges for the Root User
                                         return $this->isAllow;
-                                    }
+                                    },
                                 ],
-                            ]
+                            ],
                     ],
             ];
     }
-
     public function init()
     {
         parent::init();
@@ -89,12 +90,11 @@ abstract class BackendController extends Controller
         if (!$this->permissionNames) {
             $this->permissionNames =
                 [
-                    $this->permissionName => $this->name
+                    $this->permissionName => $this->name,
                 ];
         }
 
     }
-
     /**
      * @param \yii\base\Action $action
      * @return bool
@@ -106,7 +106,6 @@ abstract class BackendController extends Controller
 
         return parent::beforeAction($action);
     }
-
     /**
      * Ensure prefix url
      *
@@ -130,9 +129,8 @@ abstract class BackendController extends Controller
             }
         }
 
-        throw new NotFoundHttpException("Request: " . \Yii::$app->request->pathInfo . " ip: " . \Yii::$app->request->userIP);
+        throw new NotFoundHttpException("Request: ".\Yii::$app->request->pathInfo." ip: ".\Yii::$app->request->userIP);
     }
-
     /**
      * @return $this
      */
@@ -142,13 +140,12 @@ abstract class BackendController extends Controller
         $data[] = \Yii::$app->name;
         $data[] = $this->name;
 
-        if ($this->action && $this->action instanceof IHasInfo) {
+        if ($this->action && $this->action instanceof IHasName) {
             $data[] = $this->action->name;
         }
         $this->view->title = implode(" / ", $data);
         return $this;
     }
-
     /**
      * @return array
      */
@@ -158,36 +155,23 @@ abstract class BackendController extends Controller
 
         $result[] = [
             'label' => $this->name,
-            'url' => $this->url
+            'url'   => $this->url,
         ];
 
-        if ($this->action && $this->action instanceof IHasInfo) {
+        if ($this->action && $this->action instanceof IHasName) {
             $result[] = $this->action->name;
         }
 
         return $result;
     }
-
     /**
      * @return string
      */
     public function getUrl()
     {
-        $baseRoute = $this->module instanceof Application ? $this->id : ("/" . $this->module->id . "/" . $this->id);
-        return Url::to([$baseRoute . '/' . $this->defaultAction]);
+        $baseRoute = $this->module instanceof Application ? $this->id : ("/".$this->module->id."/".$this->id);
+        return Url::to([$baseRoute.'/'.$this->defaultAction]);
     }
-
-
-    /**
-     * @var BackendAction[]
-     */
-    protected $_actions = null;
-
-    /**
-     * @var BackendAction[]
-     */
-    protected $_allActions = null;
-
     /**
      * @return BackendAction[]
      */
@@ -210,7 +194,10 @@ abstract class BackendController extends Controller
 
         return $this->_actions;
     }
-
+    public function actions()
+    {
+        return ArrayHelper::merge(parent::actions(), $this->actionsMap);
+    }
     /**
      * @return BackendAction[]
      */

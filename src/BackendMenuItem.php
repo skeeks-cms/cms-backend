@@ -5,21 +5,26 @@
  * @copyright 2010 SkeekS
  * @date 08.03.2017
  */
+
 namespace skeeks\cms\backend;
 
-use skeeks\cms\IHasInfo;
+use skeeks\cms\IHasIcon;
+use skeeks\cms\IHasImage;
+use skeeks\cms\IHasName;
 use skeeks\cms\IHasPermissions;
 use skeeks\cms\IHasUrl;
-use skeeks\cms\traits\THasInfo;
+use skeeks\cms\traits\THasIcon;
+use skeeks\cms\traits\THasImage;
+use skeeks\cms\traits\THasName;
 use skeeks\cms\traits\THasPermissions;
 use skeeks\cms\traits\THasUrl;
 use yii\base\Component;
 use yii\helpers\Url;
 
 /**
- * @property bool $isVisible
- * @property bool $isActive
- * @property bool $isAllow
+ * @property bool        $isVisible
+ * @property bool        $isActive
+ * @property bool        $isAllow
  *
  * @property array|mixed $urlData
  *
@@ -27,9 +32,11 @@ use yii\helpers\Url;
  * @package skeeks\cms\backend
  */
 class BackendMenuItem extends Component
-    implements IHasInfo, IHasUrl, IHasPermissions
+    implements IHasName, IHasImage, IHasIcon, IHasUrl, IHasPermissions
 {
-    use THasInfo;
+    use THasName;
+    use THasImage;
+    use THasIcon;
     use THasUrl;
     use THasPermissions;
 
@@ -41,12 +48,12 @@ class BackendMenuItem extends Component
     /**
      * @var int
      */
-    public $priority    = 100;
+    public $priority = 100;
 
     /**
      * @var bool
      */
-    public $visible     = true;
+    public $visible = true;
 
     /**
      * @var static[]
@@ -72,7 +79,10 @@ class BackendMenuItem extends Component
      * @var callable
      */
     public $accessCallback = null;
-
+    /**
+     * @var null|\skeeks\cms\backend\BackendController
+     */
+    protected $_controller = null;
     /**
      * @return bool
      */
@@ -83,51 +93,36 @@ class BackendMenuItem extends Component
         $controller = null;
         //Default access rights
 
-        if (!$this->permissionNames && is_array($this->_url))
-        {
-            if ($controller = $this->_getController())
-            {
-                if ($controller instanceof IHasPermissions)
-                {
+        if (!$this->permissionNames && is_array($this->_url)) {
+            if ($controller = $this->_getController()) {
+                if ($controller instanceof IHasPermissions) {
                     $this->permissionNames = $controller->permissionNames;
                 }
             }
         }
 
         //No name specified
-        if (!$this->name)
-        {
-            if ($controller = $this->_getController())
-            {
-                if ($controller instanceof IHasInfo)
-                {
+        if (!$this->name) {
+            if ($controller = $this->_getController()) {
+                if ($controller instanceof IHasName) {
                     $this->name = $controller->name;
                 }
             }
         }
     }
-
-    /**
-     * @var null|\skeeks\cms\backend\BackendController
-     */
-    protected $_controller = null;
-
     /**
      * @return \skeeks\cms\backend\BackendController
      */
     protected function _getController()
     {
-        if ($this->_controller !== null)
-        {
+        if ($this->_controller !== null) {
             return $this->_controller;
         }
 
-        try
-        {
+        try {
             list($controller, $route) = \Yii::$app->createController($this->_url[0]);
             $this->_controller = $controller;
-        } catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $this->_controller = false;
         }
 
@@ -140,15 +135,14 @@ class BackendMenuItem extends Component
      */
     public function getImage()
     {
-        if ($this->_image === null)
-        {
+        if ($this->_image === null) {
             return "";
-        } if (is_array($this->_image) && count($this->_image) == 2)
-        {
+        }
+        if (is_array($this->_image) && count($this->_image) == 2) {
             list($assetClassName, $localPath) = $this->_image;
-            return (string) \Yii::$app->getAssetManager()->getAssetUrl(\Yii::$app->assetManager->getBundle($assetClassName), $localPath);
-        } if (is_string($this->_image))
-        {
+            return (string)\Yii::$app->getAssetManager()->getAssetUrl(\Yii::$app->assetManager->getBundle($assetClassName), $localPath);
+        }
+        if (is_string($this->_image)) {
             return $this->_image;
         }
 
@@ -161,17 +155,14 @@ class BackendMenuItem extends Component
      */
     public function getUrl()
     {
-        if (is_array($this->_url))
-        {
-            if (isset($this->_url[0]))
-            {
-                $this->_url[0] = "/" . $this->_url[0];
+        if (is_array($this->_url)) {
+            if (isset($this->_url[0])) {
+                $this->_url[0] = "/".$this->_url[0];
             }
 
             return Url::to($this->_url);
 
-        } else if (is_string($this->_url))
-        {
+        } else if (is_string($this->_url)) {
             return $this->_url;
         }
 
@@ -191,23 +182,17 @@ class BackendMenuItem extends Component
      */
     public function getIsVisible()
     {
-        if ($this->visible === true)
-        {
-            if ($this->items)
-            {
-                foreach ($this->items as $item)
-                {
-                    if ($item->isVisible)
-                    {
+        if ($this->visible === true) {
+            if ($this->items) {
+                foreach ($this->items as $item) {
+                    if ($item->isVisible) {
                         return true;
                     }
                 }
 
                 return false;
-            } else
-            {
-                if ($this->_url)
-                {
+            } else {
+                if ($this->_url) {
                     return true;
                 }
             }
@@ -221,45 +206,35 @@ class BackendMenuItem extends Component
      */
     public function getIsActive()
     {
-        if ($this->items)
-        {
-            foreach ($this->items as $item)
-            {
-                if ($item->isActive)
-                {
+        if ($this->items) {
+            foreach ($this->items as $item) {
+                if ($item->isActive) {
                     return true;
                 }
             }
         }
 
-        if ($this->activeCallback && is_callable($this->activeCallback))
-        {
+        if ($this->activeCallback && is_callable($this->activeCallback)) {
             $callback = $this->activeCallback;
-            return (bool) call_user_func($callback, $this);
+            return (bool)call_user_func($callback, $this);
         }
 
-        if (is_array($this->_url))
-        {
+        if (is_array($this->_url)) {
             $routeData = explode("/", $this->_url[0]);
             $routeDataCheck = [];
-            if ($routeData && is_array($routeData))
-            {
-                foreach ($routeData as $routePath)
-                {
-                    if ($routePath)
-                    {
+            if ($routeData && is_array($routeData)) {
+                foreach ($routeData as $routePath) {
+                    if ($routePath) {
                         $routeDataCheck[] = $routePath;
                     }
                 }
             }
 
-            if (!$routeDataCheck)
-            {
+            if (!$routeDataCheck) {
                 return false;
             }
 
-            if (strpos('-' . \Yii::$app->controller->route . '/', implode("/", $routeDataCheck) . '/') !== false)
-            {
+            if (strpos('-'.\Yii::$app->controller->route.'/', implode("/", $routeDataCheck).'/') !== false) {
                 return true;
             }
         }
@@ -273,10 +248,9 @@ class BackendMenuItem extends Component
      */
     public function getIsAllow()
     {
-        if ($this->accessCallback && is_callable($this->accessCallback))
-        {
+        if ($this->accessCallback && is_callable($this->accessCallback)) {
             $callback = $this->accessCallback;
-            return (bool) call_user_func($callback, $this);
+            return (bool)call_user_func($callback, $this);
         }
 
         return $this->_isAllow();
@@ -287,23 +261,17 @@ class BackendMenuItem extends Component
      */
     protected function _isAllow()
     {
-        if ($this->_getController() && $this->_getController() instanceof IHasPermissions && !$this->_getController()->isAllow)
-        {
+        if ($this->_getController() && $this->_getController() instanceof IHasPermissions && !$this->_getController()->isAllow) {
             return false;
         }
 
-        if ($this->permissionNames)
-        {
-            foreach ($this->permissionNames as $permissionName => $permissionLabel)
-            {
-                if ($permission = \Yii::$app->authManager->getPermission($permissionName))
-                {
-                    if (!\Yii::$app->user->can($permission->name))
-                    {
+        if ($this->permissionNames) {
+            foreach ($this->permissionNames as $permissionName => $permissionLabel) {
+                if ($permission = \Yii::$app->authManager->getPermission($permissionName)) {
+                    if (!\Yii::$app->user->can($permission->name)) {
                         return false;
                     }
-                } else
-                {
+                } else {
                     return false;
                 }
             }

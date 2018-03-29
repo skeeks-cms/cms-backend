@@ -140,34 +140,18 @@ JS
             ],
         ];
 
-        $fieldControlls = <<<HTML
-<div class="col-sm-3">
-    <div class="sx-field-config-controll pull-right">
-        <a href="#" class="btn btn-xs sx-move" title="Поменять порядок">
-            <i class="glyphicon glyphicon-resize-vertical"></i>
-        </a>
-        
-        <a href="#" class="btn btn-xs sx-remove" title="Удалить фильтр">
-            <i class="glyphicon glyphicon-remove"></i>
-        </a>
-        
-    </div>
-</div>
-HTML;
 
         $defaultFilters = [
-            'class' => FiltersWidget::class,
-            'activeForm' => [
-                'class' => ActiveForm::class,
-                'layout' => 'horizontal',
-                'options' => [
-                    'class' => 'sx-backend-filters-form'
+            'class' => \skeeks\cms\backend\widgets\FiltersWidget::class,
+            'configBehaviorData'         => [
+                'configKey' => $this->uniqueId,
+                'configStorage' => [
+                    'class' => ConfigDbModelStorage::class,
+                    'modelClassName' => $backendShowingClassName,
+                    'primaryKey' => $backendShowingId,
+                    'attribute' => 'config_jsoned'
                 ],
-                'fieldConfig' => [
-                    'template' => "{label}\n{beginWrapper}\n{input}\n{hint}\n{error}\n{endWrapper}{$fieldControlls}"
-                ]
-            ]
-
+            ],
         ];
 
         $this->grid = (array)ArrayHelper::merge($defaultGrid, (array)$this->grid);

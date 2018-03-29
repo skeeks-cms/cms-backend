@@ -5,35 +5,36 @@
  * @copyright (c) 2010 SkeekS
  * @date 16.03.2017
  */
+
 namespace skeeks\cms\backend;
 
-use skeeks\cms\backend\BackendComponent;
-use skeeks\cms\helpers\UrlHelper;
-use skeeks\cms\IHasInfo;
+use skeeks\cms\IHasIcon;
+use skeeks\cms\IHasImage;
+use skeeks\cms\IHasName;
 use skeeks\cms\IHasPermissions;
 use skeeks\cms\IHasUrl;
 use skeeks\cms\modules\admin\widgets\ControllerActions;
-use skeeks\cms\traits\THasInfo;
+use skeeks\cms\traits\THasIcon;
+use skeeks\cms\traits\THasImage;
+use skeeks\cms\traits\THasName;
 use skeeks\cms\traits\THasPermissions;
 use skeeks\cms\traits\THasUrl;
 use yii\base\Action;
 use yii\base\InvalidParamException;
 use yii\helpers\Inflector;
-use yii\helpers\Url;
-use yii\web\Application;
-use yii\web\ViewAction;
-use \skeeks\cms\modules\admin\controllers\AdminController;
 
 /**
- * @property IHasInfoActions    $controller
+ * @property IHasInfoActions $controller
  *
  * Class AdminViewAction
  * @package skeeks\cms\modules\admin\actions
  */
 class BackendAction extends Action
-    implements IHasInfo, IHasUrl, IBackendAction, IHasPermissions
+    implements IHasName, IHasIcon, IHasImage, IHasUrl, IBackendAction, IHasPermissions
 {
-    use THasInfo;
+    use THasName;
+    use THasImage;
+    use THasIcon;
     use THasUrl;
     use TBackendAction;
     use THasPermissions;
@@ -41,25 +42,21 @@ class BackendAction extends Action
     public function init()
     {
         //Если название не задано, покажем что нибудь.
-        if (!$this->name)
-        {
+        if (!$this->name) {
             $this->name = Inflector::humanize($this->id);
         }
 
-        if (!$this->controller instanceof IHasInfoActions)
-        {
-            throw new InvalidParamException( 'This action is designed to work with the controller: ' . IHasInfoActions::class);
+        if (!$this->controller instanceof IHasInfoActions) {
+            throw new InvalidParamException('This action is designed to work with the controller: '.IHasInfoActions::class);
         }
 
-        if ($this->callback && !is_callable($this->callback))
-        {
-            throw new InvalidConfigException('"' . static::class . '::callback Should be a valid callback"');
+        if ($this->callback && !is_callable($this->callback)) {
+            throw new InvalidConfigException('"'.static::class.'::callback Should be a valid callback"');
         }
 
-        if ($this->permissionNames === null)
-        {
+        if ($this->permissionNames === null) {
             $this->permissionNames = [
-                $this->uniqueId => $this->name
+                $this->uniqueId => $this->name,
             ];
         }
 
@@ -73,8 +70,7 @@ class BackendAction extends Action
      */
     public function run()
     {
-        if ($this->callback)
-        {
+        if ($this->callback) {
             return call_user_func($this->callback, $this);
         }
 
