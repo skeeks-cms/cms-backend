@@ -7,6 +7,7 @@
 
 namespace skeeks\cms\backend\widgets;
 
+use skeeks\cms\queryfilters\QueryFiltersWidget;
 use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -14,7 +15,8 @@ use yii\helpers\Html;
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
  */
-class FiltersWidget extends \skeeks\cms\widgets\FiltersWidget {
+//class FiltersWidget extends \skeeks\cms\widgets\FiltersWidget {
+class FiltersWidget extends QueryFiltersWidget {
 
     public $viewFile = 'filters';
 
