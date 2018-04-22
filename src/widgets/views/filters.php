@@ -72,12 +72,8 @@ JS
 
 $form = $activeFormClassName::begin((array)$widget->activeForm);
 
-echo (new \skeeks\yii2\form\Builder([
-    'models'     => $widget->filtersModel->builderModels(),
-    'model'      => $widget->filtersModel,
-    'activeForm' => $form,
-    'fields'     => $fields,
-]))->render();
+$builder->setActiveForm($form);
+echo $builder->render();
 
 ?>
     <div class="row sx-form-buttons">

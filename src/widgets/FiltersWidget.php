@@ -23,7 +23,7 @@ class FiltersWidget extends QueryFiltersWidget {
     public function init()
     {
         $fieldControlls = <<<HTML
-<div class="col-sm-3">
+<div class="col-sm-2">
     <div class="sx-field-config-controll pull-right">
         <a href="#" class="btn btn-xs sx-move" title="Поменять порядок">
             <i class="glyphicon glyphicon-resize-vertical"></i>
@@ -44,7 +44,11 @@ HTML;
                 'class' => 'sx-backend-filters-form'
             ],
             'fieldConfig' => [
-                'template' => "{label}\n{beginWrapper}\n{input}\n{hint}\n{error}\n{endWrapper}{$fieldControlls}"
+                'inputTemplate' => "{input}",
+                'template' => "{label}\n{beginWrapper}\n<div class='sx-test'>{input}</div>\n{hint}\n{error}\n{endWrapper}{$fieldControlls}",
+                'horizontalCssClasses' => [
+                    'wrapper' => 'col-sm-7',
+                ]
             ]
         ];
 
