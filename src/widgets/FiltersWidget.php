@@ -41,7 +41,8 @@ HTML;
             'class' => ActiveForm::class,
             'layout' => 'horizontal',
             'options' => [
-                'class' => 'sx-backend-filters-form'
+                'class' => 'sx-backend-filters-form',
+                'data-pjax' => 1
             ],
             'fieldConfig' => [
                 'inputTemplate' => "{input}",

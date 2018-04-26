@@ -152,15 +152,23 @@ class AdminBackendShowingController extends BackendModelController
 
         $error = null;
         $success = null;
+        $deleted = false;
         try {
             if (\Yii::$app->request->post()) {
-                if ($model->load(\Yii::$app->request->post())) {
-                    if ($component->saveConfig()) {
-                        $success = "Saved";
-                    }
+                if (\Yii::$app->request->post('delete')) {
+                    $component->configStorage->delete($component->configBehavior);
+                    $component->configRefresh();
+                    $deleted = true;
                 } else {
-                    $error = "Not saved";
+                    if ($model->load(\Yii::$app->request->post())) {
+                        if ($component->saveConfig()) {
+                            $success = "Saved";
+                        }
+                    } else {
+                        $error = "Not saved";
+                    }
                 }
+                
             }
         } catch (\Exception $e) {
             $error = $e->getMessage();
@@ -170,6 +178,7 @@ class AdminBackendShowingController extends BackendModelController
             'component' => $component,
             'error' => $error,
             'success' => $success,
+            'deleted' => $deleted,
         ]);
     }
 
