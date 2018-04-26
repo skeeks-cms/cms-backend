@@ -139,7 +139,7 @@ JS
     $widgetClassName::end();
     ?>
         <? if (YII_ENV === 'dev') : ?>
-            <pre><?= $component->dataProvider->query->createCommand()->rawSql; ?></pre>
+            <pre><code><?= $component->dataProvider->query->createCommand()->rawSql; ?></pre>
         <? endif; ?>
     </div>
 <?php \skeeks\cms\widgets\Pjax::end(); ?>
