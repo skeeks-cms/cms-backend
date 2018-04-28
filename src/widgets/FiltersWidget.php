@@ -46,7 +46,7 @@ HTML;
             ],
             'fieldConfig' => [
                 'inputTemplate' => "{input}",
-                'template' => "{label}\n{beginWrapper}\n<div class='sx-test'>{input}</div>\n{hint}\n{error}\n{endWrapper}{$fieldControlls}",
+                'template' => "{label}\n{beginWrapper}\n<div class='sx-filter-wrapper'>{input}</div>\n{hint}\n{error}\n{endWrapper}{$fieldControlls}",
                 'horizontalCssClasses' => [
                     'wrapper' => 'col-sm-7',
                 ]
