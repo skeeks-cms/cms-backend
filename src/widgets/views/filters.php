@@ -14,6 +14,7 @@ $fields = $widget->filtersModel->builderFields();
 <?= \yii\helpers\Html::beginTag('div', $widget->wrapperOptions); ?>
 
 <?
+
 $activeFormClassName = \yii\helpers\ArrayHelper::getValue($widget->activeForm, 'class', \yii\widgets\ActiveForm::class);
 \yii\helpers\ArrayHelper::remove($widget->activeForm, 'class');
 

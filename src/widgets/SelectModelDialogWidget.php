@@ -241,7 +241,8 @@ class SelectModelDialogWidget extends InputWidget
     public function hasValue()
     {
         if ($this->hasModel()) {
-            return (bool)$this->model->{$this->attribute};
+            $value = isset($this->value) ? $this->value : Html::getAttributeValue($this->model, $this->attribute);
+            return (bool)$value;
         } else {
             return (bool)$this->value;
         }
@@ -253,7 +254,8 @@ class SelectModelDialogWidget extends InputWidget
     public function getInputValue()
     {
         if ($this->hasModel()) {
-            return $this->model->{$this->attribute};
+            $value = isset($this->value) ? $this->value : Html::getAttributeValue($this->model, $this->attribute);
+            return $value;
         } else {
             return $this->value;
         }
