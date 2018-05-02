@@ -57,7 +57,7 @@ $activeFormClassName = \yii\helpers\ArrayHelper::getValue($widget->activeForm, '
                         ?>
                         <?= \yii\helpers\Html::a('<i class="glyphicon glyphicon-cog"></i>',
                 '#', [
-                    'class' => 'btn btn-sm',
+                    'class' => 'btn btn-sm sx-edit',
                     'onclick' => new \yii\web\JsExpression(<<<JS
             new sx.classes.backend.EditComponent({$editComponent}); return false;
 JS
@@ -70,7 +70,6 @@ JS
     </div>
 
 <?
-
 $form = $activeFormClassName::begin((array)$widget->activeForm);
 
 $builder->setActiveForm($form);
@@ -83,8 +82,14 @@ echo $builder->render();
             </div>
             <div class="col-sm-5">
                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-filter"></i> Применить</button>
+                <button class="btn btn-default sx-save-values"><i class="glyphicon glyphicon-save"></i> Сохранить</button>
             </div>
-            <div class="col-sm-1">
+            <div class="col-sm-2">
+                <a class="btn btn-default btn-sm dropdown-toggle sx-edit-trigger pull-right" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    <i class="glyphicon glyphicon-plus"></i>
+                </a>
+            </div>
+            <div class="col-sm-2">
 
             </div>
         </div>

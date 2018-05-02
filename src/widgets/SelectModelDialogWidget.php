@@ -107,7 +107,7 @@ class SelectModelDialogWidget extends InputWidget
         'tag' => 'a',
         'content' => '<i class="glyphicon glyphicon-th-list" aria-hidden="true"></i>',
         'options' => [
-            'class' => 'btn btn-default sx-btn-create',
+            'class' => 'btn btn-default sx-btn-create btn-xs',
             'title' => 'Выбрать значение'
         ]
     ];

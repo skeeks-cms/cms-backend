@@ -32,7 +32,7 @@ $widget = $this->context;
                         <i class="glyphicon glyphicon-th-list" aria-hidden="true"></i>
                     </a>-->
                     <? if ($widget->allowDeselect) : ?>
-                        <a class="btn btn-default btn-danger sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
+                        <a class="btn btn-default btn-danger btn-xs sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
                             <i class="glyphicon glyphicon-remove"></i>
                         </a>
                     <? endif; ?>
@@ -61,7 +61,7 @@ $widget = $this->context;
                         <i class="glyphicon glyphicon-th-list" title="Выбрать"></i>
                     </a>-->
                     <? if ($widget->allowDeselect) : ?>
-                        <a class="btn btn-default btn-danger sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
+                        <a class="btn btn-default btn-danger btn-xs sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
                             <i class="glyphicon glyphicon-remove"></i>
                         </a>
                     <? endif; ?>
@@ -76,7 +76,7 @@ $widget = $this->context;
                             <i class="glyphicon glyphicon-th-list" aria-hidden="true"></i>
                         </a>-->
                         <? if ($widget->allowDeselect) : ?>
-                            <a class="btn btn-default btn-danger sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
+                            <a class="btn btn-default btn-danger btn-xs sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
                                 <i class="glyphicon glyphicon-remove"></i>
                             </a>
                         <? endif; ?>

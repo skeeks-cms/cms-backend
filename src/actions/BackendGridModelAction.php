@@ -18,10 +18,8 @@ use skeeks\cms\cmsWidgets\gridView\GridViewCmsWidget;
 use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\widgets\DynamicFiltersWidget;
 use skeeks\cms\widgets\FiltersWidget;
-use skeeks\yii2\config\DynamicConfigModel;
 use skeeks\yii2\config\storages\ConfigDbModelStorage;
 use yii\base\Exception;
-use yii\bootstrap\ActiveForm;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
@@ -74,62 +72,62 @@ class BackendGridModelAction extends BackendAction
         $backendShowingClassName = $r->getName();
 
         $defaultGrid = [
-            'class'          => GridViewWidget::class,
-            'beforeTableRight' => function(GridViewWidget $gridViewWidget) {
+            'class'              => GridViewWidget::class,
+            'beforeTableRight'   => function (GridViewWidget $gridViewWidget) {
 
                 $id = \Yii::$app->controller->action->backendShowing->id;
                 $editComponent = [
                     'url' => \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams([
-                        BackendComponent::getCurrent()->backendShowingControllerRoute . '/component-call-edit'
+                        BackendComponent::getCurrent()->backendShowingControllerRoute.'/component-call-edit',
                     ])
                         ->merge([
-                            'id'  => $id,
-                            'componentClassName'  => $gridViewWidget::className(),
-                            'callable_id'         => $gridViewWidget->id . "-edit",
+                            'id'                 => $id,
+                            'componentClassName' => $gridViewWidget::className(),
+                            'callable_id'        => $gridViewWidget->id."-edit",
                         ])
                         ->enableEmptyLayout()
                         ->enableNoActions()
-                        ->url
+                        ->url,
                 ];
                 $editComponent = Json::encode($editComponent);
                 $callableDataInput = Html::textarea('callableData', base64_encode(serialize($gridViewWidget->editData)), [
-                    'id' => $gridViewWidget->id . "-edit",
-                    'style' => 'display: none;'
+                    'id'    => $gridViewWidget->id."-edit",
+                    'style' => 'display: none;',
                 ]);
-                return '<div class="sx-grid-settings">' . Html::a('<i class="glyphicon glyphicon-cog"></i>',
-                '#', [
-                    'class' => 'btn btn-sm',
-                    'onclick' => new JsExpression(<<<JS
+                return '<div class="sx-grid-settings">'.Html::a('<i class="glyphicon glyphicon-cog"></i>',
+                        '#', [
+                            'class'   => 'btn btn-sm',
+                            'onclick' => new JsExpression(<<<JS
             new sx.classes.backend.EditComponent({$editComponent}); return false;
 JS
-                    )
-                ]) . $callableDataInput . "</div>";
+                            ),
+                        ]).$callableDataInput."</div>";
             },
-            'modelClassName' => $this->modelClassName,
-            'configBehaviorData'         => [
-                'configKey' => $this->uniqueId,
+            'modelClassName'     => $this->modelClassName,
+            'configBehaviorData' => [
+                'configKey'     => $this->uniqueId,
                 'configStorage' => [
-                    'class' => ConfigDbModelStorage::class,
+                    'class'          => ConfigDbModelStorage::class,
                     'modelClassName' => $backendShowingClassName,
-                    'primaryKey' => $backendShowingId,
-                    'attribute' => 'config_jsoned'
+                    'primaryKey'     => $backendShowingId,
+                    'attribute'      => 'config_jsoned',
                 ],
             ],
-            'columns'        => [
+            'columns'            => [
                 'checkbox' => [
-                    'class' => 'skeeks\cms\grid\CheckboxColumn',
+                    'class'         => 'skeeks\cms\grid\CheckboxColumn',
                     'headerOptions' => [
-                        'class' => 'sx-grid-checkbox'
+                        'class' => 'sx-grid-checkbox',
                     ],
                 ],
                 'actions'  => [
                     'class'           => ControllerActionsColumn::class,
-                    'controller'      => function($action) {
+                    'controller'      => function ($action) {
                         return $this->controller;
                     },
-                    'label' => \Yii::t('skeeks/backend', 'Actions'),
-                    'headerOptions' => [
-                        'class' => 'sx-grid-actions'
+                    'label'           => \Yii::t('skeeks/backend', 'Actions'),
+                    'headerOptions'   => [
+                        'class' => 'sx-grid-actions',
                     ],
                     'isOpenNewWindow' => true,
                 ],
@@ -140,16 +138,20 @@ JS
             ],
         ];
 
+        parent::init();
 
         $defaultFilters = [
-            'class' => \skeeks\cms\backend\widgets\FiltersWidget::class,
-            'configBehaviorData'         => [
-                'configKey' => $this->uniqueId,
+            'class'              => \skeeks\cms\backend\widgets\FiltersWidget::class,
+            'activeForm'         => [
+                'action' => $this->getShowingUrl($this->getBackendShowing())
+            ],
+            'configBehaviorData' => [
+                'configKey'     => $this->uniqueId,
                 'configStorage' => [
-                    'class' => ConfigDbModelStorage::class,
+                    'class'          => ConfigDbModelStorage::class,
                     'modelClassName' => $backendShowingClassName,
-                    'primaryKey' => $backendShowingId,
-                    'attribute' => 'config_jsoned'
+                    'primaryKey'     => $backendShowingId,
+                    'attribute'      => 'config_jsoned',
                 ],
             ],
         ];
@@ -158,9 +160,6 @@ JS
         $this->filters = (array)ArrayHelper::merge($defaultFilters, (array)$this->filters);
 
         BackendGridModelActionAsset::register(\Yii::$app->view);
-
-        parent::init();
-
 
     }
 
@@ -315,6 +314,11 @@ CSS
                     \Yii::$app->response->redirect($this->indexUrl);
                     \Yii::$app->end();
                 }*/
+            } elseif ($id = (int)\Yii::$app->request->post($this->backendShowingParam)) {
+                if ($backendShowing = BackendShowing::findOne($id)) {
+                    $this->_backendShowing = $backendShowing;
+                    return $this->_backendShowing;
+                }
             }
 
             //Defauilt filter
@@ -326,9 +330,9 @@ CSS
 
             if (!$backendShowing) {
                 $backendShowing = new BackendShowing([
-                    'key'         => $this->uniqueId,
+                    'key'        => $this->uniqueId,
                     //'cms_user_id' => \Yii::$app->user->id,
-                    'is_default'  => 1,
+                    'is_default' => 1,
                 ]);
                 $backendShowing->loadDefaultValues();
 
@@ -355,8 +359,7 @@ CSS
         $query = [];
         $url = $this->url;
 
-        if ($pos = strpos($url, "?"))
-        {
+        if ($pos = strpos($url, "?")) {
             $url = StringHelper::substr($url, 0, $pos);
             $stringQuery = StringHelper::substr($url, $pos + 1, StringHelper::strlen($url));
             parse_str($stringQuery, $query);
@@ -369,7 +372,7 @@ CSS
         }*/
 
         $query[$this->backendShowingParam] = $backendShowing->id;
-        return $url . "?" . http_build_query($query);
+        return $url."?".http_build_query($query);
     }
 
     /**
@@ -378,14 +381,14 @@ CSS
     public function getBackendShowings()
     {
         return BackendShowing::find()->where([
-                    'key' => $this->uniqueId,
-                ])
-                ->andWhere([
-                    'or',
-                    ['cms_user_id' => null],
-                    ['cms_user_id' => \Yii::$app->user->id],
-                ])
-                ->orderBy(['priority' => SORT_ASC])
+            'key' => $this->uniqueId,
+        ])
+            ->andWhere([
+                'or',
+                ['cms_user_id' => null],
+                ['cms_user_id' => \Yii::$app->user->id],
+            ])
+            ->orderBy(['priority' => SORT_ASC])
             ->all();
     }
 }
