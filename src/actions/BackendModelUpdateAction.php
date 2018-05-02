@@ -61,7 +61,9 @@ class BackendModelUpdateAction extends BackendModelAction
      * @var array|callable
      */
     public $fields = [];
+    
     public $formModels = [];
+    
     public function init()
     {
         if (!$this->icon) {

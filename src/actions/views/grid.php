@@ -84,8 +84,29 @@ JS
     <? if ($backendShowings && $action->backendShowing) : ?>
         <ul class="nav nav-tabs sx-backend-showing-tabs">
             <? foreach ($backendShowings as $backendShowing) : ?>
-                <li class="sx-tab <?= $backendShowing->id == $action->backendShowing->id ? "active" : ""; ?>">
-                    <a href="<?= $action->getShowingUrl($backendShowing); ?>"><?= $backendShowing->displayName; ?></a>
+                <li class="sx-tab <?= $backendShowing->id == $action->backendShowing->id ? "active sx-active-tab" : ""; ?>">
+                    <a href="<?= $action->getShowingUrl($backendShowing); ?>">
+                        <?= $backendShowing->displayName; ?>
+                        <? if ($backendShowing->id == $action->backendShowing->id) : ?>
+                            
+                            <?
+                            $showingsControllerTmp = clone $showingsController;
+                            $showingsControllerTmp->setModel($action->backendShowing);
+                            
+                            echo \skeeks\cms\backend\widgets\ContextMenuControllerActionsWidget::widget([
+                                'actions' => $showingsControllerTmp->modelActions,
+                                'isOpenNewWindow' => true,
+                                'rightClickSelectors' => ['.sx-active-tab'],
+                                'button' => [
+                                    'class' => 'glyphicon glyphicon-cog',
+                                    'style' => 'font-size: 11px; cursor: pointer;',
+                                    'tag' => 'i',
+                                    'label' => '',
+                                ]
+                            ]);
+                            ?>
+                        <? endif; ?>
+                    </a>
                 </li>
             <? endforeach; ?>
 
@@ -100,24 +121,8 @@ JS
     <? endif; ?>
 
     <div class="tab-content">
-
-        <div class="row">
-            <div class="col-md-12">
-                <div class="pull-left">
-                    <?
-                        $showingsControllerTmp = clone $showingsController;
-                        $showingsControllerTmp->setModel($action->backendShowing);
-
-                        echo \skeeks\cms\backend\widgets\DropdownControllerActionsWidget::widget([
-                            'actions' => $showingsControllerTmp->modelActions,
-                            'isOpenNewWindow' => true,
-                            'renderFirstAction' => false
-                        ]);
-                    ?>
-                </div>
-            </div>
-        </div>
-
+        
+        
         <?
         $widgetClassName = $action->gridClassName;
         $widgetFiltersClassName = $action->filtersClassName;
@@ -139,7 +144,7 @@ JS
     $widgetClassName::end();
     ?>
         <? if (YII_ENV === 'dev') : ?>
-            <pre><code><?= $component->dataProvider->query->createCommand()->rawSql; ?></pre>
+            <pre><code><?= $component->dataProvider->query->createCommand()->rawSql; ?></code></pre>
         <? endif; ?>
     </div>
 <?php \skeeks\cms\widgets\Pjax::end(); ?>
