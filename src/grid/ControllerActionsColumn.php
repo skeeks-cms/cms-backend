@@ -79,10 +79,22 @@ class ControllerActionsColumn extends DataColumn
 
         $this->gridDoubleClickAction();
 
-        return DropdownControllerActionsWidget::widget([
+        /*return DropdownControllerActionsWidget::widget([
             "actions"         => $controller->modelActions,
             "isOpenNewWindow" => $this->isOpenNewWindow,
             "clientOptions"   => $this->clientOptions,
+        ]);*/
+
+        return \skeeks\cms\backend\widgets\ContextMenuControllerActionsWidget::widget([
+            'actions' => $controller->modelActions,
+            'isOpenNewWindow' => $this->isOpenNewWindow,
+            'rightClickSelectors' => ['tr[data-key=' . $key . ']'],
+            'button' => [
+                'class' => 'btn btn-xs btn-default sx-btn-caret-action',
+                'style' => '',
+                'tag' => 'a',
+                'label' => '<span class="caret"></span>',
+            ]
         ]);
     }
 
@@ -92,7 +104,8 @@ class ControllerActionsColumn extends DataColumn
             $this->grid->view->registerJs(<<<JS
             $('tr', $("#{$this->grid->id}")).on('dblclick', function()
             {
-                $('.sx-row-action', $(this)).click();
+                //$('.sx-row-action', $(this)).click();
+                $(this).contextmenu();
             });
 JS
             );
