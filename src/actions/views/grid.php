@@ -99,19 +99,20 @@ JS
     ?>
         <ul class="nav nav-tabs sx-backend-showing-tabs">
             <? foreach ($backendShowings as $backendShowing) : ?>
-                <li class="sx-tab <?= $backendShowing->id == $action->backendShowing->id ? "active sx-active-tab" : "sx-no-active-tab"; ?>">
+                <li class="sx-tab <?= $backendShowing->id == $action->backendShowing->id ? "active sx-active-tab" : "sx-no-active-tab"; ?>" id="sx-tab-<?= $backendShowing->id; ?>">
                     <a href="<?= $action->getShowingUrl($backendShowing); ?>">
                         <?= $backendShowing->displayName; ?>
                         <? if ($backendShowing->id == $action->backendShowing->id) : ?>
                             
                             <?
-                            $showingsControllerTmp = clone $showingsController;
-                            $showingsControllerTmp->setModel($action->backendShowing);
-                            
+                            $showingsController = \Yii::$app->createController($controllerRoute)[0];
+                            $showingsController->setModel($backendShowing);
+
+
                             echo \skeeks\cms\backend\widgets\ContextMenuControllerActionsWidget::widget([
-                                'actions' => $showingsControllerTmp->modelActions,
+                                'actions' => $showingsController->modelActions,
                                 'isOpenNewWindow' => true,
-                                'rightClickSelectors' => ['.sx-active-tab'],
+                                'rightClickSelectors' => ['#sx-tab-' . $backendShowing->id],
                                 'button' => [
                                     'class' => 'glyphicon glyphicon-cog',
                                     'style' => 'font-size: 11px; cursor: pointer;',
