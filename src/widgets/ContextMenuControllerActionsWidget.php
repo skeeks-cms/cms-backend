@@ -10,6 +10,7 @@ namespace skeeks\cms\backend\widgets;
 
 use skeeks\cms\backend\BackendAction;
 use skeeks\cms\backend\helpers\BackendUrlHelper;
+use skeeks\cms\backend\widgets\assets\ControllerActionsWidgetAsset;
 use skeeks\yii2\contextmenu\JqueryContextMenuWidget;
 use yii\helpers\Json;
 
@@ -30,6 +31,7 @@ class ContextMenuControllerActionsWidget extends ContextMenuWidget
 
     public function run()
     {
+        ControllerActionsWidgetAsset::register($this->getView());
         $actions = $this->actions;
 
 
