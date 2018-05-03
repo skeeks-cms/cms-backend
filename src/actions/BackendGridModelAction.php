@@ -129,7 +129,6 @@ JS
                     'headerOptions'   => [
                         'class' => 'sx-grid-actions',
                     ],
-                    'isOpenNewWindow' => true,
                 ],
                 'serial'   => [
                     'class'   => 'yii\grid\SerialColumn',

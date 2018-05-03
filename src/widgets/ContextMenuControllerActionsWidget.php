@@ -16,7 +16,7 @@ use yii\helpers\Json;
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
  */
-class ContextMenuControllerActionsWidget extends JqueryContextMenuWidget
+class ContextMenuControllerActionsWidget extends ContextMenuWidget
 {
     /**
      * @var BackendAction[]
@@ -32,18 +32,6 @@ class ContextMenuControllerActionsWidget extends JqueryContextMenuWidget
     {
         $actions = $this->actions;
 
-        $this->view->registerJs(<<<JS
-        
-        jQuery.contextMenu.types.backendAction = function(item, opt, root) {
-            this.addClass('sx-backend-action-wrapper')
-            jQuery('<a>', {
-                'href' : '#',
-                'onclick' : item.onclick,
-            }).append(item.name)
-                .appendTo(this);
-        };
-JS
-        );
 
         if (!$actions)
         {
@@ -63,10 +51,11 @@ JS
 
             $options = [];
             $options['icon'] = $action->icon;
-            $options['type'] = 'backendAction';
             $options['name'] = "<i class='{$action->icon}'></i> " . $action->name;
-            $options['onclick'] = "new sx.classes.backend.widgets.Action({$actionDataJson}).go(); return false;";
-            
+            $options['callback'] = new \yii\web\JsExpression("function(key, options) {
+                new sx.classes.backend.widgets.Action({$actionDataJson}).go();
+            }");
+
             $this->items[$action->id] = $options;
         }
         

@@ -82,9 +82,24 @@ JS
     $backendShowings = $action->backendShowings;
     ?>
     <? if ($backendShowings && $action->backendShowing) : ?>
+    <?
+    echo \skeeks\cms\backend\widgets\ContextMenuWidget::widget([
+        'button' => false,
+        'items' => [
+            'no' => [
+                'callback' => new \yii\web\JsExpression("function(key, options) {
+                    $('a', $(this)).trigger('click');
+                }"),
+                //'onclick' => "$(this).click(); return false;",
+                'name' => 'Открыть'
+            ]
+        ],
+        'rightClickSelectors' => ['.sx-no-active-tab'],
+    ]);
+    ?>
         <ul class="nav nav-tabs sx-backend-showing-tabs">
             <? foreach ($backendShowings as $backendShowing) : ?>
-                <li class="sx-tab <?= $backendShowing->id == $action->backendShowing->id ? "active sx-active-tab" : ""; ?>">
+                <li class="sx-tab <?= $backendShowing->id == $action->backendShowing->id ? "active sx-active-tab" : "sx-no-active-tab"; ?>">
                     <a href="<?= $action->getShowingUrl($backendShowing); ?>">
                         <?= $backendShowing->displayName; ?>
                         <? if ($backendShowing->id == $action->backendShowing->id) : ?>
