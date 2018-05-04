@@ -114,6 +114,10 @@ JS
                 ],
             ],
             'columns'            => [
+                'serial'   => [
+                    'class'   => 'yii\grid\SerialColumn',
+                    'visible' => false,
+                ],
                 'checkbox' => [
                     'class'         => 'skeeks\cms\grid\CheckboxColumn',
                     'headerOptions' => [
@@ -130,10 +134,7 @@ JS
                         'class' => 'sx-grid-actions',
                     ],
                 ],
-                'serial'   => [
-                    'class'   => 'yii\grid\SerialColumn',
-                    'visible' => false,
-                ],
+
             ],
         ];
 
