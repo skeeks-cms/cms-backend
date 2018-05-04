@@ -120,6 +120,12 @@ abstract class BackendController extends Controller
                     $request = \Yii::$app->request;
                     $pathInfo = $request->getPathInfo();
                     $params = $request->getQueryParams();
+
+                    //Если например нужно на главной странице сделать бэкенд
+                    if (!$pathInfo) {
+                        return true;
+                    }
+
                     $firstPrefix = StringHelper::substr($pathInfo, 0, StringHelper::strlen($rule->urlPrefix));
 
                     if ($firstPrefix == $rule->urlPrefix) {
