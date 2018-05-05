@@ -67,6 +67,16 @@ class BackendGridModelAction extends BackendAction
 
     public function init()
     {
+        if (!$this->icon) {
+            $this->icon = "glyphicon glyphicon-th-list";
+        }
+
+
+        if (!$this->name) {
+            $this->name = \Yii::t('skeeks/backend', "List");
+        }
+
+
         $r = new \ReflectionClass($this->backendShowing);
         $backendShowingId = $this->backendShowing->id;
         $backendShowingClassName = $r->getName();
@@ -179,6 +189,7 @@ JS
     {
         return (string)ArrayHelper::getValue($this->grid, 'class');
     }
+
     /**
      * @return string
      */
@@ -188,6 +199,7 @@ JS
         ArrayHelper::remove($grid, 'class');
         return (array)$grid;
     }
+
     public function run()
     {
         if ($this->callback) {

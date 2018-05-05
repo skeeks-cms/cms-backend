@@ -9,6 +9,7 @@
 namespace skeeks\cms\backend\controllers;
 
 use skeeks\cms\backend\actions\BackendGridModelAction;
+use skeeks\cms\backend\actions\BackendModelCreateAction;
 use skeeks\cms\backend\actions\BackendModelDeleteAction;
 use skeeks\cms\backend\actions\BackendModelUpdateAction;
 use skeeks\cms\backend\BackendInfoInterface;
@@ -28,6 +29,10 @@ class BackendModelStandartController extends BackendModelController
         return ArrayHelper::merge(parent::actions(), [
             'index' => [
                 'class' => BackendGridModelAction::class,
+            ],
+
+            "create" => [
+                'class' => BackendModelCreateAction::class,
             ],
 
             "update" => [
