@@ -150,6 +150,11 @@ class BackendModelCreateAction extends ViewBackendAction
         }
 
         if ($this->fields) {
+            if (is_callable($this->fields)) {
+                $fields = $this->fields;
+                $this->fields = call_user_func($fields, $this);
+            }
+
             return $this->controller->render('@skeeks/cms/backend/actions/views/model-update', [
                 'model' => $model,
                 'formModels' => $this->formModels,
