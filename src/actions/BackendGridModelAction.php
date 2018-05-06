@@ -16,6 +16,7 @@ use skeeks\cms\backend\models\BackendShowing;
 use skeeks\cms\backend\widgets\GridViewWidget;
 use skeeks\cms\cmsWidgets\gridView\GridViewCmsWidget;
 use skeeks\cms\helpers\StringHelper;
+use skeeks\cms\modules\admin\widgets\gridViewStandart\GridViewStandartAsset;
 use skeeks\cms\widgets\DynamicFiltersWidget;
 use skeeks\cms\widgets\FiltersWidget;
 use skeeks\yii2\config\storages\ConfigDbModelStorage;
@@ -83,6 +84,12 @@ class BackendGridModelAction extends BackendAction
 
         $defaultGrid = [
             'class'              => GridViewWidget::class,
+            'beforeTableLeft'   => function (GridViewWidget $gridViewWidget) {
+                return $this->renderBeforeTable($gridViewWidget);
+            },
+            'afterTableLeft'   => function (GridViewWidget $gridViewWidget) {
+                return $this->renderAfterTable($gridViewWidget);
+            },
             'beforeTableRight'   => function (GridViewWidget $gridViewWidget) {
 
                 $id = \Yii::$app->controller->action->backendShowing->id;
@@ -208,27 +215,26 @@ JS
 
         return $this->controller->render('@skeeks/cms/backend/actions/views/grid');
     }
+
+
+
+
     /**
      * @return string
      */
-    public function renderBeforeTable()
+    public function renderBeforeTable(GridViewWidget $gridViewWidget)
     {
+        GridViewStandartAsset::register($gridViewWidget->view);
         $multiActions = [];
         if ($this->controller) {
             $multiActions = $this->controller->modelMultiActions;
         }
 
-        if (!$multiActions) {
-            return parent::renderBeforeTable();
-        }
-
-        $this->_initMultiActions();
-        $this->beforeTableLeft = $this->_buttonsMulti;
-
-        return parent::renderBeforeTable();
+        $this->_initMultiActions($gridViewWidget);
+        return $this->_buttonsMulti;
     }
 
-    protected function _initMultiActions()
+    protected function _initMultiActions(GridViewWidget $gridViewWidget)
     {
         if ($this->_initMultiOptions === true) {
             return $this;
@@ -237,8 +243,8 @@ JS
         $this->_initMultiOptions = true;
 
         $multiActions = [];
-        if ($this->adminController) {
-            $multiActions = $this->adminController->modelMultiActions;
+        if ($this->controller) {
+            $multiActions = $this->controller->modelMultiActions;
         }
 
         if (!$multiActions) {
@@ -246,14 +252,14 @@ JS
         }
 
         $options = [
-            'id'                 => $this->id,
+            'id'                 => $gridViewWidget->id,
             'requestPkParamName' => $this->controller->requestPkParamName,
         ];
         $optionsString = Json::encode($options);
 
-        $gridJsObject = $this->getGridJsObject();
+        $gridJsObject = "sx.Grid" . $gridViewWidget->id;
 
-        $this->view->registerJs(<<<JS
+        $gridViewWidget->view->registerJs(<<<JS
         {$gridJsObject} = new sx.classes.grid.Standart($optionsString);
 JS
         );
@@ -262,7 +268,7 @@ JS
 
         $additional = [];
         foreach ($multiActions as $action) {
-            $additional[] = $action->registerForGrid($this);
+            $additional[] = $action->registerForGrid($gridViewWidget);
 
             $buttons .= <<<HTML
             <button class="btn btn-default btn-sm sx-grid-multi-btn" data-id="{$action->id}">
@@ -285,7 +291,7 @@ HTML;
 HTML;
         $this->_additionalsMulti = $additional;
 
-        $this->view->registerCss(<<<CSS
+        $gridViewWidget->view->registerCss(<<<CSS
     .sx-grid-multi-controlls
     {
         margin-left: 20px;
@@ -296,21 +302,17 @@ CSS
     /**
      * @return string
      */
-    public function renderAfterTable()
+    public function renderAfterTable(GridViewWidget $gridViewWidget)
     {
         $multiActions = [];
-        if ($this->adminController) {
-            $multiActions = $this->adminController->modelMultiActions;
+        if ($this->controller) {
+            $multiActions = $this->controller->modelMultiActions;
         }
 
-        if (!$multiActions) {
-            return parent::renderAfterTable();
-        }
 
-        $this->_initMultiActions();
-        $this->afterTableLeft = $this->_buttonsMulti.$this->_additionalsMulti;
+        $this->_initMultiActions($gridViewWidget);
+        return $this->_buttonsMulti.$this->_additionalsMulti;
 
-        return parent::renderAfterTable();
     }
 
 

@@ -23,7 +23,6 @@ class BackendModelDeleteAction extends BackendModelAction
     public function init()
     {
         $this->request = "ajax";
-        $this->priority = 99999;
         $this->method = 'post';
 
         if (!$this->icon)
@@ -33,7 +32,7 @@ class BackendModelDeleteAction extends BackendModelAction
 
         if (!$this->priority)
         {
-            $this->icon = "glyphicon glyphicon-trash";
+            $this->priority = 99999;
         }
 
         if (!$this->confirm)

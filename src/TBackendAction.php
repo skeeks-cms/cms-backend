@@ -25,7 +25,7 @@ trait TBackendAction
     /**
      * @var int приоритет виляет на сортировку
      */
-    public $priority = 100;
+    public $priority = 0;
 
     /**
      * @var callable

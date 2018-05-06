@@ -11,6 +11,7 @@ namespace skeeks\cms\backend\controllers;
 use skeeks\cms\backend\actions\BackendGridModelAction;
 use skeeks\cms\backend\actions\BackendModelCreateAction;
 use skeeks\cms\backend\actions\BackendModelDeleteAction;
+use skeeks\cms\backend\actions\BackendModelMultiDeleteAction;
 use skeeks\cms\backend\actions\BackendModelUpdateAction;
 use skeeks\cms\backend\BackendInfoInterface;
 use skeeks\cms\backend\BackendModelControllerInterface;
@@ -40,6 +41,10 @@ class BackendModelStandartController extends BackendModelController
             ],
             "delete" => [
                 'class' => BackendModelDeleteAction::class,
+            ],
+
+            "delete-multi" => [
+                'class'        => BackendModelMultiDeleteAction::class,
             ],
         ]);
     }

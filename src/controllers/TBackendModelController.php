@@ -247,6 +247,7 @@ trait TBackendModelController
      */
     public function getModelMultiActions()
     {
+
         if ($this->_modelMultiActions !== null) {
             return $this->_modelMultiActions;
         }

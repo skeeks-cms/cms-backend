@@ -40,6 +40,11 @@ class BackendModelCreateAction extends ViewBackendAction
      * @var array
      */
     public $fields = [];
+    /**
+     * @var string
+     */
+    public $preContent = '';
+
 
     public function init()
     {
