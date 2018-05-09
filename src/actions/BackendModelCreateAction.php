@@ -12,6 +12,7 @@ use skeeks\cms\backend\controllers\IBackendModelController;
 use skeeks\cms\backend\ViewBackendAction;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\IHasUrl;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\widgets\ActiveForm;
 
