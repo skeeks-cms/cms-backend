@@ -85,17 +85,22 @@ class ControllerActionsColumn extends DataColumn
             "clientOptions"   => $this->clientOptions,
         ]);*/
 
-        return \skeeks\cms\backend\widgets\ContextMenuControllerActionsWidget::widget([
-            'actions' => $controller->modelActions,
-            'isOpenNewWindow' => $this->isOpenNewWindow,
-            'rightClickSelectors' => ['tr[data-key=' . $key . ']'],
-            'button' => [
-                'class' => 'btn btn-xs btn-default sx-btn-caret-action',
-                'style' => '',
-                'tag' => 'a',
-                'label' => '<span class="caret"></span>',
-            ]
-        ]);
+        if ($controller->modelActions) {
+            return \skeeks\cms\backend\widgets\ContextMenuControllerActionsWidget::widget([
+                'actions' => $controller->modelActions,
+                'isOpenNewWindow' => $this->isOpenNewWindow,
+                'rightClickSelectors' => ['tr[data-key=' . $key . ']'],
+                'button' => [
+                    'class' => 'btn btn-xs btn-default sx-btn-caret-action',
+                    'style' => '',
+                    'tag' => 'a',
+                    'label' => '<span class="caret"></span>',
+                ]
+            ]);
+        } else {
+            return null;
+        }
+
     }
 
     protected function gridDoubleClickAction()
