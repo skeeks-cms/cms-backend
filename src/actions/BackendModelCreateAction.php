@@ -27,6 +27,8 @@ class BackendModelCreateAction extends ViewBackendAction
 {
     use THasActiveForm;
 
+    const EVENT_BEFORE_SAVE = 'beforeSave';
+
     /**
      * @var bool
      */
@@ -112,6 +114,8 @@ class BackendModelCreateAction extends ViewBackendAction
                             throw new Exception("Не удалось сохранить данные: " . print_r($fmodel->errors, true));
                         }
                     }
+
+                    $this->trigger(self::EVENT_BEFORE_SAVE);
 
                     foreach ($this->formModels as $fmodel) {
                         if ($fmodel->save($this->modelValidate)) {
