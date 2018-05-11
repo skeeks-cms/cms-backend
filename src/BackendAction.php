@@ -85,7 +85,8 @@ class BackendAction extends Action
         if ($this->callback) {
             $result = call_user_func($this->callback, $this);
         } else {
-            $result = parent::run();
+            $result = '';
+            //$result = parent::run();
         }
 
         return $result;

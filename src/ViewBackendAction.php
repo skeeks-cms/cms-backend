@@ -43,6 +43,20 @@ class ViewBackendAction extends BackendAction
         parent::init();
     }
 
+    /**
+     * @return $this|mixed
+     */
+    public function run()
+    {
+        if ($this->callback) {
+            $result = call_user_func($this->callback, $this);
+        } else {
+            $result = $this->render($this->defaultView);
+        }
+
+        return $result;
+    }
+
 
     /**
      * Renders a view
