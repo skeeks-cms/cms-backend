@@ -39,6 +39,18 @@ class BackendAction extends Action
     use TBackendAction;
     use THasPermissions;
 
+    /**
+     * @return string
+     */
+    public function getPermissionName()
+    {
+        if ($this->_permissionName !== false) {
+            return $this->controller->permissionName."/".$this->id;
+        }
+
+        return $this->_permissionName;
+    }
+
     public function init()
     {
         //Если название не задано, покажем что нибудь.
@@ -71,9 +83,11 @@ class BackendAction extends Action
     public function run()
     {
         if ($this->callback) {
-            return call_user_func($this->callback, $this);
+            $result = call_user_func($this->callback, $this);
+        } else {
+            $result = parent::run();
         }
 
-        return $this->controller->render($this->id);
+        return $result;
     }
 }

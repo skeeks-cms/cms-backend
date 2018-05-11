@@ -13,6 +13,7 @@ use skeeks\cms\backend\BackendAction;
 use skeeks\cms\backend\BackendComponent;
 use skeeks\cms\backend\grid\ControllerActionsColumn;
 use skeeks\cms\backend\models\BackendShowing;
+use skeeks\cms\backend\ViewBackendAction;
 use skeeks\cms\backend\widgets\GridViewWidget;
 use skeeks\cms\cmsWidgets\gridView\GridViewCmsWidget;
 use skeeks\cms\helpers\StringHelper;
@@ -34,7 +35,7 @@ use yii\web\JsExpression;
  * Class BackendGridModelAction
  * @package skeeks\cms\backend\actions
  */
-class BackendGridModelAction extends BackendAction
+class BackendGridModelAction extends ViewBackendAction
 {
     /**
      * @var
@@ -213,7 +214,7 @@ JS
             return call_user_func($this->callback, $this);
         }
 
-        return $this->controller->render('@skeeks/cms/backend/actions/views/grid');
+        return $this->render('@skeeks/cms/backend/actions/views/grid');
     }
 
 

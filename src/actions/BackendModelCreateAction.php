@@ -44,9 +44,14 @@ class BackendModelCreateAction extends ViewBackendAction
      */
     public $fields = [];
     /**
-     * @var string
+     * @var string|callable
      */
-    public $preContent = '';
+    public $afterContent;
+
+    /**
+     * @var string|callable
+     */
+    public $beforeContent;
 
 
     public function init()
@@ -160,7 +165,7 @@ class BackendModelCreateAction extends ViewBackendAction
                 $this->fields = call_user_func($fields, $this);
             }
 
-            return $this->controller->render('@skeeks/cms/backend/actions/views/model-update', [
+            return $this->render('@skeeks/cms/backend/actions/views/model-update', [
                 'model' => $model,
                 'formModels' => $this->formModels,
             ]);
@@ -178,8 +183,9 @@ class BackendModelCreateAction extends ViewBackendAction
      * @param string $viewName view name
      * @return string result of the rendering
      */
-    protected function render($viewName)
+    protected function render($viewName, $params = [])
     {
-        return $this->controller->render($viewName, ['model' => $this->model]);
+        $params['model'] = $this->model;
+        return parent::render($viewName, $params);
     }
 }

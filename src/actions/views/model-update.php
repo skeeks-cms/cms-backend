@@ -12,9 +12,10 @@
 $controller = $this->context;
 $action = $controller->action;
 ?>
-<? if ($action->preContent) : ?>
+
+<? if ($action->beforeContent) : ?>
     <div class="sx-box sx-p-10 sx-bg-primary" style="margin-bottom: 10px;">
-        <? echo $action->preContent; ?>
+        <? echo $action->beforeContent; ?>
     </div>
 <? endif; ?>
 
@@ -32,3 +33,10 @@ $action = $controller->action;
     <?= $form->buttonsStandart($model); ?>
     <?= $form->errorSummary($formModels); ?>
 <?php $action->endActiveForm(); ?>
+
+
+<? if ($action->afterContent) : ?>
+    <div class="sx-box sx-p-10 sx-bg-primary" style="margin-bottom: 10px;">
+        <? echo $action->preContent; ?>
+    </div>
+<? endif; ?>
