@@ -9,25 +9,23 @@
 namespace skeeks\cms\backend\actions;
 
 use skeeks\cms\backend\actions\assets\BackendGridModelActionAsset;
-use skeeks\cms\backend\BackendAction;
 use skeeks\cms\backend\BackendComponent;
 use skeeks\cms\backend\grid\ControllerActionsColumn;
 use skeeks\cms\backend\models\BackendShowing;
 use skeeks\cms\backend\ViewBackendAction;
 use skeeks\cms\backend\widgets\GridViewWidget;
 use skeeks\cms\cmsWidgets\gridView\GridViewCmsWidget;
-use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\modules\admin\widgets\gridViewStandart\GridViewStandartAsset;
 use skeeks\cms\widgets\DynamicFiltersWidget;
 use skeeks\cms\widgets\FiltersWidget;
 use skeeks\yii2\config\storages\ConfigDbModelStorage;
-use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\web\JsExpression;
 /**
  * @property string $gridClassName
+ * @property string $configKey
  * @property [] $gridConfig
  *
  * ***
@@ -47,7 +45,7 @@ class BackendGridModelAction extends ViewBackendAction
      */
     public $filters;
 
-    public $backendShowingParam = 'sx-backend-showing';
+
     /**
      * @var
      */
@@ -55,10 +53,7 @@ class BackendGridModelAction extends ViewBackendAction
     protected $_initMultiOptions = null;
     protected $_buttonsMulti = null;
     protected $_additionalsMulti = null;
-    /**
-     * @var BackendShowing
-     */
-    protected $_backendShowing = null;
+
     /**
      * @return string
      */
@@ -85,10 +80,10 @@ class BackendGridModelAction extends ViewBackendAction
 
         $defaultGrid = [
             'class'              => GridViewWidget::class,
-            'beforeTableLeft'   => function (GridViewWidget $gridViewWidget) {
+            'beforeTableLeft'    => function (GridViewWidget $gridViewWidget) {
                 return $this->renderBeforeTable($gridViewWidget);
             },
-            'afterTableLeft'   => function (GridViewWidget $gridViewWidget) {
+            'afterTableLeft'     => function (GridViewWidget $gridViewWidget) {
                 return $this->renderAfterTable($gridViewWidget);
             },
             'beforeTableRight'   => function (GridViewWidget $gridViewWidget) {
@@ -123,7 +118,7 @@ JS
             },
             'modelClassName'     => $this->modelClassName,
             'configBehaviorData' => [
-                'configKey'     => $this->uniqueId,
+                'configKey'     => $this->configKey,
                 'configStorage' => [
                     'class'          => ConfigDbModelStorage::class,
                     'modelClassName' => $backendShowingClassName,
@@ -143,12 +138,12 @@ JS
                     ],
                 ],
                 'actions'  => [
-                    'class'           => ControllerActionsColumn::class,
-                    'controller'      => function ($action) {
+                    'class'         => ControllerActionsColumn::class,
+                    'controller'    => function ($action) {
                         return $this->controller;
                     },
-                    'label'           => \Yii::t('skeeks/backend', 'Actions'),
-                    'headerOptions'   => [
+                    'label'         => \Yii::t('skeeks/backend', 'Actions'),
+                    'headerOptions' => [
                         'class' => 'sx-grid-actions',
                     ],
                 ],
@@ -161,10 +156,10 @@ JS
         $defaultFilters = [
             'class'              => \skeeks\cms\backend\widgets\FiltersWidget::class,
             'activeForm'         => [
-                'action' => $this->getShowingUrl($this->getBackendShowing())
+                'action' => $this->getShowingUrl($this->getBackendShowing()),
             ],
             'configBehaviorData' => [
-                'configKey'     => $this->uniqueId,
+                'configKey'     => $this->configKey,
                 'configStorage' => [
                     'class'          => ConfigDbModelStorage::class,
                     'modelClassName' => $backendShowingClassName,
@@ -180,46 +175,6 @@ JS
         BackendGridModelActionAsset::register(\Yii::$app->view);
 
     }
-
-    public function getFiltersConfig()
-    {
-        $filters = $this->filters;
-        ArrayHelper::remove($filters, 'class');
-        return (array)$filters;
-    }
-
-    public function getFiltersClassName()
-    {
-        return (string)ArrayHelper::getValue($this->filters, 'class');
-    }
-
-    public function getGridClassName()
-    {
-        return (string)ArrayHelper::getValue($this->grid, 'class');
-    }
-
-    /**
-     * @return string
-     */
-    public function getGridConfig()
-    {
-        $grid = $this->grid;
-        ArrayHelper::remove($grid, 'class');
-        return (array)$grid;
-    }
-
-    public function run()
-    {
-        if ($this->callback) {
-            return call_user_func($this->callback, $this);
-        }
-
-        return $this->render('@skeeks/cms/backend/actions/views/grid');
-    }
-
-
-
-
     /**
      * @return string
      */
@@ -234,7 +189,6 @@ JS
         $this->_initMultiActions($gridViewWidget);
         return $this->_buttonsMulti;
     }
-
     protected function _initMultiActions(GridViewWidget $gridViewWidget)
     {
         if ($this->_initMultiOptions === true) {
@@ -258,7 +212,7 @@ JS
         ];
         $optionsString = Json::encode($options);
 
-        $gridJsObject = "sx.Grid" . $gridViewWidget->id;
+        $gridJsObject = "sx.Grid".$gridViewWidget->id;
 
         $gridViewWidget->view->registerJs(<<<JS
         {$gridJsObject} = new sx.classes.grid.Standart($optionsString);
@@ -315,95 +269,60 @@ CSS
         return $this->_buttonsMulti.$this->_additionalsMulti;
 
     }
-
-
-    public function getBackendShowing()
+    public function getFiltersConfig()
     {
-        if ($this->_backendShowing === null || !$this->_backendShowing instanceof BackendShowing) {
-            //Find in get params
-            if ($id = (int)\Yii::$app->request->get($this->backendShowingParam)) {
-                if ($backendShowing = BackendShowing::findOne($id)) {
-                    $this->_backendShowing = $backendShowing;
-                    return $this->_backendShowing;
-                } /*else {
-                    \Yii::$app->response->redirect($this->indexUrl);
-                    \Yii::$app->end();
-                }*/
-            } elseif ($id = (int)\Yii::$app->request->post($this->backendShowingParam)) {
-                if ($backendShowing = BackendShowing::findOne($id)) {
-                    $this->_backendShowing = $backendShowing;
-                    return $this->_backendShowing;
-                }
-            }
-
-            //Defauilt filter
-            $backendShowing = BackendShowing::find()
-                ->where(['key' => $this->uniqueId])
-                //->andWhere(['cms_user_id' => \Yii::$app->user->id])
-                ->andWhere(['is_default' => 1])
-                ->one();
-
-            if (!$backendShowing) {
-                $backendShowing = new BackendShowing([
-                    'key'        => $this->uniqueId,
-                    //'cms_user_id' => \Yii::$app->user->id,
-                    'is_default' => 1,
-                ]);
-                $backendShowing->loadDefaultValues();
-
-                if ($backendShowing->save()) {
-
-                } else {
-                    throw new Exception('Backend showing not saved');
-                }
-            }
-
-            $this->_backendShowing = $backendShowing;
-        }
-
-        return $this->_backendShowing;
+        $filters = $this->filters;
+        ArrayHelper::remove($filters, 'class');
+        return (array)$filters;
     }
-
-
+    public function getFiltersClassName()
+    {
+        return (string)ArrayHelper::getValue($this->filters, 'class');
+    }
+    public function getGridClassName()
+    {
+        return (string)ArrayHelper::getValue($this->grid, 'class');
+    }
     /**
-     * @param BackendShowing $backendShowing
      * @return string
      */
-    public function getShowingUrl(BackendShowing $backendShowing)
+    public function getGridConfig()
     {
-        $query = [];
-        $url = $this->url;
+        $grid = $this->grid;
+        ArrayHelper::remove($grid, 'class');
+        return (array)$grid;
+    }
 
-        if ($pos = strpos($url, "?")) {
-            $url = StringHelper::substr($url, 0, $pos);
-            $stringQuery = StringHelper::substr($url, $pos + 1, StringHelper::strlen($url));
-            parse_str($stringQuery, $query);
+    public function run()
+    {
+        if ($this->callback) {
+            return call_user_func($this->callback, $this);
         }
 
-        $query = [];
-        /*if ($filter->values)
-        {
-            $query = (array) $filter->values;
-        }*/
+        return $this->render('@skeeks/cms/backend/actions/views/grid', ['action' => $this]);
+    }
 
-        $query[$this->backendShowingParam] = $backendShowing->id;
-        return $url."?".http_build_query($query);
+    protected $_configKey = null;
+
+    /**
+     * @param $key
+     * @return $this
+     */
+    public function setConfigKey($key)
+    {
+        $this->_configKey = $key;
+        return $this;
     }
 
     /**
-     * @return array|BackendShowing[]
+     * @return null|string
      */
-    public function getBackendShowings()
+    public function getConfigKey()
     {
-        return BackendShowing::find()->where([
-            'key' => $this->uniqueId,
-        ])
-            ->andWhere([
-                'or',
-                ['cms_user_id' => null],
-                ['cms_user_id' => \Yii::$app->user->id],
-            ])
-            ->orderBy(['priority' => SORT_ASC])
-            ->all();
+        if ($this->_configKey === null) {
+            return $this->uniqueId;
+        }
+
+        return $this->_configKey;
     }
 }

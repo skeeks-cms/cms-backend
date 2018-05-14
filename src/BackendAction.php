@@ -8,6 +8,8 @@
 
 namespace skeeks\cms\backend;
 
+use skeeks\cms\backend\models\BackendShowing;
+use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\IHasIcon;
 use skeeks\cms\IHasImage;
 use skeeks\cms\IHasName;
@@ -90,5 +92,111 @@ class BackendAction extends Action
         }
 
         return $result;
+    }
+
+
+
+
+
+
+
+
+
+    public $backendShowingParam = 'sx-backend-showing';
+
+
+    /**
+     * @var BackendShowing
+     */
+    protected $_backendShowing = null;
+
+    public function getBackendShowing()
+    {
+        if ($this->_backendShowing === null || !$this->_backendShowing instanceof BackendShowing) {
+            //Find in get params
+            if ($id = (int)\Yii::$app->request->get($this->backendShowingParam)) {
+                if ($backendShowing = BackendShowing::findOne($id)) {
+                    $this->_backendShowing = $backendShowing;
+                    return $this->_backendShowing;
+                } /*else {
+                    \Yii::$app->response->redirect($this->indexUrl);
+                    \Yii::$app->end();
+                }*/
+            } elseif ($id = (int)\Yii::$app->request->post($this->backendShowingParam)) {
+                if ($backendShowing = BackendShowing::findOne($id)) {
+                    $this->_backendShowing = $backendShowing;
+                    return $this->_backendShowing;
+                }
+            }
+
+            //Defauilt filter
+            $backendShowing = BackendShowing::find()
+                ->where(['key' => $this->uniqueId])
+                //->andWhere(['cms_user_id' => \Yii::$app->user->id])
+                ->andWhere(['is_default' => 1])
+                ->one();
+
+            if (!$backendShowing) {
+                $backendShowing = new BackendShowing([
+                    'key'        => $this->uniqueId,
+                    //'cms_user_id' => \Yii::$app->user->id,
+                    'is_default' => 1,
+                ]);
+                $backendShowing->loadDefaultValues();
+
+                if ($backendShowing->save()) {
+
+                } else {
+                    throw new Exception('Backend showing not saved');
+                }
+            }
+
+            $this->_backendShowing = $backendShowing;
+        }
+
+        return $this->_backendShowing;
+    }
+
+
+    /**
+     * @param BackendShowing $backendShowing
+     * @return string
+     */
+    public function getShowingUrl(BackendShowing $backendShowing)
+    {
+        $query = [];
+        $url = $this->url;
+
+        if ($pos = strpos($url, "?")) {
+            $url = StringHelper::substr($url, 0, $pos);
+            $stringQuery = StringHelper::substr($url, $pos + 1, StringHelper::strlen($url));
+            parse_str($stringQuery, $query);
+        }
+
+        $query = [];
+        /*if ($filter->values)
+        {
+            $query = (array) $filter->values;
+        }*/
+
+        $query[$this->backendShowingParam] = $backendShowing->id;
+        return $url."?".http_build_query($query);
+    }
+
+    /**
+     * @return array|BackendShowing[]
+     */
+    public function getBackendShowings()
+    {
+        return BackendShowing::find()->where([
+            'key' => $this->uniqueId,
+        ])
+            ->andWhere([
+                'or',
+                ['cms_user_id' => null],
+                ['cms_user_id' => \Yii::$app->user->id],
+            ])
+            ->orderBy(['priority' => SORT_ASC])
+            ->all();
     }
 }

@@ -8,8 +8,8 @@
 /* @var $this yii\web\View */
 /* @var $action \skeeks\cms\backend\actions\BackendGridModelAction */
 /* @var $backendShowing \skeeks\cms\backend\models\BackendShowing */
+/* @var $controller \skeeks\crm\controllers\AdminCrmContactController */
 $controller = $this->context;
-$action = $controller->action;
 ?>
 <?php $pjax = \skeeks\cms\widgets\Pjax::begin(); ?>
 <?
