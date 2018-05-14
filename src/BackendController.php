@@ -61,23 +61,20 @@ abstract class BackendController extends Controller
      */
     public function behaviors()
     {
-        return
-            [
-                'access' =>
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
                     [
-                        'class' => AccessControl::className(),
-                        'rules' =>
-                            [
-                                [
-                                    'allow'         => true,
-                                    'matchCallback' => function ($rule, $action) {
-                                        //Creating and Assigning Privileges for the Root User
-                                        return $this->isAllow;
-                                    },
-                                ],
-                            ],
+                        'allow'         => true,
+                        'matchCallback' => function ($rule, $action) {
+                            //Creating and Assigning Privileges for the Root User
+                            return $this->isAllow;
+                        },
                     ],
-            ];
+                ],
+            ],
+        ];
     }
     public function init()
     {
