@@ -144,23 +144,25 @@ JS
         $widgetFiltersClassName = $action->filtersClassName;
         ?>
 
-    <?
-    $grid = $widgetClassName::begin((array)$action->gridConfig);
-    ?>
+        <?
+        $grid = $widgetClassName::begin((array)$action->gridConfig);
+        ?>
 
         <?
-        $filtersConfig = (array)$action->filtersConfig;
-        $filtersConfig['dataProvider'] = $grid->dataProvider;
+        if ($widgetFiltersClassName) {
+            $filtersConfig = (array)$action->filtersConfig;
+            $filtersConfig['dataProvider'] = $grid->dataProvider;
 
-        $component = $widgetFiltersClassName::begin($filtersConfig);
-        $widgetFiltersClassName::end();
+            $component = $widgetFiltersClassName::begin($filtersConfig);
+            $widgetFiltersClassName::end();
+        }
         ?>
 
     <?
     $widgetClassName::end();
     ?>
         <? if (YII_ENV === 'dev') : ?>
-            <pre><code><?= $component->dataProvider->query->createCommand()->rawSql; ?></code></pre>
+            <pre><code><?= $grid->dataProvider->query->createCommand()->rawSql; ?></code></pre>
         <? endif; ?>
     </div>
 <?php \skeeks\cms\widgets\Pjax::end(); ?>

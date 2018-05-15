@@ -170,7 +170,12 @@ JS
         ];
 
         $this->grid = (array)ArrayHelper::merge($defaultGrid, (array)$this->grid);
-        $this->filters = (array)ArrayHelper::merge($defaultFilters, (array)$this->filters);
+        if ($this->filters === false) {
+            $this->filters = false;
+        } else {
+            $this->filters = (array)ArrayHelper::merge($defaultFilters, (array) $this->filters);
+        }
+
 
         BackendGridModelActionAsset::register(\Yii::$app->view);
 
@@ -273,11 +278,11 @@ CSS
     {
         $filters = $this->filters;
         ArrayHelper::remove($filters, 'class');
-        return (array)$filters;
+        return (array) $filters;
     }
     public function getFiltersClassName()
     {
-        return (string)ArrayHelper::getValue($this->filters, 'class');
+        return (string) ArrayHelper::getValue($this->filters, 'class');
     }
     public function getGridClassName()
     {
