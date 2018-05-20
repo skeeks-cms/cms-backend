@@ -111,7 +111,7 @@ class BackendUrlHelper extends Component
     {
         $params = $this->backendParams;
         $params[$paramName] = $paramValue;
-        $this->backendParams = $params;
+        $this->setBackendParams($params);
 
         return $this;
     }
@@ -123,7 +123,7 @@ class BackendUrlHelper extends Component
      */
     public function getBackenParam($paramName, $default = null)
     {
-        $params = $this->backendParams;
+        $params = $this->getBackendParams();
         return ArrayHelper::getValue($params, $paramName, $default);
     }
 

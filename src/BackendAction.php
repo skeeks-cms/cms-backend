@@ -8,6 +8,7 @@
 
 namespace skeeks\cms\backend;
 
+use skeeks\cms\backend\helpers\BackendUrlHelper;
 use skeeks\cms\backend\models\BackendShowing;
 use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\IHasIcon;
@@ -174,13 +175,14 @@ class BackendAction extends Action
         }
 
         $query = [];
-        /*if ($filter->values)
-        {
-            $query = (array) $filter->values;
-        }*/
+
+        $url = BackendUrlHelper::createByParams();
+        $url->params = $this->urlData;
+        $url->params[$this->backendShowingParam] = $backendShowing->id;
+        $url->setBackendParamsByCurrentRequest();
 
         $query[$this->backendShowingParam] = $backendShowing->id;
-        return $url."?".http_build_query($query);
+        return $url->url;
     }
 
     /**
