@@ -113,6 +113,7 @@ class BackendGridModelAction extends ViewBackendAction
             new sx.classes.backend.EditComponent({$editComponent}); return false;
 JS
                             ),
+                            
                         ]).$callableDataInput .
                     Html::a('<i class="glyphicon glyphicon-fullscreen"></i>', '#', [
                         'class'   => 'btn btn-sm',
