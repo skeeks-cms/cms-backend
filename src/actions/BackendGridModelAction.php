@@ -11,7 +11,6 @@ namespace skeeks\cms\backend\actions;
 use skeeks\cms\backend\actions\assets\BackendGridModelActionAsset;
 use skeeks\cms\backend\BackendComponent;
 use skeeks\cms\backend\grid\ControllerActionsColumn;
-use skeeks\cms\backend\models\BackendShowing;
 use skeeks\cms\backend\ViewBackendAction;
 use skeeks\cms\backend\widgets\GridViewWidget;
 use skeeks\cms\cmsWidgets\gridView\GridViewCmsWidget;
@@ -114,7 +113,23 @@ class BackendGridModelAction extends ViewBackendAction
             new sx.classes.backend.EditComponent({$editComponent}); return false;
 JS
                             ),
-                        ]).$callableDataInput."</div>";
+                        ]).$callableDataInput .
+                    Html::a('<i class="glyphicon glyphicon-fullscreen"></i>', '#', [
+                        'class'   => 'btn btn-sm',
+                        'onclick' => new JsExpression(<<<JS
+                        if (!jQuery(this).closest('.sx-grid-view').hasClass('sx-grid-view-full')) {
+                            jQuery(this).closest('.sx-grid-view').addClass('sx-grid-view-full'); return false;
+                            jQuery('body').addClass('has-sx-grid-view-full');
+                        } else {
+                            jQuery(this).closest('.sx-grid-view').removeClass('sx-grid-view-full'); return false;
+                            jQuery('body').removeClass('has-sx-grid-view-full');
+                        }
+            
+JS
+                            ),
+                    ])
+                        
+                        . "</div>";
             },
             'modelClassName'     => $this->modelClassName,
             'configBehaviorData' => [
