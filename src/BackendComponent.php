@@ -5,6 +5,7 @@
  * @copyright 2010 SkeekS
  * @date 08.03.2017
  */
+
 namespace skeeks\cms\backend;
 
 use yii\base\Application;
@@ -26,6 +27,12 @@ class BackendComponent extends Component
 {
     const EVENT_BEFORE_RUN = 'beforeRun';
     const EVENT_RUN = 'run';
+    /**
+     * @var BackendComponent
+     */
+    static protected $_runningBakcend = null;
+
+    public $id;
 
     /**
      * @var array the list of IPs that are allowed to access this module.
@@ -35,12 +42,30 @@ class BackendComponent extends Component
      * by localhost.
      */
     public $allowedIPs = ['*'];
-
     /**
-     * @var BackendComponent
+     * @var string
      */
-    static protected $_runningBakcend = null;
-
+    public $controllerPrefix = "";
+    /**
+     * @var array
+     */
+    public $urlRule = [];
+    /**
+     * @var string
+     */
+    public $backendShowingControllerRoute = '/backend/admin-backend-showing';
+    /**
+     * @var bool
+     */
+    public $isMergeControllerMenu = false;
+    /**
+     * @var null
+     */
+    protected $_menu = null;
+    /**
+     * @var bool
+     */
+    protected $_isRunning = false;
     /**
      * @return null|BackendComponent
      */
@@ -48,33 +73,6 @@ class BackendComponent extends Component
     {
         return static::$_runningBakcend;
     }
-
-    /**
-     * @var string
-     */
-    public $controllerPrefix    = "";
-
-    /**
-     * @var array
-     */
-    public $urlRule             = [];
-
-    /**
-     * @var null
-     */
-    protected $_menu = null;
-
-
-    /**
-     * @var string
-     */
-    public $backendShowingControllerRoute = '/backend/admin-backend-showing';
-
-    /**
-     * @var bool
-     */
-    public $isMergeControllerMenu = false;
-
     /**
      * @throws InvalidConfigException
      */
@@ -82,52 +80,62 @@ class BackendComponent extends Component
     {
         parent::init();
 
-        if (!$this->controllerPrefix)
-        {
-            throw new InvalidConfigException('Need controller prefix: ' . static::class);
+        if (!$this->controllerPrefix) {
+            throw new InvalidConfigException('Need controller prefix: '.static::class);
         }
     }
-
 
     /**
      * @param Application $application
      */
     public function bootstrap($application)
     {
-        if ($application instanceof \yii\web\Application)
-        {
-            if ($this->_checkAccess())
-            {
+        if ($application instanceof \yii\web\Application) {
+            if ($this->_checkAccess()) {
                 /**
                  * Adding routing rules
                  */
                 $this->urlRule = ArrayHelper::merge([
-                    'class' => 'skeeks\cms\backend\BackendUrlRule'
+                    'class' => 'skeeks\cms\backend\BackendUrlRule',
                 ], $this->urlRule, [
-                    'controllerPrefix'  => $this->controllerPrefix,
-                    'backend'           => $this
+                    'controllerPrefix' => $this->controllerPrefix,
+                    'backendId'        => $this->id,
                 ]);
 
                 $application->urlManager->addRules([$this->urlRule]);
             }
         }
     }
-
     /**
-     * @var bool
+     * @return boolean whether the module can be accessed by the current user
      */
-    protected $_isRunning = false;
+    protected function _checkAccess()
+    {
+        if (\Yii::$app instanceof \yii\web\Application) {
+            $ip = \Yii::$app->getRequest()->getUserIP();
 
+            foreach ($this->allowedIPs as $filter) {
+                if ($filter === '*' || $filter === $ip || (($pos = strpos($filter, '*')) !== false && !strncmp($ip, $filter, $pos))) {
+                    return true;
+                }
+            }
+
+            \Yii::warning('Access to Backend is denied due to IP address restriction. The requested IP is '.$ip, __METHOD__);
+
+            return false;
+        }
+
+        return true;
+    }
     /**
      * Run backend app
      * @return $this
      */
     public function run()
     {
-        if ($this->_isRunning === false && $this->_checkAccess())
-        {
-            $this->_isRunning           = true;
-            static::$_runningBakcend    = $this;
+        if ($this->_isRunning === false && $this->_checkAccess()) {
+            $this->_isRunning = true;
+            static::$_runningBakcend = $this;
 
             $event = new Event();
             $this->trigger(self::EVENT_BEFORE_RUN, $event);
@@ -137,37 +145,30 @@ class BackendComponent extends Component
             $event = new Event();
             $this->trigger(self::EVENT_RUN, $event);
         }
-        
+
         return $this;
     }
-
     protected function _run()
     {
         //Backend run code
     }
-
-
     /**
      * @return BackendMenu
      */
     public function getMenu()
     {
-        if (is_array($this->_menu) || $this->_menu === null)
-        {
-            $data = (array) $this->_menu;
-            if (!ArrayHelper::getValue($data, 'class'))
-            {
+        if (is_array($this->_menu) || $this->_menu === null) {
+            $data = (array)$this->_menu;
+            if (!ArrayHelper::getValue($data, 'class')) {
                 $data['class'] = BackendMenu::class;
             }
 
-            if (!ArrayHelper::getValue($data, 'data'))
-            {
+            if (!ArrayHelper::getValue($data, 'data')) {
                 $data['data'] = [];
             }
 
-            if ($this->isMergeControllerMenu)
-            {
-                $data['data'] = ArrayHelper::merge((array) $this->getMenuDataFromControllers(), (array) $data['data']);
+            if ($this->isMergeControllerMenu) {
+                $data['data'] = ArrayHelper::merge((array)$this->getMenuDataFromControllers(), (array)$data['data']);
             }
 
             $this->_menu = \Yii::createObject($data);
@@ -175,7 +176,6 @@ class BackendComponent extends Component
 
         return $this->_menu;
     }
-
     /**
      * @param array $data
      * @return $this
@@ -185,8 +185,6 @@ class BackendComponent extends Component
         $this->_menu = $data;
         return $this;
     }
-
-
     /**
      * Загрузка данных для меню из контроллеров
      *
@@ -194,28 +192,23 @@ class BackendComponent extends Component
      */
     public function getMenuDataFromControllers()
     {
-        \Yii::beginProfile('getMenuDataFromControllers: ' . $this->controllerPrefix);
+        \Yii::beginProfile('getMenuDataFromControllers: '.$this->controllerPrefix);
 
         $result = [];
 
-        foreach ($this->getCommands() as $route)
-        {
-            if ($class = \Yii::$app->createController($route))
-            {
+        foreach ($this->getCommands() as $route) {
+            if ($class = \Yii::$app->createController($route)) {
                 $class = $class[0];
-                if (method_exists($class, 'getBackendMenuData'))
-                {
+                if (method_exists($class, 'getBackendMenuData')) {
                     $result = ArrayHelper::merge($result, $class->getBackendMenuData());
                 }
             }
         }
 
-        \Yii::endProfile('getMenuDataFromControllers: ' . $this->controllerPrefix);
+        \Yii::endProfile('getMenuDataFromControllers: '.$this->controllerPrefix);
 
         return $result;
     }
-
-
     /**
      * Все контроллеры которыми оперирует данный backend компонент
      *
@@ -223,31 +216,27 @@ class BackendComponent extends Component
      */
     public function getCommands()
     {
-        \Yii::beginProfile('getControllers: ' . $this->controllerPrefix);
+        \Yii::beginProfile('getControllers: '.$this->controllerPrefix);
 
         $controllers = [];
 
-        if ($allControllers = static::getAppCommands())
-        {
-            foreach ($allControllers as $controllerRoute)
-            {
+        if ($allControllers = static::getAppCommands()) {
+            foreach ($allControllers as $controllerRoute) {
                 $controllerRoutes = explode('/', $controllerRoute);
                 $controllerRouteLast = $controllerRoutes[count($controllerRoutes) - 1];
 
                 $prefixs = explode("-", $controllerRouteLast);
 
-                if (isset($prefixs[0]) && $prefixs[0] == $this->controllerPrefix)
-                {
+                if (isset($prefixs[0]) && $prefixs[0] == $this->controllerPrefix) {
                     $controllers[] = $controllerRoute;
                 }
             }
         }
 
-        \Yii::endProfile('getControllers: ' . $this->controllerPrefix);
+        \Yii::endProfile('getControllers: '.$this->controllerPrefix);
 
         return $controllers;
     }
-
     /**
      * TODO:: add cache!
      *
@@ -266,8 +255,6 @@ class BackendComponent extends Component
 
         return $result;
     }
-
-
     /**
      * Returns available commands of a specified module.
      * @param \yii\base\Module $module the module instance
@@ -275,11 +262,11 @@ class BackendComponent extends Component
      */
     static public function getModuleCommands($module)
     {
-        $prefix = $module instanceof Application ? '' : $module->getUniqueId() . '/';
+        $prefix = $module instanceof Application ? '' : $module->getUniqueId().'/';
 
         $controllers = [];
         foreach (array_keys($module->controllerMap) as $id) {
-            $controllers[] = $prefix . $id;
+            $controllers[] = $prefix.$id;
         }
 
         foreach ($module->getModules() as $id => $child) {
@@ -296,9 +283,9 @@ class BackendComponent extends Component
             $files = scandir($controllerPath);
             foreach ($files as $file) {
                 if (!empty($file) && substr_compare($file, 'Controller.php', -14, 14) === 0) {
-                    $controllerClass = $module->controllerNamespace . '\\' . substr(basename($file), 0, -4);
+                    $controllerClass = $module->controllerNamespace.'\\'.substr(basename($file), 0, -4);
                     if (static::validateControllerClass($controllerClass)) {
-                        $controllers[] = $prefix . Inflector::camel2id(substr(basename($file), 0, -14));
+                        $controllers[] = $prefix.Inflector::camel2id(substr(basename($file), 0, -14));
                         //$controllers[] = $controllerClass;
                     }
                 }
@@ -307,7 +294,6 @@ class BackendComponent extends Component
 
         return $controllers;
     }
-
     /**
      * Validates if the given class is a valid console controller class.
      * @param string $controllerClass
@@ -321,29 +307,5 @@ class BackendComponent extends Component
         } else {
             return false;
         }
-    }
-
-
-    /**
-     * @return boolean whether the module can be accessed by the current user
-     */
-    protected function _checkAccess()
-    {
-        if (\Yii::$app instanceof \yii\web\Application)
-        {
-            $ip = \Yii::$app->getRequest()->getUserIP();
-
-            foreach ($this->allowedIPs as $filter) {
-                if ($filter === '*' || $filter === $ip || (($pos = strpos($filter, '*')) !== false && !strncmp($ip, $filter, $pos))) {
-                    return true;
-                }
-            }
-
-            \Yii::warning('Access to Backend is denied due to IP address restriction. The requested IP is ' . $ip, __METHOD__);
-
-            return false;
-        }
-
-        return true;
     }
 }
