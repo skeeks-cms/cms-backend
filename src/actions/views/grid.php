@@ -108,18 +108,21 @@ JS
                             $showingsController = \Yii::$app->createController($controllerRoute)[0];
                             $showingsController->setModel($backendShowing);
 
+                            if ($showingsController->modelActions) {
+                                echo \skeeks\cms\backend\widgets\ContextMenuControllerActionsWidget::widget([
+                                    'actions' => (array) $showingsController->modelActions,
+                                    'isOpenNewWindow' => true,
+                                    'rightClickSelectors' => ['#sx-tab-' . $backendShowing->id],
+                                    'button' => [
+                                        'class' => 'glyphicon glyphicon-cog',
+                                        'style' => 'font-size: 11px; cursor: pointer;',
+                                        'tag' => 'i',
+                                        'label' => '',
+                                    ]
+                                ]);
+                            }
 
-                            echo \skeeks\cms\backend\widgets\ContextMenuControllerActionsWidget::widget([
-                                'actions' => $showingsController->modelActions,
-                                'isOpenNewWindow' => true,
-                                'rightClickSelectors' => ['#sx-tab-' . $backendShowing->id],
-                                'button' => [
-                                    'class' => 'glyphicon glyphicon-cog',
-                                    'style' => 'font-size: 11px; cursor: pointer;',
-                                    'tag' => 'i',
-                                    'label' => '',
-                                ]
-                            ]);
+                            
                             ?>
                         <? endif; ?>
                     </a>
