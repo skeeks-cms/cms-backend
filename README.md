@@ -18,15 +18,6 @@ or add
 "skeeks/cms-backend": "*"
 ```
 
-```
-"repositories": [
-    {
-        "type": "git",
-        "url":  "https://github.com/skeeks-cms/cms-backend.git"
-    }
-]
-```
-
 Configuration app
 ----------
 
@@ -38,6 +29,7 @@ Configuration app
     [
         'backendAdmin' =>
         [
+            'id'                => 'id',
             'class'             => 'skeeks\cms\backend\BackendComponent',
             'controllerPrefix'  => 'admin',
             'urlRule'           => [
@@ -54,9 +46,9 @@ Configuration app
 
 Links
 -----
-* [Web site (rus)](https://cms.skeeks.com)
+* [Web site](https://cms.skeeks.com)
 * [Author](https://skeeks.com)
-* [ChangeLog](https://github.com/skeeks-cms/cms-vk-database/blob/master/CHANGELOG.md)
+* [ChangeLog](https://github.com/skeeks-cms/cms-backend/blob/master/CHANGELOG.md)
 
 ___
 
