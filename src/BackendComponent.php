@@ -104,6 +104,18 @@ class BackendComponent extends Component
 
                 $application->urlManager->addRules([$this->urlRule]);
             }
+        } else if ($application instanceof \yii\console\Application) {
+            /**
+             * Adding routing rules
+             */
+            $this->urlRule = ArrayHelper::merge([
+                'class' => 'skeeks\cms\backend\BackendUrlRule',
+            ], $this->urlRule, [
+                'controllerPrefix' => $this->controllerPrefix,
+                'backendId'        => $this->id,
+            ]);
+
+            $application->urlManager->addRules([$this->urlRule]);
         }
     }
     /**
