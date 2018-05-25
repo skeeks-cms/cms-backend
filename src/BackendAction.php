@@ -177,8 +177,16 @@ class BackendAction extends Action
         $query = [];
 
         $url = BackendUrlHelper::createByParams();
-        $url->params = $this->urlData;
-        $url->params[$this->backendShowingParam] = $backendShowing->id;
+        if (is_array($this->urlData)) {
+            $url->params = $this->urlData;
+            $url->params[$this->backendShowingParam] = $backendShowing->id;
+        } else {
+            parse_str($this->urlData, $query);
+            $url->params = $query;
+            $url->params[$this->backendShowingParam] = $backendShowing->id;
+        }
+
+
         $url->setBackendParamsByCurrentRequest();
 
         $query[$this->backendShowingParam] = $backendShowing->id;
