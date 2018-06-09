@@ -140,17 +140,13 @@ JS
     <? endif; ?>
 
     <div class="tab-content">
-        
-        
         <?
         $widgetClassName = $action->gridClassName;
         $widgetFiltersClassName = $action->filtersClassName;
         ?>
-
         <?
         $grid = $widgetClassName::begin((array)$action->gridConfig);
         ?>
-
         <?
         if ($widgetFiltersClassName) {
             $filtersConfig = (array)$action->filtersConfig;
