@@ -28,6 +28,7 @@ class BackendModelCreateAction extends ViewBackendAction
     use THasActiveForm;
 
     const EVENT_BEFORE_SAVE = 'beforeSave';
+    const EVENT_BEFORE_VALIDATE = 'beforeValidate';
 
     /**
      * @var bool
@@ -53,6 +54,21 @@ class BackendModelCreateAction extends ViewBackendAction
      */
     public $beforeContent;
 
+
+    /**
+     * @var string
+     */
+    public $afterSaveUrl = '';
+
+    /**
+     * @var string
+     */
+    public $successMessage = '';
+
+    /**
+     * @var bool
+     */
+    public $isSaveFormModels = true;
 
     public function init()
     {
@@ -104,6 +120,8 @@ class BackendModelCreateAction extends ViewBackendAction
             }
         }
 
+        $isValid = true;
+
         if ($rr->isRequestPjaxPost()) {
 
             try {
@@ -112,51 +130,62 @@ class BackendModelCreateAction extends ViewBackendAction
                         $fmodel->load(\Yii::$app->request->post());
                     }
 
+                    $this->trigger(self::EVENT_BEFORE_VALIDATE);
+
                     foreach ($this->formModels as $fmodel) {
-                        if ($fmodel->validate()) {
+                        if ($model->validate()) {
 
                         } else {
-                            throw new Exception("Не удалось сохранить данные: " . print_r($fmodel->errors, true));
+                            $isValid = false;
+                            //throw new Exception("Не удалось сохранить данные: ".print_r($model->errors, true));
                         }
                     }
 
-                    $this->trigger(self::EVENT_BEFORE_SAVE);
+                    if ($isValid) {
+                        $this->trigger(self::EVENT_BEFORE_SAVE);
 
-                    foreach ($this->formModels as $fmodel) {
-                        if ($fmodel->save($this->modelValidate)) {
-                            $fmodel->refresh();
-                        } else {
-                            throw new Exception("Не удалось сохранить данные: " . print_r($fmodel->errors, true));
-                        }
-                    }
-
-                    \Yii::$app->getSession()->setFlash('success', \Yii::t('skeeks/cms', 'Saved'));
-
-                    if (\Yii::$app->request->post('submit-btn') == 'apply') {
-                        $url = '';
-                        $this->controller->model = $model;
-
-                        if ($this->controller->modelActions) {
-                            if ($action = ArrayHelper::getValue($this->controller->modelActions,
-                                $this->controller->modelDefaultAction)) {
-                                $url = $action->url;
+                        if ($this->isSaveFormModels) {
+                            foreach ($this->formModels as $model) {
+                                if (method_exists($model, 'save') && $model->save($this->modelValidate)) {
+                                    $model->refresh();
+                                } else {
+                                    throw new Exception("Не удалось сохранить данные: ".print_r($model->errors, true));
+                                }
                             }
                         }
 
-                        if (!$url) {
-                            $url = $this->controller->url;
+                        if (!$this->successMessage) {
+                            $this->successMessage = \Yii::t('skeeks/cms', 'Saved');
                         }
 
-                        return $this->controller->redirect($url);
-                    } else {
-                        return $this->controller->redirect(
-                            $this->controller->url
-                        );
+                        \Yii::$app->getSession()->setFlash('success', $this->successMessage);
+
+                        if (\Yii::$app->request->post('submit-btn') == 'apply') {
+                            $url = '';
+                            $this->controller->model = $model;
+
+                            if ($this->controller->modelActions) {
+                                if ($action = ArrayHelper::getValue($this->controller->modelActions,
+                                    $this->controller->modelDefaultAction)) {
+                                    $url = $action->url;
+                                }
+                            }
+
+                            if (!$url) {
+                                $url = $this->controller->url;
+                            }
+
+                            return $this->controller->redirect($url);
+                        } else {
+                            return $this->controller->redirect(
+                                $this->controller->url
+                            );
+                        }
                     }
+
                 }
             } catch (\Exception $e) {
-                throw $e;
-                //\Yii::$app->getSession()->setFlash('error', $e->getMessage());
+                \Yii::$app->getSession()->setFlash('error', $e->getMessage());
             }
         }
 
