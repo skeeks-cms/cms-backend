@@ -198,7 +198,7 @@ trait TBackendModelController
      * @param Model|ActiveRecord $model
      * @return $this
      */
-    public function setModel(BaseObject $model = null)
+    public function setModel($model = null)
     {
         $this->_model = $model;
         return $this;

@@ -63,6 +63,8 @@ class BackendGridModelAction extends ViewBackendAction
 
     public function init()
     {
+        \Yii::info("Здесь: " . $this->uniqueId);
+
         if (!$this->icon) {
             $this->icon = "glyphicon glyphicon-th-list";
         }

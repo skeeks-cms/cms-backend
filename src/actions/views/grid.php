@@ -164,7 +164,7 @@ JS
     <?
     $widgetClassName::end();
     ?>
-        <? if (YII_ENV === 'dev') : ?>
+        <? if (YII_ENV === 'dev' && isset($grid->dataProvider->query)) : ?>
             <pre><code><?= $grid->dataProvider->query->createCommand()->rawSql; ?></code></pre>
         <? endif; ?>
     </div>
