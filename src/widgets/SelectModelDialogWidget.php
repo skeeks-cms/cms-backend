@@ -5,53 +5,50 @@
  * @copyright (c) 2010 SkeekS
  * @date 21.08.2017
  */
+
 namespace skeeks\cms\backend\widgets;
+
 use skeeks\cms\backend\helpers\BackendUrlHelper;
 use skeeks\cms\backend\widgets\assets\SelectModelDialogWidgetAsset;
+use skeeks\cms\base\ActiveRecord;
 use skeeks\cms\Exception;
-use skeeks\cms\models\CmsContentElement;
 use skeeks\cms\models\Publication;
-use skeeks\cms\modules\admin\Module;
 use yii\base\InvalidConfigException;
-use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
-use yii\helpers\Json;
 use yii\helpers\Url;
-use yii\web\Application;
 use yii\widgets\InputWidget;
-use Yii;
 
 /**
  *
  *
  * <?= $form->field($model, 'name')->widget(
-        \skeeks\cms\backend\widgets\SelectModelDialogWidget::class,
-        [
-            'dialogRoute' => ['/cms/admin-user'],
-            'previewValueClientCallback' => new \yii\web\JsExpression(<<<JS
-function(data)
-{
-console.log(data);
-return '<a href="' + data.id + '" target="_blank" data-pjax="0">' + data.name + '</a>'
-}
-JS
-            ),
-            'previewValueCallback' => function(\skeeks\cms\backend\widgets\SelectModelDialogWidget $selectModelDialogWidget)
-            {
-                return $selectModelDialogWidget->model->name;
-            }
-        ]
-    ); ?>
-*
-*
- * @property string $url
+ * \skeeks\cms\backend\widgets\SelectModelDialogWidget::class,
+ * [
+ * 'dialogRoute' => ['/cms/admin-user'],
+ * 'previewValueClientCallback' => new \yii\web\JsExpression(<<<JS
+ * function(data)
+ * {
+ * console.log(data);
+ * return '<a href="' + data.id + '" target="_blank" data-pjax="0">' + data.name + '</a>'
+ * }
+ * JS
+ * ),
+ * 'initClientDataModelCallback' => function($model)
+ * {
+ * return $model->toArray();
+ * }
+ * ]
+ * ); ?>
+ *
+ *
+ * @property string       $url
  * @property string|array $inputValue
- * @property string $callbackEventName
+ * @property string       $callbackEventName
  *
- * @property array $initClientData
+ * @property array        $initClientData
  *
- * @property string $selectBtn
+ * @property string       $selectBtn
  * @package skeeks\widget\SelectModelDialog
  */
 class SelectModelDialogWidget extends InputWidget
@@ -104,12 +101,12 @@ class SelectModelDialogWidget extends InputWidget
     public $viewFile = '@skeeks/cms/backend/widgets/views/select-model-dialog';
 
     protected $_selectBtn = [
-        'tag' => 'a',
+        'tag'     => 'a',
         'content' => '<i class="glyphicon glyphicon-th-list" aria-hidden="true"></i>',
         'options' => [
             'class' => 'btn btn-default sx-btn-create btn-xs',
-            'title' => 'Выбрать значение'
-        ]
+            'title' => 'Выбрать значение',
+        ],
     ];
 
     public function init()
@@ -119,32 +116,31 @@ class SelectModelDialogWidget extends InputWidget
         }
 
         if (!$this->id) {
-            $this->id = $this->id . "-" . \Yii::$app->security->generateRandomString(10);
+            $this->id = $this->id."-".\Yii::$app->security->generateRandomString(10);
         }
 
         $this->clientOptions['id'] = $this->id;
         parent::init();
     }
-
+    /**
+     * @return array
+     */
+    public function getSelectBtn()
+    {
+        return $this->_selectBtn;
+    }
     /**
      * @param array $selectBtn
      * @return $this
      */
-    public function setSelectBtn($selectBtn = []) {
+    public function setSelectBtn($selectBtn = [])
+    {
         $this->_selectBtn = ArrayHelper::merge($this->_selectBtn, $selectBtn);
 
         Html::addCssClass($this->_selectBtn['options'], 'sx-btn-create');
         return $this;
 
     }
-
-    /**
-     * @return array
-     */
-    public function getSelectBtn() {
-        return $this->_selectBtn;
-    }
-
     /**
      * @return string
      */
@@ -216,13 +212,21 @@ class SelectModelDialogWidget extends InputWidget
 
         if ($this->previewValueClientCallback) {
             $this->clientOptions['previewValueClientCallback'] = $this->previewValueClientCallback;
-        }
+        } else {
+            $this->clientOptions['previewValueClientCallback'] = new \yii\web\JsExpression(<<<JS
+                function(data)
+                {
+                    return '<a href="#" target="_blank" data-pjax="0">' + data.asText + '</a>'
+                }
+JS
+            );
+                }
         if ($initClientData = $this->initClientData) {
             $this->clientOptions['initClientData'] = $initClientData;
         }
 
         return $this->render($this->viewFile, [
-            'input' => $input
+            'input' => $input,
         ]);
     }
 
@@ -232,7 +236,7 @@ class SelectModelDialogWidget extends InputWidget
      */
     public function getCallbackEventName()
     {
-        return $this->id . '-select-dialog';
+        return $this->id.'-select-dialog';
     }
 
     /**
@@ -277,7 +281,13 @@ class SelectModelDialogWidget extends InputWidget
                     if ($initClientDataModelCallback = $this->initClientDataModelCallback) {
                         $result[] = (array)$initClientDataModelCallback($model);
                     } else {
-                        $result[] = $model->toArray();
+                        if ($model instanceof ActiveRecord) {
+                            $result[] = ArrayHelper::merge($model->toArray(), [
+                                'asText' => $model->asText
+                            ]);
+                        } else {
+                            $result[] = $model->toArray();
+                        }
                     }
 
                 }
@@ -287,7 +297,14 @@ class SelectModelDialogWidget extends InputWidget
                 if ($initClientDataModelCallback = $this->initClientDataModelCallback) {
                     $result = (array)$initClientDataModelCallback($model);
                 } else {
-                    $result = $model->toArray();
+                    if ($model instanceof ActiveRecord) {
+                        $result = ArrayHelper::merge($model->toArray(), [
+                            'asText' => $model->asText
+                        ]);
+                    } else {
+                        $result = $model->toArray();
+                    }
+
                 }
             }
         }
