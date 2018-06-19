@@ -21,6 +21,7 @@ use skeeks\yii2\config\storages\ConfigDbModelStorage;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
+use yii\helpers\Url;
 use yii\web\JsExpression;
 /**
  * @property string $gridClassName
@@ -108,7 +109,23 @@ class BackendGridModelAction extends ViewBackendAction
                     'id'    => $gridViewWidget->id."-edit",
                     'style' => 'display: none;',
                 ]);
-                return '<div class="sx-grid-settings">'.Html::a('<i class="glyphicon glyphicon-cog"></i>',
+
+                \Yii::$app->request->url;
+
+                $url = Url::current([
+                    $gridViewWidget->exportParam => $gridViewWidget->id
+                ]);
+
+                return '<div class="sx-grid-settings">'.
+
+                    Html::a('<i class="fa fa-download"></i>', $url, [
+                        'target'   => '_blank',
+                        'data-pjax'   => '0',
+                        'title'   => 'Экспорт в CSV',
+                        'class'   => 'btn btn-sm',
+                    ])
+                    .
+                    Html::a('<i class="glyphicon glyphicon-cog"></i>',
                         '#', [
                             'class'   => 'btn btn-sm',
                             'onclick' => new JsExpression(<<<JS
@@ -116,7 +133,10 @@ class BackendGridModelAction extends ViewBackendAction
 JS
                             ),
                             
-                        ]).$callableDataInput .
+                        ])
+
+                    .$callableDataInput .
+
                     Html::a('<i class="glyphicon glyphicon-fullscreen"></i>', '#', [
                         'class'   => 'btn btn-sm',
                         'onclick' => new JsExpression(<<<JS
@@ -131,6 +151,8 @@ JS
 JS
                             ),
                     ])
+
+
                         
                         . "</div>";
             },
