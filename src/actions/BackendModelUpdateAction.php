@@ -120,8 +120,6 @@ class BackendModelUpdateAction extends BackendModelAction
                         $model->load(\Yii::$app->request->post());
                     }
 
-
-
                     /**
                      * @var $model DynamicModel
                      */
@@ -166,6 +164,11 @@ class BackendModelUpdateAction extends BackendModelAction
                         );
                     }
 
+                } else {
+                    foreach ($this->formModels as $model) {
+                        $model->load(\Yii::$app->request->post());
+                        $model->validate();
+                    }
                 }
             } catch (\Exception $e) {
                 \Yii::$app->getSession()->setFlash('error', $e->getMessage());
