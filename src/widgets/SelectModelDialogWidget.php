@@ -166,7 +166,7 @@ class SelectModelDialogWidget extends InputWidget
                 $this->options['multiple'] = true;
 
                 $items = [];
-                if ($this->inputValue) {
+                if ($this->inputValue && is_array($this->inputValue)) {
                     foreach (array_values($this->inputValue) as $id) {
                         if (is_object($id)) {
                             //TODO: не всегда id
@@ -187,7 +187,9 @@ class SelectModelDialogWidget extends InputWidget
             if ($this->multiple) {
                 $this->options['multiple'] = true;
                 $items = [];
-                if ($this->inputValue) {
+                $value = [];
+                if ($this->inputValue && is_array($this->inputValue)) {
+                    $value = $this->inputValue;
                     foreach (array_values($this->inputValue) as $id) {
                         if (is_object($id)) {
                             //TODO: не всегда id
@@ -197,10 +199,10 @@ class SelectModelDialogWidget extends InputWidget
                         }
                     }
                 }
-                $input = \yii\helpers\Html::listBox($this->id, $this->attribute, $items, $this->options);
+                $input = \yii\helpers\Html::listBox($this->name, $value, $items, $this->options);
             } else {
                 Html::addCssClass($this->options, 'form-control');
-                $input = \yii\helpers\Html::textInput($this->id, $this->attribute, $this->options);
+                $input = \yii\helpers\Html::textInput($this->name, $this->inputValue, $this->options);
             }
 
         }
@@ -257,12 +259,23 @@ JS
      */
     public function getInputValue()
     {
+        $value = null;
+
         if ($this->hasModel()) {
             $value = isset($this->value) ? $this->value : Html::getAttributeValue($this->model, $this->attribute);
-            return $value;
         } else {
-            return $this->value;
+            $value = $this->value;
         }
+
+        if ($this->multiple) {
+            if (!is_array($value)) {
+                $newVal = [];
+                $newVal[] = $value;
+                $value = $newVal;
+            }
+        }
+
+        return $value;
     }
 
     /**

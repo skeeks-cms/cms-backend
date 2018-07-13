@@ -63,6 +63,8 @@
         {
             var self = this;
 
+
+
             this.jQueryContentWrapper.empty();
             this.jQueryDeselectBtn.hide();
 
