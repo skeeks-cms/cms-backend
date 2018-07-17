@@ -64,12 +64,9 @@ class BackendGridModelAction extends ViewBackendAction
 
     public function init()
     {
-        \Yii::info("Здесь: " . $this->uniqueId);
-
         if (!$this->icon) {
             $this->icon = "glyphicon glyphicon-th-list";
         }
-
 
         if (!$this->name) {
             $this->name = \Yii::t('skeeks/backend', "List");
