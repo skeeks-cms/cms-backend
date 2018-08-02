@@ -58,6 +58,13 @@ class SelectModelDialogWidget extends InputWidget
      * @var array
      */
     public $clientOptions = [];
+
+    /**
+     * @var array
+     */
+    public $wrapperOptions = [
+        "class" => "row"
+    ];
     /**
      * @var array
      */
@@ -119,7 +126,11 @@ class SelectModelDialogWidget extends InputWidget
             $this->id = $this->id."-".\Yii::$app->security->generateRandomString(10);
         }
 
-        $this->clientOptions['id'] = $this->id;
+        if (!isset($this->wrapperOptions['id'])) {
+            $this->wrapperOptions['id'] = $this->id . "-wrapper";
+        }
+        $this->clientOptions['id'] = $this->wrapperOptions['id'];
+
         parent::init();
     }
     /**

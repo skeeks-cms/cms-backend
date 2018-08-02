@@ -10,7 +10,7 @@
 /* @var $input string */
 $widget = $this->context;
 ?>
-<div class="row" id="<?= $widget->id; ?>">
+<?= \yii\helpers\Html::beginTag("div", $widget->wrapperOptions); ?>
     <div class="col-lg-12">
         <div class="row sx-one-input">
 
@@ -88,7 +88,7 @@ $widget = $this->context;
 
         </div>
     </div>
-</div>
+<?= \yii\helpers\Html::endTag("div"); ?>
 <?
 $jsonOptions = \yii\helpers\Json::encode($widget->clientOptions);
 

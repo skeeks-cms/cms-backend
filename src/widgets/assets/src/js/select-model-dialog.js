@@ -17,7 +17,7 @@
 
             sx.EventManager.bind(this.get('callbackEventName'), function(e, data)
             {
-                self.update(data);
+                /*self.update(data);*/
                 if (self.get('multiple'))
                 {
                     self.add(data);
