@@ -6,7 +6,7 @@
  * @date 18.03.2018
  */
 /* @var $this yii\web\View */
-/* @var $widget \skeeks\cms\widgets\FiltersWidget */
+/* @var $widget \skeeks\cms\queryfilters\QueryFiltersWidget */
 $widget = $this->context;
 $fields = $widget->filtersModel->builderFields();
 ?>
@@ -94,7 +94,7 @@ echo $builder->render();
             </div>
         </div>
     </div>
-
+<input type="hidden" value="1" name="<?= $widget->filtersSubmitKey; ?>">
 <?
 $activeFormClassName::end();
 ?>
