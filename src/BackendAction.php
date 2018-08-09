@@ -23,6 +23,7 @@ use skeeks\cms\traits\THasName;
 use skeeks\cms\traits\THasPermissions;
 use skeeks\cms\traits\THasUrl;
 use yii\base\Action;
+use yii\base\Event;
 use yii\base\InvalidParamException;
 use yii\helpers\Inflector;
 
@@ -41,6 +42,8 @@ class BackendAction extends Action
     use THasUrl;
     use TBackendAction;
     use THasPermissions;
+
+    const EVENT_INIT = "init";
 
     /**
      * @return string
@@ -78,6 +81,8 @@ class BackendAction extends Action
 
         $this->_initUrl()->_initAccess();
         parent::init();
+
+        $this->trigger(self::EVENT_INIT, new Event());
     }
 
     /**

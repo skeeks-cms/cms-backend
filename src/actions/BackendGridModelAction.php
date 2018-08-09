@@ -41,7 +41,7 @@ class BackendGridModelAction extends ViewBackendAction
     public $grid;
 
     /**
-     * @var FiltersWidget
+     * @var \skeeks\cms\backend\widgets\FiltersWidget
      */
     public $filters;
 

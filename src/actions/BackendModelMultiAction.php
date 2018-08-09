@@ -62,6 +62,7 @@ class BackendModelMultiAction extends BackendAction
             return (array) $rr;
         }
 
+
         $data = [];
         foreach ($this->models as $model)
         {
