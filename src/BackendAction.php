@@ -24,6 +24,7 @@ use skeeks\cms\traits\THasPermissions;
 use skeeks\cms\traits\THasUrl;
 use yii\base\Action;
 use yii\base\Event;
+use yii\base\InvalidConfigException;
 use yii\base\InvalidParamException;
 use yii\helpers\Inflector;
 
