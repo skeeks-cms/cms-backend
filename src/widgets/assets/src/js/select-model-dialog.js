@@ -149,7 +149,7 @@
 
             sx.EventManager.bind(this.get('callbackEventName'), function(e, data)
             {
-                self.add(data);
+                self.add(data, true);
             });
         },
 
@@ -179,7 +179,7 @@
             if (this.get('initClientData'))
             {
                 _.each(this.get('initClientData'), function(data, key){
-                    self.add(data);
+                    self.add(data, false);
                 });
             }
         },
@@ -188,8 +188,9 @@
          * @param itemData
          * @returns {sx.classes.SelectModelDialogMultiple}
          */
-        add: function(itemData)
+        add: function(itemData, triggerUpdate)
         {
+            var triggerUpdate = triggerUpdate;
             var self = this;
 
             if (_.size(itemData) > 0)
@@ -215,7 +216,7 @@
                     var value = self.getVal();
                     value = _.without(value, String(id));
 
-                    self.setVal(value);
+                    self.setVal(value, true);
 
                     _.delay(function(){
                         jLi.remove()
@@ -236,7 +237,7 @@
                 }
 
                 val = _.uniq(val);
-                self.setVal(val);
+                self.setVal(val, triggerUpdate);
                 this.jQueryDeselectBtn.show();
             }
 
@@ -268,8 +269,10 @@
          * @param id
          * @returns {sx.classes.SelectModelDialog}
          */
-        setVal: function(data)
+        setVal: function(data, triggerUpdate)
         {
+            var triggerUpdate = triggerUpdate;
+
             var self = this;
             self.jQueryInput.empty();
 
@@ -282,7 +285,9 @@
                 )
             });
 
-            this.jQueryInput.change();
+            if (triggerUpdate) {
+                this.jQueryInput.change();
+            }
             return this;
         },
 
