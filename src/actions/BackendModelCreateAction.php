@@ -28,6 +28,7 @@ class BackendModelCreateAction extends ViewBackendAction
     use THasActiveForm;
 
     const EVENT_BEFORE_SAVE = 'beforeSave';
+    const EVENT_AFTER_SAVE = 'afterSave';
     const EVENT_BEFORE_VALIDATE = 'beforeValidate';
 
     /**
@@ -154,6 +155,8 @@ class BackendModelCreateAction extends ViewBackendAction
                             }
                         }
 
+                        $this->trigger(self::EVENT_AFTER_SAVE);
+
                         if (!$this->successMessage) {
                             $this->successMessage = \Yii::t('skeeks/cms', 'Saved');
                         }
@@ -177,9 +180,15 @@ class BackendModelCreateAction extends ViewBackendAction
 
                             return $this->controller->redirect($url);
                         } else {
+
+                            if (!$this->afterSaveUrl) {
+                                $this->afterSaveUrl = $this->controller->url;
+                            }
+
                             return $this->controller->redirect(
-                                $this->controller->url
+                                $this->afterSaveUrl
                             );
+
                         }
                     }
 

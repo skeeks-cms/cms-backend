@@ -157,11 +157,11 @@ class BackendModelUpdateAction extends BackendModelAction
                             if (!$this->afterSaveUrl) {
                                 $this->afterSaveUrl = $this->controller->url;
                             }
-                        }
 
-                        return $this->controller->redirect(
-                            $this->afterSaveUrl
-                        );
+                            return $this->controller->redirect(
+                                $this->afterSaveUrl
+                            );
+                        }
                     }
 
                 } else {
