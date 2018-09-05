@@ -139,7 +139,7 @@ JS
         </ul>
     <? endif; ?>
 
-    <div class="tab-content">
+    <div class="<?= ($backendShowings && $action->backendShowing) ? "tab-content" : ""; ?>">
         <?
         $widgetClassName = $action->gridClassName;
         $widgetFiltersClassName = $action->filtersClassName;

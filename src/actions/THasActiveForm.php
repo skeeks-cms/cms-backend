@@ -41,6 +41,11 @@ trait THasActiveForm
     public $reloadFieldParam = 'data-form-reload';
 
     /**
+     * @var array
+     */
+    public $buttons = ['apply', 'save', 'close'];
+
+    /**
      * @param array $config
      *
      * @return ActiveForm|ActiveFormUseTab

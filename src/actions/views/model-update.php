@@ -30,7 +30,7 @@ $action = $controller->action;
             'fields' => $action->fields,
         ]))->render(); ?>
 
-    <?= $form->buttonsStandart($model); ?>
+    <?= $form->buttonsStandart($model, $action->buttons); ?>
     <?= $form->errorSummary($formModels); ?>
 <?php $action->endActiveForm(); ?>
 

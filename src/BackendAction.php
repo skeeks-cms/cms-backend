@@ -45,7 +45,16 @@ class BackendAction extends Action
     use THasPermissions;
 
     const EVENT_INIT = "init";
-
+    public $backendShowingParam = 'sx-backend-showing';
+    /**
+     * @var bool Показывать отображения?
+     */
+    public $isDisplayBackendShowings = true;
+    /**
+     * @var BackendShowing
+     */
+    protected $_backendShowing = null;
+    protected $_backendShowings = null;
     /**
      * @return string
      */
@@ -57,7 +66,6 @@ class BackendAction extends Action
 
         return $this->_permissionName;
     }
-
     public function init()
     {
         //Если название не задано, покажем что нибудь.
@@ -85,7 +93,6 @@ class BackendAction extends Action
 
         $this->trigger(self::EVENT_INIT, new Event());
     }
-
     /**
      * @return $this|mixed
      */
@@ -100,23 +107,6 @@ class BackendAction extends Action
 
         return $result;
     }
-
-
-
-
-
-
-
-
-
-    public $backendShowingParam = 'sx-backend-showing';
-
-
-    /**
-     * @var BackendShowing
-     */
-    protected $_backendShowing = null;
-
     public function getBackendShowing()
     {
         if ($this->_backendShowing === null || !$this->_backendShowing instanceof BackendShowing) {
@@ -163,8 +153,6 @@ class BackendAction extends Action
 
         return $this->_backendShowing;
     }
-
-
     /**
      * @param BackendShowing $backendShowing
      * @return string
@@ -198,21 +186,34 @@ class BackendAction extends Action
         $query[$this->backendShowingParam] = $backendShowing->id;
         return $url->url;
     }
-
     /**
      * @return array|BackendShowing[]
      */
     public function getBackendShowings()
     {
-        return BackendShowing::find()->where([
-            'key' => $this->uniqueId,
-        ])
-            ->andWhere([
-                'or',
-                ['cms_user_id' => null],
-                ['cms_user_id' => \Yii::$app->user->id],
+        if ($this->_backendShowings === null) {
+            $this->_backendShowings = BackendShowing::find()->where([
+                'key' => $this->uniqueId,
             ])
-            ->orderBy(['priority' => SORT_ASC])
-            ->all();
+                ->andWhere([
+                    'or',
+                    ['cms_user_id' => null],
+                    ['cms_user_id' => \Yii::$app->user->id],
+                ])
+                ->orderBy(['priority' => SORT_ASC])
+                ->all();
+        }
+
+        return $this->_backendShowings;
+    }
+
+    /**
+     * @param $backendShowings
+     * @return $this
+     */
+    public function setBackendShowings($backendShowings)
+    {
+        $this->_backendShowings = $backendShowings;
+        return $this;
     }
 }
