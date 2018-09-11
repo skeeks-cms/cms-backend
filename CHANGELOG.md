@@ -3,6 +3,7 @@ CHANGELOG
 
 1.2.2
 -----------------
+ * Hide empty menu
  * Update
  
 1.2.1

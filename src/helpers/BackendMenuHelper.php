@@ -8,6 +8,7 @@
 namespace skeeks\cms\backend\helpers;
 use yii\base\Component;
 use yii\base\InvalidConfigException;
+use yii\helpers\ArrayHelper;
 
 /**
  * @property array $navData
@@ -43,7 +44,12 @@ class BackendMenuHelper extends Component
         {
             foreach ($this->menu->items as $item)
             {
-                $result[$item->id] = $this->getRecursiveData($item);;
+                $data = $this->getRecursiveData($item);
+                if (!ArrayHelper::getValue($data, 'url') && ! ArrayHelper::getValue($data, 'items')) {
+
+                } else {
+                    $result[$item->id] = $data;
+                }
             }
         }
 
