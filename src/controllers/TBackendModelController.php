@@ -161,11 +161,17 @@ trait TBackendModelController
      */
     public function getModelShowName()
     {
-        if (!$this->model) {
+        $model = $this->model;
+
+        if (!$model) {
             return '';
         }
 
-        return isset($this->model->{$this->modelShowAttribute}) ? $this->model->{$this->modelShowAttribute} : '';
+        if (isset($model->{$this->modelShowAttribute})) {
+            return $model->{$this->modelShowAttribute};
+        }
+
+        return '';
     }
     /**
      * @return mixed|string
