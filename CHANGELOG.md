@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.2.4.pre
+-----------------
+ * Fixed context menu
+ 
 1.2.3
 -----------------
  * Hide empty menu

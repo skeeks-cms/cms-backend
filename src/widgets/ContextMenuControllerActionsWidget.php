@@ -58,7 +58,12 @@ class ContextMenuControllerActionsWidget extends ContextMenuWidget
                 new sx.classes.backend.widgets.Action({$actionDataJson}).go();
             }");
 
-            $this->items[$action->id] = $options;
+            if (isset($this->items[$action->id])) {
+                $this->items[$action->id . uniqid()] = $options;
+            } else {
+                $this->items[$action->id] = $options;
+            }
+            //$this->items[] = $options;
         }
         
         return parent::run();
