@@ -8,6 +8,7 @@
 
 namespace skeeks\cms\backend;
 
+use skeeks\cms\backend\events\ViewRenderEvent;
 use skeeks\cms\modules\admin\widgets\ControllerActions;
 use yii\base\Event;
 
@@ -66,18 +67,18 @@ class ViewBackendAction extends BackendAction
      */
     protected function render($viewName, $params = [])
     {
-        $e = new Event();
+        $e = new ViewRenderEvent();
         $this->trigger(self::EVENT_BEFORE_RENDER, $e);
-        $result = (string)$e->data;
+        $result = (string)$e->content;
 
         $result .= $this->controller->getView()->render($viewName, $params, $this->controller);
 
 
         //$result .= $this->controller->render($viewName);
 
-        $e = new Event();
+        $e = new ViewRenderEvent();
         $this->trigger(self::EVENT_AFTER_RENDER, $e);
-        $result .= (string)$e->data;
+        $result .= (string)$e->content;
 
         return $this->controller->renderContent($result);
     }

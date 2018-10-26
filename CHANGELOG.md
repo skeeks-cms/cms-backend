@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.2.5
+-----------------
+ * New ViewRenderEvent
+ 
 1.2.4
 -----------------
  * Fixed context menu
