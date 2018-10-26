@@ -1,7 +1,7 @@
 CHANGELOG
 ==============
 
-1.2.4.pre
+1.2.4
 -----------------
  * Fixed context menu
  
