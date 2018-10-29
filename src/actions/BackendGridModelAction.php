@@ -194,6 +194,11 @@ JS
             'class'              => \skeeks\cms\backend\widgets\FiltersWidget::class,
             'activeForm'         => [
                 'action' => $this->getShowingUrl($this->getBackendShowing()),
+                'options' => [
+                    'data' => [
+                        'real-action' => $this->getShowingUrl($this->getBackendShowing()),
+                    ]
+                ]
             ],
             'configBehaviorData' => [
                 'configKey'     => $this->configKey,
@@ -205,6 +210,9 @@ JS
                 ],
             ],
         ];
+
+        /*print_r($this->url);
+        die;*/
 
         $this->grid = (array)ArrayHelper::merge($defaultGrid, (array)$this->grid);
         if ($this->filters === false) {

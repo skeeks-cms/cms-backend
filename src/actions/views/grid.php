@@ -27,7 +27,7 @@ $actionCreate = \yii\helpers\ArrayHelper::getValue($showingsControllerTmp->actio
 
 $backendShowing = new \skeeks\cms\backend\models\BackendShowing();
 $backendShowing->loadDefaultValues();
-$backendShowing->key = $action->uniqueId;
+$backendShowing->key = $action->backendShowingKey;
 
 
 

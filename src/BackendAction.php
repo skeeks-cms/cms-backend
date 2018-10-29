@@ -30,6 +30,8 @@ use yii\helpers\Inflector;
 
 /**
  * @property IHasInfoActions $controller
+ * @property string $backendShowingKey
+ * @property []|null $backendShowings
  *
  * Class AdminViewAction
  * @package skeeks\cms\modules\admin\actions
@@ -128,14 +130,14 @@ class BackendAction extends Action
 
             //Defauilt filter
             $backendShowing = BackendShowing::find()
-                ->where(['key' => $this->uniqueId])
+                ->where(['key' => $this->backendShowingKey])
                 //->andWhere(['cms_user_id' => \Yii::$app->user->id])
                 ->andWhere(['is_default' => 1])
                 ->one();
 
             if (!$backendShowing) {
                 $backendShowing = new BackendShowing([
-                    'key'        => $this->uniqueId,
+                    'key'        => $this->backendShowingKey,
                     //'cms_user_id' => \Yii::$app->user->id,
                     'is_default' => 1,
                 ]);
@@ -161,6 +163,7 @@ class BackendAction extends Action
     {
         $query = [];
         $url = $this->url;
+        $query = [];
 
         if ($pos = strpos($url, "?")) {
             $url = StringHelper::substr($url, 0, $pos);
@@ -168,7 +171,6 @@ class BackendAction extends Action
             parse_str($stringQuery, $query);
         }
 
-        $query = [];
 
         $url = BackendUrlHelper::createByParams();
         if (is_array($this->urlData)) {
@@ -193,7 +195,7 @@ class BackendAction extends Action
     {
         if ($this->_backendShowings === null) {
             $this->_backendShowings = BackendShowing::find()->where([
-                'key' => $this->uniqueId,
+                'key' => $this->backendShowingKey,
             ])
                 ->andWhere([
                     'or',
@@ -214,6 +216,30 @@ class BackendAction extends Action
     public function setBackendShowings($backendShowings)
     {
         $this->_backendShowings = $backendShowings;
+        return $this;
+    }
+
+    protected $_backendShowingKey = null;
+    /**
+     * @return string
+     */
+    public function getBackendShowingKey()
+    {
+        if ($this->_backendShowingKey !== null) {
+            return (string) $this->_backendShowingKey;
+        }
+
+        return $this->uniqueId;
+    }
+
+    /**
+     * @param $key
+     * @return $this
+     */
+    public function setBackendShowingKey($key)
+    {
+        $this->_backendShowingKey = (string) $key;
+
         return $this;
     }
 }

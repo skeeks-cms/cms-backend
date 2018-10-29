@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.2.6
+-----------------
+ * Added backendShowingKey to BackandAction
+ 
 1.2.5
 -----------------
  * New ViewRenderEvent

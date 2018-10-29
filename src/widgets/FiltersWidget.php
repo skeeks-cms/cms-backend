@@ -314,7 +314,12 @@ class FiltersWidget extends QueryFiltersWidget {
             
             var data = this.jForm.serializeArray();
 
-            var ajaxQuery = sx.ajax.preparePostQuery(this.jForm.attr('action'), data);
+            var action = this.jForm.attr('action');
+            if (this.jForm.data('real-action')) {
+                action = this.jForm.data('real-action');
+            }
+            
+            var ajaxQuery = sx.ajax.preparePostQuery(action, data);
             
             var handler = new sx.classes.AjaxHandlerStandartRespose(ajaxQuery, {
                 'blocker' : self.Blocker,
