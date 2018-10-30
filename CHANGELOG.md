@@ -1,10 +1,6 @@
 CHANGELOG
 ==============
 
-1.2.7
------------------
- * Update
- 
 1.2.6
 -----------------
  * Added backendShowingKey to BackandAction
