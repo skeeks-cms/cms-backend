@@ -38,6 +38,7 @@ use yii\helpers\Url;
  */
 class ControllerActionsWidget extends Widget
 {
+
     /**
      * @var array
      */
@@ -60,6 +61,11 @@ class ControllerActionsWidget extends Widget
      * @var string
      */
     public $tag               = "ul";
+
+    /**
+     * @var int
+     */
+    public $minViewCount               = 2;
 
 
 
@@ -119,7 +125,7 @@ class ControllerActionsWidget extends Widget
     {
         $actions = $this->actions;
 
-        if (!$actions || count($actions) <= 1)
+        if (!$actions || count($actions) < $this->minViewCount)
         {
             return "";
         }

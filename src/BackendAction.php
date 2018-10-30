@@ -71,7 +71,7 @@ class BackendAction extends Action
     public function init()
     {
         //Если название не задано, покажем что нибудь.
-        if (!$this->name) {
+        if (!$this->name && $this->name !== false) {
             $this->name = Inflector::humanize($this->id);
         }
 
