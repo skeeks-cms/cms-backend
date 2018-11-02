@@ -99,8 +99,8 @@ JS
     ?>
         <ul class="nav nav-tabs sx-backend-showing-tabs">
             <? foreach ($backendShowings as $backendShowing) : ?>
-                <li class="sx-tab <?= $backendShowing->id == $action->backendShowing->id ? "active sx-active-tab" : "sx-no-active-tab"; ?>" id="sx-tab-<?= $backendShowing->id; ?>">
-                    <a href="<?= $action->getShowingUrl($backendShowing); ?>">
+                <li class="sx-tab nav-item <?= $backendShowing->id == $action->backendShowing->id ? "active sx-active-tab" : "sx-no-active-tab"; ?>" id="sx-tab-<?= $backendShowing->id; ?>">
+                    <a href="<?= $action->getShowingUrl($backendShowing); ?>" class="nav-link active">
                         <?= $backendShowing->displayName; ?>
                         <? if ($backendShowing->id == $action->backendShowing->id) : ?>
                             
@@ -130,9 +130,9 @@ JS
             <? endforeach; ?>
 
             <? if ($actionCreate) : ?>
-                <li>
-                    <a href="#sx-modal-create" class="sx-btn-filter-create" data-toggle="modal" data-target="#sx-modal-create">
-                        <i class="glyphicon glyphicon-plus"></i>
+                <li class="nav-item">
+                    <a href="#sx-modal-create" class="sx-btn-filter-create nav-link" data-toggle="modal" data-target="#sx-modal-create">
+                        <i class="fa fa-plus"></i>
                     </a>
                 </li>
             <? endif; ?>
