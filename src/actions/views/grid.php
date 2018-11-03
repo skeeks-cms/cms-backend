@@ -73,7 +73,7 @@ JS
         <button style="display: none;"></button>
     <? \skeeks\cms\base\widgets\ActiveFormAjaxSubmit::end(); ?>
 
-<? \yii\bootstrap\Modal::end();?>
+<? $createModal::end();?>
 
 
 
@@ -161,7 +161,10 @@ JS
     $widgetClassName::end();
     ?>
         <? if (YII_ENV === 'dev' && isset($grid->dataProvider->query)) : ?>
-            <pre><code><?= $grid->dataProvider->query->createCommand()->rawSql; ?></code></pre>
+            <a href="#" onclick="$('.sx-grid-sql').toggle(); return false;" style="text-decoration: none; border-bottom: 1px dashed;">Показать SQL</a>
+            <div class="sx-grid-sql" style="display: none; padding: 1px solid; padding: 10px;">
+            <code ><?= $grid->dataProvider->query->createCommand()->rawSql; ?></code>
+            </div>
         <? endif; ?>
     </div>
 <?php \skeeks\cms\widgets\Pjax::end(); ?>

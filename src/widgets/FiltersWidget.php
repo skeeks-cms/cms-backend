@@ -22,6 +22,7 @@ use yii\helpers\Json;
 class FiltersWidget extends QueryFiltersWidget {
 
     public $viewFile = 'filters';
+    public $isOpened = false;
 
     public function init()
     {

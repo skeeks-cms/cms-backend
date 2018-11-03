@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.2.8.pre
+-----------------
+ * Add filters setting isOpened
+ 
 1.2.7
 -----------------
  * Update icons to fontawesome for bootstrap4
