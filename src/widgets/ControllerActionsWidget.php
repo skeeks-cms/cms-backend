@@ -102,7 +102,7 @@ class ControllerActionsWidget extends Widget
     /**
      * @return string
      */
-    static public function currentWidget()
+    static public function currentWidget($config = [])
     {
         $activeId = null;
 
@@ -111,10 +111,10 @@ class ControllerActionsWidget extends Widget
             $activeId = \Yii::$app->controller->action->id;
         }
 
-        return static::widget([
+        return static::widget(ArrayHelper::merge($config, [
             'actions'    => \Yii::$app->controller->actions,
             'activeId'      => $activeId,
-        ]);
+        ]));
     }
 
 
@@ -211,6 +211,12 @@ class ControllerActionsWidget extends Widget
         {
             $icon = Html::tag('span', '', ['class' => $action->icon]);
         }
+
+        if ($this->activeId == $action->id)
+        {
+            Html::addCssClass($options, 'active');
+        }
+
 
         return Html::tag($this->itemTag, $icon . '  ' . $action->name, $options);
     }
