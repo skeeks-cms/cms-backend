@@ -114,7 +114,7 @@ JS
                                     'isOpenNewWindow' => true,
                                     'rightClickSelectors' => ['#sx-tab-' . $backendShowing->id],
                                     'button' => [
-                                        'class' => 'glyphicon glyphicon-cog',
+                                        'class' => 'fa fa-cog',
                                         'style' => 'font-size: 11px; cursor: pointer;',
                                         'tag' => 'i',
                                         'label' => '',

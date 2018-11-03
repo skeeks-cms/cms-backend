@@ -55,7 +55,7 @@ $activeFormClassName = \yii\helpers\ArrayHelper::getValue($widget->activeForm, '
                         ]);
 
                         ?>
-                        <?= \yii\helpers\Html::a('<i class="glyphicon glyphicon-cog"></i>',
+                        <?= \yii\helpers\Html::a('<i class="fa fa-cog"></i>',
                 '#', [
                     'class' => 'btn btn-sm sx-edit',
                     'onclick' => new \yii\web\JsExpression(<<<JS
@@ -82,11 +82,11 @@ echo $builder->render();
             </div>
             <div class="col-sm-5">
                 <button class="btn btn-default" type="submit"><i class="glyphicon glyphicon-filter"></i> Применить</button>
-                <button class="btn btn-default sx-save-values"><i class="glyphicon glyphicon-save"></i> Сохранить</button>
+                <button class="btn btn-default sx-save-values"><i class="fa fa-check"></i> Сохранить</button>
             </div>
             <div class="col-sm-2">
                 <a class="btn btn-default btn-sm dropdown-toggle sx-edit-trigger pull-right" href="#" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                    <i class="glyphicon glyphicon-plus"></i>
+                    <i class="fa fa-plus"></i>
                 </a>
             </div>
             <div class="col-sm-2">

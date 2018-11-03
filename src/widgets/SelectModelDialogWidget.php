@@ -109,7 +109,7 @@ class SelectModelDialogWidget extends InputWidget
 
     protected $_selectBtn = [
         'tag'     => 'a',
-        'content' => '<i class="glyphicon glyphicon-th-list" aria-hidden="true"></i>',
+        'content' => '<i class="fa fa-list" aria-hidden="true"></i>',
         'options' => [
             'class' => 'btn btn-default sx-btn-create btn-xs',
             'title' => 'Выбрать значение',

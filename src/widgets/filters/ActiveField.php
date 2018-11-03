@@ -57,7 +57,7 @@ class ActiveField extends \yii\bootstrap\ActiveField {
                     <i class="glyphicon glyphicon-resize-vertical"></i>
                 </a>
                 <a href="#" class="btn btn-xs sx-remove" title="Удалить фильтр">
-                    <i class="glyphicon glyphicon-remove"></i>
+                    <i class="fa fa-times"></i>
                 </a>
             </div>
         </div>

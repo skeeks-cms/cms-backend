@@ -65,7 +65,7 @@ class BackendGridModelAction extends ViewBackendAction
     public function init()
     {
         if (!$this->icon) {
-            $this->icon = "glyphicon glyphicon-th-list";
+            $this->icon = "fa fa-list";
         }
 
         if (!$this->name) {
@@ -122,7 +122,7 @@ class BackendGridModelAction extends ViewBackendAction
                         'class'   => 'btn btn-sm',
                     ])
                     .
-                    Html::a('<i class="glyphicon glyphicon-cog"></i>',
+                    Html::a('<i class="fa fa-cog"></i>',
                         '#', [
                             'class'   => 'btn btn-sm',
                             'onclick' => new JsExpression(<<<JS
@@ -134,7 +134,7 @@ JS
 
                     .$callableDataInput .
 
-                    Html::a('<i class="glyphicon glyphicon-fullscreen"></i>', '#', [
+                    Html::a('<i class="fa fa-expand"></i>', '#', [
                         'class'   => 'btn btn-sm',
                         'onclick' => new JsExpression(<<<JS
                         if (!jQuery(this).closest('.sx-grid-view').hasClass('sx-grid-view-full')) {

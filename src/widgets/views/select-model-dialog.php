@@ -29,11 +29,11 @@ $widget = $this->context;
                 <div class="col-lg-12">
                     <?= \yii\helpers\Html::tag($widget->selectBtn['tag'], $widget->selectBtn['content'], $widget->selectBtn['options'])?>
                     <!--<a class="btn btn-default sx-btn-create sx-btn-create" title="Добавить значение">
-                        <i class="glyphicon glyphicon-th-list" aria-hidden="true"></i>
+                        <i class="fa fa-list" aria-hidden="true"></i>
                     </a>-->
                     <? if ($widget->allowDeselect) : ?>
                         <a class="btn btn-default btn-danger btn-xs sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
-                            <i class="glyphicon glyphicon-remove"></i>
+                            <i class="fa fa-times"></i>
                         </a>
                     <? endif; ?>
                 </div>
@@ -58,11 +58,11 @@ $widget = $this->context;
                     <?= \yii\helpers\Html::tag($widget->selectBtn['tag'], $widget->selectBtn['content'], $widget->selectBtn['options'])?>
                     <!--
                     <a class="btn btn-default sx-btn-create sx-btn-create" title="Выбрать">
-                        <i class="glyphicon glyphicon-th-list" title="Выбрать"></i>
+                        <i class="fa fa-list" title="Выбрать"></i>
                     </a>-->
                     <? if ($widget->allowDeselect) : ?>
                         <a class="btn btn-default btn-danger btn-xs sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
-                            <i class="glyphicon glyphicon-remove"></i>
+                            <i class="fa fa-times"></i>
                         </a>
                     <? endif; ?>
                 </div>
@@ -73,11 +73,11 @@ $widget = $this->context;
                         <?= \yii\helpers\Html::tag($widget->selectBtn['tag'], $widget->selectBtn['content'], $widget->selectBtn['options'])?>
                         <!--
                         <a class="btn btn-default sx-btn-create sx-btn-create" title="Добавить значение">
-                            <i class="glyphicon glyphicon-th-list" aria-hidden="true"></i>
+                            <i class="fa fa-list" aria-hidden="true"></i>
                         </a>-->
                         <? if ($widget->allowDeselect) : ?>
                             <a class="btn btn-default btn-danger btn-xs sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
-                                <i class="glyphicon glyphicon-remove"></i>
+                                <i class="fa fa-times"></i>
                             </a>
                         <? endif; ?>
                     </div>

@@ -206,7 +206,7 @@
                 jLiCloseBtm = $("<a>", {
                     'href' : '#',
                     'class' : 'sx-close-btn pull-right',
-                }).append('<i class="glyphicon glyphicon-remove"></i>').appendTo(jLi);
+                }).append('<i class="fa fa-times"></i>').appendTo(jLi);
 
                 jLiCloseBtm.on('click', function()
                 {

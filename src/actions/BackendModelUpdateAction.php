@@ -72,7 +72,7 @@ class BackendModelUpdateAction extends BackendModelAction
     public function init()
     {
         if (!$this->icon) {
-            $this->icon = "glyphicon glyphicon-pencil";
+            $this->icon = "fa fa-edit";
         }
 
         if (!$this->priority) {

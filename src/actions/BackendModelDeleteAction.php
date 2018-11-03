@@ -27,7 +27,7 @@ class BackendModelDeleteAction extends BackendModelAction
 
         if (!$this->icon)
         {
-            $this->icon = "glyphicon glyphicon-trash";
+            $this->icon = "fa fa-trash";
         }
 
         if (!$this->priority)

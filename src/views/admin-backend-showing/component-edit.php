@@ -72,7 +72,7 @@ JS
     <div class="row">
         <div class="col-md-12">
             <button href="#" class="btn btn-danger btn-xs pull-right sx-btn-remove">
-                <span class="glyphicon glyphicon-trash"></span> Удалить настройки
+                <span class="fa fa-trash"></span> Удалить настройки
             </button>
         </div>
     </div>

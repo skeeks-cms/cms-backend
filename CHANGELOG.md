@@ -1,6 +1,11 @@
 CHANGELOG
 ==============
 
+1.2.7
+-----------------
+ * Update icons to fontawesome for bootstrap4
+ 
+ 
 1.2.6
 -----------------
  * Added backendShowingKey to BackandAction

@@ -23,7 +23,7 @@ class BackendModelMultiDeleteAction extends BackendModelMultiAction
     {
         if (!$this->icon)
         {
-            $this->icon = "glyphicon glyphicon-trash";
+            $this->icon = "fa fa-trash";
         }
 
         if (!$this->confirm)

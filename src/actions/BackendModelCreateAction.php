@@ -74,7 +74,7 @@ class BackendModelCreateAction extends ViewBackendAction
     public function init()
     {
         if (!$this->icon) {
-            $this->icon = "glyphicon glyphicon-plus";
+            $this->icon = "fa fa-plus";
         }
 
 
