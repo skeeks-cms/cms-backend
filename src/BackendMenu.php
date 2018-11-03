@@ -116,7 +116,7 @@ class BackendMenu extends Component
             }
         }
 
-        //ArrayHelper::multisort($result, 'priority');
+        ArrayHelper::multisort($result, 'priority');
 
         return $result;
     }

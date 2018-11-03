@@ -94,7 +94,7 @@ class ControllerActionsColumn extends DataColumn
                     'class' => 'btn btn-xs btn-default sx-btn-caret-action',
                     'style' => '',
                     'tag' => 'a',
-                    'label' => '<span class="caret"></span>',
+                    'label' => '<i class="fa fa-caret-down"></i>',
                 ]
             ]);
         } else {
