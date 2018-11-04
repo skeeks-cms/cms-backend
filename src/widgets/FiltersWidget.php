@@ -19,14 +19,29 @@ use yii\helpers\Json;
  * @author Semenov Alexander <semenov@skeeks.com>
  */
 //class FiltersWidget extends \skeeks\cms\widgets\FiltersWidget {
-class FiltersWidget extends QueryFiltersWidget {
+class FiltersWidget extends QueryFiltersWidget
+{
 
     public $viewFile = 'filters';
     public $isOpened = false;
 
+    public $defaultActiveForm = [
+        'class'       => ActiveForm::class,
+        'fieldClass'  => ActiveField::class,
+        'layout'      => 'horizontal',
+        'options'     => [
+            'class'     => 'sx-backend-filters-form ',
+            'data-pjax' => 1,
+        ],
+        'method' => 'get',
+        'fieldConfig' => [
+            'template' => "{label}\n{beginWrapper}\n<div class='sx-filter-wrapper'>{input}</div>\n{hint}\n{error}\n{endWrapper}{controlls}",
+        ],
+    ];
+
     public function init()
     {
-        $defaultOptions = [
+        /*$defaultOptions = [
             'class' => ActiveForm::class,
             'fieldClass' => ActiveField::class,
             'layout' => 'horizontal',
@@ -37,9 +52,10 @@ class FiltersWidget extends QueryFiltersWidget {
             'fieldConfig' => [
                 'template' => "{label}\n{beginWrapper}\n<div class='sx-filter-wrapper'>{input}</div>\n{hint}\n{error}\n{endWrapper}{controlls}",
             ]
-        ];
+        ];*/
 
-        $this->activeForm = ArrayHelper::merge($defaultOptions, $this->activeForm);
+        $this->activeForm = ArrayHelper::merge($this->defaultActiveForm, $this->activeForm);
+
         parent::init();
 
         Html::addCssClass($this->wrapperOptions, 'sx-backend-filters-wrapper');
@@ -102,7 +118,7 @@ class FiltersWidget extends QueryFiltersWidget {
         }
 
         $jsOptions = Json::encode([
-            'id' => $this->id
+            'id' => $this->id,
         ]);
 
         \yii\jui\Sortable::widget();
@@ -335,7 +351,7 @@ class FiltersWidget extends QueryFiltersWidget {
     new sx.classes.widgets.BackendFiltersWidget({$jsOptions});
 })(sx, sx.$, sx._);
 JS
-);
+        );
 
         return parent::run();
     }
