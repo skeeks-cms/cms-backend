@@ -323,8 +323,6 @@ trait TBackendModelController
     {
         $result = [];
 
-        $baseRoute = $this->module instanceof Application ? "/".$this->id : ("/".$this->module->id."/".$this->id);
-
         if ($this->name) {
             $result[] = [
                 'label' => $this->name,

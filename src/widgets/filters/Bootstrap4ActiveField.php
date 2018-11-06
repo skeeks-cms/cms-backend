@@ -5,22 +5,24 @@
  * @license https://cms.skeeks.com/license/
  * @author Semenov Alexander <semenov@skeeks.com>
  */
+
 namespace skeeks\cms\backend\widgets\filters;
 
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
  */
-class Bootstrap4ActiveField extends \yii\bootstrap4\ActiveField {
+class Bootstrap4ActiveField extends \yii\bootstrap4\ActiveField
+{
 
     protected function createLayoutConfig($instanceConfig)
     {
         $config = parent::createLayoutConfig($instanceConfig);
         $config['template'] = "{label}\n{beginWrapper}\n<div class='sx-filter-wrapper'>{input}</div>\n{hint}\n{error}\n{endWrapper}{controlls}";
         $config['wrapperOptions'] = [
-            'class' => 'col-sm-7'
+            'class' => 'col-sm-7',
         ];
         $config['labelOptions'] = [
-            'class' => 'col-sm-3 col-form-label'
+            'class' => 'col-sm-3 col-form-label',
         ];
         return $config;
     }
@@ -71,4 +73,5 @@ class Bootstrap4ActiveField extends \yii\bootstrap4\ActiveField {
 HTML;
 
     }
+
 }
