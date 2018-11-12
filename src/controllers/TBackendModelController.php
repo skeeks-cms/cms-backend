@@ -330,7 +330,7 @@ trait TBackendModelController
             ];
         }
 
-        if ($this->action instanceof IBackendModelAction && $this->model) {
+        if ($this->action instanceof IBackendModelAction && $this->model && $this->modelShowName) {
             $result[] = [
                 'label' => $this->modelShowName,
                 'url'   => $this->action->url,

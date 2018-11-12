@@ -80,7 +80,7 @@ abstract class BackendController extends Controller
     {
         parent::init();
 
-        if (!$this->name) {
+        if ($this->name == '' && $this->name !== false) {
             $this->name = Inflector::humanize(static::class);
         }
 
