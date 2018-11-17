@@ -26,50 +26,14 @@ class BackendModelCreateAction extends ViewBackendAction
     implements IHasActiveForm
 {
     use THasActiveForm;
+    use TBackendModelUpdateAction;
 
     const EVENT_BEFORE_SAVE = 'beforeSave';
     const EVENT_AFTER_SAVE = 'afterSave';
     const EVENT_BEFORE_VALIDATE = 'beforeValidate';
 
-    /**
-     * @var bool
-     */
-    public $modelValidate = true;
 
-    /**
-     * @var string
-     */
     public $defaultView = "_form";
-
-    /**
-     * @var array
-     */
-    public $fields = [];
-    /**
-     * @var string|callable
-     */
-    public $afterContent;
-
-    /**
-     * @var string|callable
-     */
-    public $beforeContent;
-
-
-    /**
-     * @var string
-     */
-    public $afterSaveUrl = '';
-
-    /**
-     * @var string
-     */
-    public $successMessage = '';
-
-    /**
-     * @var bool
-     */
-    public $isSaveFormModels = true;
 
     public function init()
     {
@@ -85,7 +49,7 @@ class BackendModelCreateAction extends ViewBackendAction
         parent::init();
     }
 
-    public $formModels = [];
+
     public $model;
 
     const EVENT_INIT_FORM_MODELS = 'initFormModels';

@@ -26,49 +26,13 @@ class BackendModelUpdateAction extends BackendModelAction
     implements IHasActiveForm
 {
     use THasActiveForm;
+    use TBackendModelUpdateAction;
 
     const EVENT_INIT_FORM_MODELS = 'initFormModels';
     const EVENT_BEFORE_SAVE = 'beforeSave';
-    /**
-     * @var bool
-     */
-    public $modelValidate = true;
-    /**
-     * @var string
-     */
+
     public $defaultView = "_form";
-    /**
-     * @var bool
-     */
-    public $isSaveFormModels = true;
 
-    /**
-     * @var string
-     */
-    public $afterContent = '';
-
-    /**
-     * @var string
-     */
-    public $beforeContent = '';
-
-    /**
-     * @var string
-     */
-    public $afterSaveUrl = '';
-
-    /**
-     * @var string
-     */
-    public $successMessage = '';
-
-    /**
-     * @var array|callable
-     */
-    public $fields = [];
-    
-    public $formModels = [];
-    
     public function init()
     {
         if (!$this->icon) {
