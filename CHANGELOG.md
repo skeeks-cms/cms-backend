@@ -1,7 +1,7 @@
 CHANGELOG
 ==============
 
-1.2.8.pre
+1.2.8
 -----------------
  * Add filters setting isOpened
  
