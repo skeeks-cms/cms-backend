@@ -68,12 +68,19 @@ JS
 
     <?= $form->errorSummary($formModels); ?>
 
-        <? echo (new \skeeks\yii2\form\Builder([
+        <? echo \Yii::createObject([
+            'class' => \skeeks\yii2\form\Builder::class,
             'model' => $model,
             'models' => $formModels,
             'activeForm' => $form,
             'fields' => $action->fields,
-        ]))->render(); ?>
+        ])->render(); ?>
+        <?/* echo (new \skeeks\yii2\form\Builder([
+            'model' => $model,
+            'models' => $formModels,
+            'activeForm' => $form,
+            'fields' => $action->fields,
+        ]))->render(); */?>
 
     <?= $form->buttonsStandart($model, $action->buttons); ?>
     <?= $form->errorSummary($formModels); ?>
