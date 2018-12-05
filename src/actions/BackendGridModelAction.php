@@ -17,6 +17,7 @@ use skeeks\cms\cmsWidgets\gridView\GridViewCmsWidget;
 use skeeks\cms\modules\admin\widgets\gridViewStandart\GridViewStandartAsset;
 use skeeks\cms\widgets\DynamicFiltersWidget;
 use skeeks\cms\widgets\FiltersWidget;
+use skeeks\cms\widgets\GridView;
 use skeeks\yii2\config\storages\ConfigDbModelStorage;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -39,6 +40,12 @@ class BackendGridModelAction extends ViewBackendAction
      * @var
      */
     public $grid;
+
+    /**
+     * Заполняется после рендеринга шаблона
+     * @var null|GridView
+     */
+    public $gridObject = null;
 
     /**
      * @var \skeeks\cms\backend\widgets\FiltersWidget

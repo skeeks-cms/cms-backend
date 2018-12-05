@@ -12,14 +12,16 @@
 $controller = $this->context;
 ?>
 <?php $pjax = \skeeks\cms\widgets\Pjax::begin(); ?>
+
+
 <?
 $backendCode = \skeeks\cms\backend\BackendComponent::getCurrent()->controllerPrefix;
 $controllerRoute = \skeeks\cms\backend\BackendComponent::getCurrent()->backendShowingControllerRoute;
 $showingsController = \Yii::$app->createController($controllerRoute)[0];
 $showingsControllerTmp = clone $showingsController;
 /**
- * @var \skeeks\cms\backend\BackendAction $actionIndex
- * @var \skeeks\cms\backend\BackendAction $actionCreate
+ * @var \skeeks\cms\backend\BackendAction                      $actionIndex
+ * @var \skeeks\cms\backend\BackendAction                      $actionCreate
  * @var \skeeks\cms\backend\controllers\BackendModelController $showingsController
  */
 $actionCreate = \yii\helpers\ArrayHelper::getValue($showingsControllerTmp->actions, 'create');
@@ -30,22 +32,21 @@ $backendShowing->loadDefaultValues();
 $backendShowing->key = $action->backendShowingKey;
 
 
-
 $createModal = \yii\bootstrap\Modal::begin([
-    'id'        => 'sx-modal-create',
-    'header'    => '<b>' . \Yii::t('skeeks/backend', 'Создание отображения') . '</b>',
-    'footer'    => '
-        <button class="btn btn-primary" onclick="$(\'#sx-create-showing-form\').submit(); return false;">' . \Yii::t('skeeks/backend', 'Create') . '</button>
-        <button type="button" class="btn btn-default" data-dismiss="modal">' . \Yii::t('skeeks/backend', 'Close') . '</button>
+    'id'     => 'sx-modal-create',
+    'header' => '<b>'.\Yii::t('skeeks/backend', 'Создание отображения').'</b>',
+    'footer' => '
+        <button class="btn btn-primary" onclick="$(\'#sx-create-showing-form\').submit(); return false;">'.\Yii::t('skeeks/backend', 'Create').'</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal">'.\Yii::t('skeeks/backend', 'Close').'</button>
     ',
 ]);
 ?>
 
-    <? $form = \skeeks\cms\base\widgets\ActiveFormAjaxSubmit::begin([
-            'id'                => 'sx-create-showing-form',
-            'action'            => \yii\helpers\Url::to([ $controllerRoute . '/create']),
-            'validationUrl'     => \yii\helpers\Url::to([ $controllerRoute . '/create', 'sx-validate' => true]),
-            'afterValidateCallback'     => new \yii\web\JsExpression(<<<JS
+<? $form = \skeeks\cms\base\widgets\ActiveFormAjaxSubmit::begin([
+    'id'                    => 'sx-create-showing-form',
+    'action'                => \yii\helpers\Url::to([$controllerRoute.'/create']),
+    'validationUrl'         => \yii\helpers\Url::to([$controllerRoute.'/create', 'sx-validate' => true]),
+    'afterValidateCallback' => new \yii\web\JsExpression(<<<JS
         function(jForm, AjaxQuery)
         {
             var Handler = new sx.classes.AjaxHandlerStandartRespose(AjaxQuery);
@@ -62,82 +63,81 @@ $createModal = \yii\bootstrap\Modal::begin([
             });
         }
 JS
-            )
-        ]); ?>
-        <?= $form->field($backendShowing, 'name'); ?>
-        <?= $form->field($backendShowing, 'isPublic')->checkbox(\Yii::$app->formatter->booleanFormat); ?>
-        <?= $form->field($backendShowing, 'key')->hiddenInput()->label(false); ?>
+    ),
+]); ?>
+<?= $form->field($backendShowing, 'name'); ?>
+<?= $form->field($backendShowing, 'isPublic')->checkbox(\Yii::$app->formatter->booleanFormat); ?>
+<?= $form->field($backendShowing, 'key')->hiddenInput()->label(false); ?>
 
-        <?= \yii\bootstrap\Html::hiddenInput('visibles'); ?>
-        <?= \yii\bootstrap\Html::hiddenInput('values'); ?>
-        <button style="display: none;"></button>
-    <? \skeeks\cms\base\widgets\ActiveFormAjaxSubmit::end(); ?>
+<?= \yii\bootstrap\Html::hiddenInput('visibles'); ?>
+<?= \yii\bootstrap\Html::hiddenInput('values'); ?>
+    <button style="display: none;"></button>
+<? \skeeks\cms\base\widgets\ActiveFormAjaxSubmit::end(); ?>
 
-<? $createModal::end();?>
+<? $createModal::end(); ?>
 
 
-
-    <?
-    $action->backendShowing;
-    $backendShowings = $action->backendShowings;
-    ?>
-    <? if ($backendShowings && $action->backendShowing) : ?>
+<?
+$action->backendShowing;
+$backendShowings = $action->backendShowings;
+?>
+<? if ($backendShowings && $action->backendShowing) : ?>
     <?
     echo \skeeks\cms\backend\widgets\ContextMenuWidget::widget([
-        'button' => false,
-        'items' => [
+        'button'              => false,
+        'items'               => [
             'no' => [
                 'callback' => new \yii\web\JsExpression("function(key, options) {
                     $('a', $(this)).trigger('click');
                 }"),
                 //'onclick' => "$(this).click(); return false;",
-                'name' => 'Открыть'
-            ]
+                'name'     => 'Открыть',
+            ],
         ],
         'rightClickSelectors' => ['.sx-no-active-tab'],
     ]);
     ?>
-        <ul class="nav nav-tabs sx-backend-showing-tabs">
-            <? foreach ($backendShowings as $backendShowing) : ?>
-                <li class="sx-tab nav-item <?= $backendShowing->id == $action->backendShowing->id ? "active sx-active-tab" : "sx-no-active-tab"; ?>" id="sx-tab-<?= $backendShowing->id; ?>">
-                    <a href="<?= $action->getShowingUrl($backendShowing); ?>" class="nav-link active">
-                        <?= $backendShowing->displayName; ?>
-                        <? if ($backendShowing->id == $action->backendShowing->id) : ?>
-                            
-                            <?
-                            $showingsController = \Yii::$app->createController($controllerRoute)[0];
-                            $showingsController->setModel($backendShowing);
+    <ul class="nav nav-tabs sx-backend-showing-tabs">
+        <? foreach ($backendShowings as $backendShowing) : ?>
+            <li class="sx-tab nav-item <?= $backendShowing->id == $action->backendShowing->id ? "active sx-active-tab" : "sx-no-active-tab"; ?>" id="sx-tab-<?= $backendShowing->id; ?>">
+                <a href="<?= $action->getShowingUrl($backendShowing); ?>" class="nav-link <?= $backendShowing->id == $action->backendShowing->id ? "active" : ""; ?>">
+                    <?= $backendShowing->displayName; ?>
+                    <? if ($backendShowing->id == $action->backendShowing->id) : ?>
 
-                            if ($showingsController->modelActions) {
-                                echo \skeeks\cms\backend\widgets\ContextMenuControllerActionsWidget::widget([
-                                    'actions' => (array) $showingsController->modelActions,
-                                    'isOpenNewWindow' => true,
-                                    'rightClickSelectors' => ['#sx-tab-' . $backendShowing->id],
-                                    'button' => [
-                                        'class' => 'fa fa-cog',
-                                        'style' => 'font-size: 11px; cursor: pointer;',
-                                        'tag' => 'i',
-                                        'label' => '',
-                                    ]
-                                ]);
-                            }
+                        <?
+                        $showingsController = \Yii::$app->createController($controllerRoute)[0];
+                        $showingsController->setModel($backendShowing);
 
-                            
-                            ?>
-                        <? endif; ?>
-                    </a>
-                </li>
-            <? endforeach; ?>
+                        if ($showingsController->modelActions) {
+                            echo \skeeks\cms\backend\widgets\ContextMenuControllerActionsWidget::widget([
+                                'actions'             => (array)$showingsController->modelActions,
+                                'isOpenNewWindow'     => true,
+                                'rightClickSelectors' => ['#sx-tab-'.$backendShowing->id],
+                                'button'              => [
+                                    'class' => 'fa fa-cog',
+                                    'style' => 'font-size: 11px; cursor: pointer;',
+                                    'tag'   => 'i',
+                                    'label' => '',
+                                ],
+                            ]);
+                        }
 
-            <? if ($actionCreate) : ?>
-                <li class="nav-item">
-                    <a href="#sx-modal-create" class="sx-btn-filter-create nav-link" data-toggle="modal" data-target="#sx-modal-create">
-                        <i class="fa fa-plus"></i>
-                    </a>
-                </li>
-            <? endif; ?>
-        </ul>
-    <? endif; ?>
+
+                        ?>
+                    <? endif; ?>
+                </a>
+            </li>
+        <? endforeach; ?>
+
+        <? if ($actionCreate) : ?>
+            <li class="nav-item">
+                <a href="#sx-modal-create" class="sx-btn-filter-create nav-link" data-toggle="modal" data-target="#sx-modal-create">
+                    <i class="fa fa-plus"></i>
+                </a>
+            </li>
+        <? endif; ?>
+    </ul>
+<? endif; ?>
 
     <div class="<?= ($backendShowings && $action->backendShowing) ? "tab-content" : ""; ?>">
         <?
@@ -146,6 +146,7 @@ JS
         ?>
         <?
         $grid = $widgetClassName::begin((array)$action->gridConfig);
+        $action->gridObject = $grid;
         ?>
         <?
         if ($widgetFiltersClassName) {
@@ -157,14 +158,18 @@ JS
         }
         ?>
 
-    <?
-    $widgetClassName::end();
-    ?>
+        <?
+        $widgetClassName::end();
+        ?>
+
         <? if (YII_ENV === 'dev' && isset($grid->dataProvider->query)) : ?>
             <a href="#" onclick="$('.sx-grid-sql').toggle(); return false;" style="text-decoration: none; border-bottom: 1px dashed;">Показать SQL</a>
             <div class="sx-grid-sql" style="display: none; padding: 1px solid; padding: 10px;">
-            <code ><?= $grid->dataProvider->query->createCommand()->rawSql; ?></code>
+                <code><?= $grid->dataProvider->query->createCommand()->rawSql; ?></code>
             </div>
         <? endif; ?>
+
     </div>
-<?php \skeeks\cms\widgets\Pjax::end(); ?>
+
+
+<?php $pjax::end(); ?>
