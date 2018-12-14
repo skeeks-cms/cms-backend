@@ -30,7 +30,7 @@ use yii\helpers\Inflector;
 
 /**
  * @property IHasInfoActions $controller
- * @property string $backendShowingKey
+ * @property string          $backendShowingKey
  * @property []|null $backendShowings
  *
  * Class AdminViewAction
@@ -161,7 +161,6 @@ class BackendAction extends Action
      */
     public function getShowingUrl(BackendShowing $backendShowing)
     {
-        $query = [];
         $url = $this->url;
         $query = [];
 
@@ -184,8 +183,8 @@ class BackendAction extends Action
 
 
         $url->setBackendParamsByCurrentRequest();
-
         $query[$this->backendShowingParam] = $backendShowing->id;
+        //print_r($url->url);die;
         return $url->url;
     }
     /**
@@ -226,7 +225,7 @@ class BackendAction extends Action
     public function getBackendShowingKey()
     {
         if ($this->_backendShowingKey !== null) {
-            return (string) $this->_backendShowingKey;
+            return (string)$this->_backendShowingKey;
         }
 
         return $this->uniqueId;
@@ -238,7 +237,7 @@ class BackendAction extends Action
      */
     public function setBackendShowingKey($key)
     {
-        $this->_backendShowingKey = (string) $key;
+        $this->_backendShowingKey = (string)$key;
 
         return $this;
     }
