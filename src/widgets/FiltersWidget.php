@@ -33,7 +33,7 @@ class FiltersWidget extends QueryFiltersWidget
             'class'     => 'sx-backend-filters-form ',
             'data-pjax' => 1,
         ],
-        'method' => 'get',
+        'method'      => 'get',
         'fieldConfig' => [
             'template' => "{label}\n{beginWrapper}\n<div class='sx-filter-wrapper'>{input}</div>\n{hint}\n{error}\n{endWrapper}{controlls}",
         ],
@@ -64,41 +64,15 @@ class FiltersWidget extends QueryFiltersWidget
     public function run()
     {
         if (\Yii::$app->request->isPost && \Yii::$app->request->isAjax) {
-            ob_get_clean();
-            $rr = new RequestResponse();
-            if (\Yii::$app->request->post('act') == 'remove-item') {
+            if (\Yii::$app->request->post('act')) {
+                ob_get_clean();
+                $rr = new RequestResponse();
+                if (\Yii::$app->request->post('act') == 'remove-item') {
 
-                $visibles = $this->visibleFilters;
-                ArrayHelper::removeValue($visibles, \Yii::$app->request->post('attribute'));
+                    $visibles = $this->visibleFilters;
+                    ArrayHelper::removeValue($visibles, \Yii::$app->request->post('attribute'));
 
-                $this->configModel->visibleFilters = $visibles;
-
-                if (!$this->configBehavior->saveConfig()) {
-                    $rr->success = false;
-                    $rr->message = "Настройки не сохранены";
-                } else {
-                    $rr->success = true;
-                    //$rr->message = 'Настройки сохранены';
-                }
-
-            } elseif (\Yii::$app->request->post('act') == 'save-values') {
-                try {
-                    $this->filtersModel->load(\Yii::$app->request->post());
-                    $this->configModel->filterValues = $this->filtersModel->toArray();
-
-                    if (!$this->configBehavior->saveConfig()) {
-                        $rr->success = false;
-                        $rr->message = "Настройки не сохранены";
-                    } else {
-                        $rr->success = true;
-                        //$rr->message = 'Настройки сохранены';
-                    }
-                } catch (\Exception $e) {
-
-                }
-            } elseif (\Yii::$app->request->post('act') == 'sort') {
-                try {
-                    $this->configModel->visibleFilters = \Yii::$app->request->post('sort');
+                    $this->configModel->visibleFilters = $visibles;
 
                     if (!$this->configBehavior->saveConfig()) {
                         $rr->success = false;
@@ -108,13 +82,42 @@ class FiltersWidget extends QueryFiltersWidget
                         //$rr->message = 'Настройки сохранены';
                     }
 
-                } catch (\Exception $e) {
+                } elseif (\Yii::$app->request->post('act') == 'save-values') {
+                    try {
+                        $this->filtersModel->load(\Yii::$app->request->post());
+                        $this->configModel->filterValues = $this->filtersModel->toArray();
 
+                        if (!$this->configBehavior->saveConfig()) {
+                            $rr->success = false;
+                            $rr->message = "Настройки не сохранены";
+                        } else {
+                            $rr->success = true;
+                            //$rr->message = 'Настройки сохранены';
+                        }
+                    } catch (\Exception $e) {
+
+                    }
+                } elseif (\Yii::$app->request->post('act') == 'sort') {
+                    try {
+                        $this->configModel->visibleFilters = \Yii::$app->request->post('sort');
+
+                        if (!$this->configBehavior->saveConfig()) {
+                            $rr->success = false;
+                            $rr->message = "Настройки не сохранены";
+                        } else {
+                            $rr->success = true;
+                            //$rr->message = 'Настройки сохранены';
+                        }
+
+                    } catch (\Exception $e) {
+
+                    }
                 }
+
+                \Yii::$app->response->data = $rr;
+                \Yii::$app->end();
             }
 
-            \Yii::$app->response->data = $rr;
-            \Yii::$app->end();
         }
 
         $jsOptions = Json::encode([
