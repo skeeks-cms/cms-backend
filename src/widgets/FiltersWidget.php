@@ -11,6 +11,7 @@ use skeeks\cms\backend\widgets\filters\ActiveField;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\queryfilters\QueryFiltersWidget;
 use yii\bootstrap\ActiveForm;
+use yii\bootstrap\BootstrapPluginAsset;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\helpers\Json;
