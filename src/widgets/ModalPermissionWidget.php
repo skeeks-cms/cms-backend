@@ -32,6 +32,8 @@ class ModalPermissionWidget extends Modal
      */
     public $controller = null;
 
+    public $standartToggleButton = true;
+
     public function init()
     {
         if (!$this->controller)
@@ -39,15 +41,14 @@ class ModalPermissionWidget extends Modal
             throw new InvalidConfigException('Property controller not be null: ' . static::class);
         }
 
-        if (!$this->header !== false)
+        if (isset($this->header) && $this->header !== false)
         {
             $this->header = \Yii::t('skeeks/backend', 'Access settings');
         }
 
-        if (!$this->toggleButton)
+        if ($this->toggleButton === false && $this->standartToggleButton)
         {
-            $this->toggleButton =
-            [
+            $this->toggleButton = [
                 'tag' => 'a',
                 'class' => "btn btn-default btn-primary",
                 'label' => '<i class="glyphicon glyphicon-exclamation-sign" data-sx-widget="tooltip-b" data-original-title="' . \Yii::t('skeeks/backend','Setting up access to this section') . '"></i>'

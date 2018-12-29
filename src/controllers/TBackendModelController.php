@@ -11,7 +11,6 @@ namespace skeeks\cms\backend\controllers;
 use skeeks\cms\backend\actions\IBackendModelAction;
 use skeeks\cms\backend\actions\IBackendModelMultiAction;
 use skeeks\cms\IHasName;
-use yii\base\BaseObject;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\db\ActiveRecord;
@@ -24,7 +23,7 @@ use yii\web\Application;
  * @property                            $modelShowAttribute;
  * @property                            $modelPkAttribute;
  * @property                            $requestPkParamName;
- * @property                            $modelShowName;
+ * @property string|callable            $modelShowName;
  * @property                            $modelPkValue;
  *
  * @property Model|ActiveRecord         $model;
@@ -156,11 +155,18 @@ trait TBackendModelController
         $this->_requestPkParamName = $requestPkParamName;
         return $this;
     }
+
+    private $_modelShowName = null;
+
     /**
-     * @return string
+     * @return string|callable
      */
     public function getModelShowName()
     {
+        if ($this->_modelShowName !== null) {
+            return $this->_modelShowName;
+        }
+
         $model = $this->model;
 
         if (!$model) {
@@ -173,6 +179,17 @@ trait TBackendModelController
 
         return '';
     }
+
+    /**
+     * @param $value
+     * @return $this
+     */
+    public function setModelShowName($value)
+    {
+        $this->_modelShowName = $value;
+        return $this;
+    }
+
     /**
      * @return mixed|string
      */
