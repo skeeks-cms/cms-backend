@@ -9,10 +9,10 @@
 /* @var $context \skeeks\cms\backend\actions\BackendModelMultiDialogEditAction */
 $context = $this->context;
 ?>
-<? \yii\bootstrap\Modal::begin([
+<? $modal = \yii\bootstrap\Modal::begin([
     'header' => '<b>' . $context->name . '</b>',
     'size' => \yii\bootstrap\Modal::SIZE_LARGE,
     'id' => $dialogId,
 ]); ?>
     <?= $content; ?>
-<? \yii\bootstrap\Modal::end(); ?>
+<? $modal::end(); ?>
