@@ -15,6 +15,7 @@ use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\db\ActiveRecord;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Html;
 use yii\web\Application;
 
 /**
@@ -24,6 +25,7 @@ use yii\web\Application;
  * @property                            $modelPkAttribute;
  * @property                            $requestPkParamName;
  * @property string|callable            $modelShowName;
+ * @property string|callable            $modelHeader;
  * @property                            $modelPkValue;
  *
  * @property Model|ActiveRecord         $model;
@@ -67,6 +69,14 @@ trait TBackendModelController
      * @var IBackendModelMultiAction[]
      */
     protected $_modelMultiActions = null;
+
+    protected $_modelShowName = null;
+
+    /**
+     * @var null|callable
+     */
+    protected $_modelHeader = null;
+
     /**
      * Required to fill!
      * The model class with which the controller operates.
@@ -156,7 +166,7 @@ trait TBackendModelController
         return $this;
     }
 
-    private $_modelShowName = null;
+
 
     /**
      * @return string|callable
@@ -188,6 +198,33 @@ trait TBackendModelController
     {
         $this->_modelShowName = $value;
         return $this;
+    }
+
+    /**
+     * @param null|callable|string $value
+     * @return $this
+     */
+    public function setModelHeader($value)
+    {
+        $this->_modelHeader = $value;
+        return $this;
+    }
+
+    /**
+     * @return string|callable
+     */
+    public function getModelHeader()
+    {
+        if ($this->_modelHeader !== null) {
+            if (is_string($this->_modelHeader)) {
+                return $this->_modelHeader;
+            } elseif(is_callable($this->_modelHeader)) {
+                $callable = $this->_modelHeader;
+                return $callable();
+            }
+        }
+
+        return Html::tag('h1', $this->modelShowName);
     }
 
     /**
