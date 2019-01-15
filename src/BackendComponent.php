@@ -145,6 +145,10 @@ class BackendComponent extends Component
      */
     public function run()
     {
+        if (isset(\Yii::$app->cmsMarketplace) && \Yii::$app->cmsMarketplace) {
+            \Yii::$app->cmsMarketplace->info;
+        }
+
         if ($this->_isRunning === false && $this->_checkAccess()) {
             $this->_isRunning = true;
             static::$_runningBakcend = $this;
