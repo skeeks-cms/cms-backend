@@ -14,6 +14,8 @@ use skeeks\cms\modules\admin\widgets\ControllerActions;
 use skeeks\cms\modules\admin\widgets\ControllerModelActions;
 use yii\base\InvalidConfigException;
 use yii\grid\DataColumn;
+use yii\helpers\Html;
+use yii\web\JsExpression;
 
 /**
  * Class ControllerActionsColumn
@@ -86,7 +88,19 @@ class ControllerActionsColumn extends DataColumn
         ]);*/
 
         if ($controller->modelActions) {
-            return \skeeks\cms\backend\widgets\ContextMenuControllerActionsWidget::widget([
+            /*$first = array_keys($controller->modelActions)[0];
+            $action = $controller->modelActions[$first];
+
+            $result .= Html::tag("div", "", [
+                'style' => "display:none;",
+                'class' => "sx-row-action",
+                'onclick' => new JsExpression(<<<JS
+            new sx.classes.backend.widgets.Action({$actionDataJson}).go();
+            return false;
+JS
+)
+            ]);*/
+            $result = \skeeks\cms\backend\widgets\ContextMenuControllerActionsWidget::widget([
                 'actions' => $controller->modelActions,
                 'isOpenNewWindow' => $this->isOpenNewWindow,
                 'rightClickSelectors' => ['tr[data-key=' . $key . ']'],
@@ -97,6 +111,8 @@ class ControllerActionsColumn extends DataColumn
                     'label' => '<i class="fa fa-caret-down"></i>',
                 ]
             ]);
+
+            return $result;
         } else {
             return null;
         }
@@ -106,7 +122,11 @@ class ControllerActionsColumn extends DataColumn
     protected function gridDoubleClickAction()
     {
         if (!isset(self::$grids[$this->grid->id])) {
+
             $this->grid->view->registerJs(<<<JS
+            
+            
+            
             $('tr', $("#{$this->grid->id}")).on('dblclick', function()
             {
                 //$('.sx-row-action', $(this)).click();
