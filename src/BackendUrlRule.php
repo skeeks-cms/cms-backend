@@ -5,12 +5,12 @@
  * @copyright 2010 SkeekS
  * @date 05.03.2017
  */
+
 namespace skeeks\cms\backend;
+
 use skeeks\cms\backend\helpers\BackendUrlHelper;
 use skeeks\cms\helpers\StringHelper;
-use skeeks\cms\helpers\UrlHelper;
-use \yii\base\InvalidConfigException;
-use yii\helpers\ArrayHelper;
+use yii\base\InvalidConfigException;
 use yii\web\Application;
 
 /**
@@ -46,42 +46,63 @@ class BackendUrlRule
      */
     public function init()
     {
-        if ($this->name === null)
-        {
+        if ($this->name === null) {
             $this->name = __CLASS__;
         }
 
-        if (!$this->urlPrefix)
-        {
-            throw new InvalidConfigException("Need 'urlPrefix'. Incorrect configuration of a component " . static::class);
+        if (!$this->urlPrefix) {
+            throw new InvalidConfigException("Need 'urlPrefix'. Incorrect configuration of a component ".static::class);
         }
 
-        if (!$this->backendId && $this->_backend === null)
-        {
-            throw new InvalidConfigException("Need 'backendId' or 'backend'. Incorrect configuration of a component " . static::class);
+        if (!$this->backendId && $this->_backend === null) {
+            throw new InvalidConfigException("Need 'backendId' or 'backend'. Incorrect configuration of a component ".static::class);
         }
     }
 
     /**
      * @param \yii\web\UrlManager $manager
-     * @param string $route
-     * @param array $params
+     * @param string              $route
+     * @param array               $params
      * @return bool|string
      */
     public function createUrl($manager, $route, $params)
     {
         if (\Yii::$app instanceof Application) {
-            if ($systemParams = \Yii::$app->request->get(BackendUrlHelper::BACKEND_PARAM_NAME))
-            {
+            if ($systemParams = \Yii::$app->request->get(BackendUrlHelper::BACKEND_PARAM_NAME)) {
                 $params = BackendUrlHelper::createByParams($params)->setBackendParamsByCurrentRequest()->params;
             }
         }
 
 
         $routeData = explode("/", $route);
-        $isRoute   = false;
+        $isRoute = false;
 
-        if ($routeData)
+
+        if ($routeData) {
+            if (count($routeData) == 2) {
+
+
+                $controllerPrefix = StringHelper::substr($routeData[1], 0, StringHelper::strlen($this->controllerPrefix));
+                if ($this->controllerPrefix == $controllerPrefix) {
+                    //if ($path != $controllerPrefix) {
+                    $isRoute = true;
+                    //}
+                }
+
+            }
+
+            if (count($routeData) == 3) {
+                $controllerPrefix = StringHelper::substr($routeData[1], 0, StringHelper::strlen($this->controllerPrefix));
+                if ($this->controllerPrefix == $controllerPrefix) {
+                    //if ($path != $controllerPrefix) {
+                    $isRoute = true;
+                    //}
+                }
+            }
+        }
+
+
+        /*if ($routeData)
         {
             foreach ($routeData as $count => $path)
             {
@@ -90,12 +111,13 @@ class BackendUrlRule
                     continue;
                 }
 
-
                 if ($count == 0) {
                     $controllerPrefix = StringHelper::substr($path, 0, StringHelper::strlen($this->controllerPrefix));
-                    if ($this->controllerPrefix == $controllerPrefix && $path != $controllerPrefix)
+                    if ($this->controllerPrefix == $controllerPrefix)
                     {
-                        $isRoute = true;
+                        if ($path != $controllerPrefix) {
+                            $isRoute = true;
+                        }
                     }
                 }
 
@@ -109,14 +131,13 @@ class BackendUrlRule
 
 
             }
-        }
+        }*/
 
-        if ($isRoute === false)
-        {
+        if ($isRoute === false) {
             return false;
         }
 
-        $url = $this->urlPrefix . "/" . $route;
+        $url = $this->urlPrefix."/".$route;
 
         /**
          * @see parent::createUrl()
@@ -124,7 +145,7 @@ class BackendUrlRule
         if ($this->host !== null) {
             $pos = strpos($url, '/', 8);
             if ($pos !== false) {
-                $url = substr($url, 0, $pos) . preg_replace('#/+#', '/', substr($url, $pos));
+                $url = substr($url, 0, $pos).preg_replace('#/+#', '/', substr($url, $pos));
             }
         } elseif (strpos($url, '//') !== false) {
             $url = preg_replace('#/+#', '/', $url);
@@ -141,43 +162,37 @@ class BackendUrlRule
          * @see parent::createUrl()
          */
         if (!empty($params) && ($query = http_build_query($params)) !== '') {
-            $url .= '?' . $query;
+            $url .= '?'.$query;
         }
-
 
 
         return $url;
     }
 
     /**
-     * @param \yii\web\UrlManager   $manager
-     * @param \yii\web\Request      $request
+     * @param \yii\web\UrlManager $manager
+     * @param \yii\web\Request    $request
      * @return array|bool
      */
     public function parseRequest($manager, $request)
     {
-        $pathInfo       = $request->getPathInfo();
-        $params         = $request->getQueryParams();
-        $firstPrefix    = substr($pathInfo, 0, strlen($this->urlPrefix));
+        $pathInfo = $request->getPathInfo();
+        $params = $request->getQueryParams();
+        $firstPrefix = substr($pathInfo, 0, strlen($this->urlPrefix));
 
-        if ($firstPrefix == $this->urlPrefix)
-        {
-            if ($this->backend === null)
-            {
-                if ($this->backendId)
-                {
-                    throw new InvalidConfigException("Backend Id '{$this->backendId}' not exist. Incorrect configuration of a component " . static::class);
-                } else
-                {
-                    throw new InvalidConfigException("Need 'backendId' or 'backend'. Incorrect configuration of a component " . static::class);
+        if ($firstPrefix == $this->urlPrefix) {
+            if ($this->backend === null) {
+                if ($this->backendId) {
+                    throw new InvalidConfigException("Backend Id '{$this->backendId}' not exist. Incorrect configuration of a component ".static::class);
+                } else {
+                    throw new InvalidConfigException("Need 'backendId' or 'backend'. Incorrect configuration of a component ".static::class);
                 }
             }
 
             $this->backend->run();
             $route = str_replace($this->urlPrefix, "", $pathInfo);
-            if (!$route || $route == "/")
-            {
-                $route = "/" . $this->controllerPrefix . "/index";
+            if (!$route || $route == "/") {
+                $route = "/".$this->controllerPrefix."/index";
                 /*print_r($route);
                 die;*/
             }
@@ -207,19 +222,14 @@ class BackendUrlRule
      */
     public function getBackend()
     {
-        if ($this->_backend !== null)
-        {
+        if ($this->_backend !== null) {
             return $this->_backend;
         }
 
-        if ($this->backendId)
-        {
-            if (\Yii::$app->has($this->backendId))
-            {
-                if ($backendComponent = \Yii::$app->get($this->backendId))
-                {
-                    if ($backendComponent instanceof IBackendComponent)
-                    {
+        if ($this->backendId) {
+            if (\Yii::$app->has($this->backendId)) {
+                if ($backendComponent = \Yii::$app->get($this->backendId)) {
+                    if ($backendComponent instanceof IBackendComponent) {
                         $this->_backend = $backendComponent;
                         return $this->_backend;
                     }
