@@ -11,6 +11,7 @@ namespace skeeks\cms\backend;
 use skeeks\cms\backend\helpers\BackendUrlHelper;
 use skeeks\cms\helpers\StringHelper;
 use yii\base\InvalidConfigException;
+use yii\helpers\Inflector;
 use yii\web\Application;
 
 /**
@@ -78,67 +79,52 @@ class BackendUrlRule
         $isRoute = false;
 
 
-        if ($routeData) {
-
-            if (count($routeData) == 1) {
-                $controllerPrefix = StringHelper::substr($routeData[0], 0, StringHelper::strlen($this->controllerPrefix));
-                if ($this->controllerPrefix == $controllerPrefix) {
-                    //if ($path != $controllerPrefix) {
-                    $isRoute = true;
-                    //}
-                }
-            }
-
-            if (count($routeData) == 2) {
-                $controllerPrefix = StringHelper::substr($routeData[1], 0, StringHelper::strlen($this->controllerPrefix));
-                if ($this->controllerPrefix == $controllerPrefix) {
-                    //if ($path != $controllerPrefix) {
-                    $isRoute = true;
-                    //}
-                }
-            }
-
-            if (count($routeData) == 3) {
-                $controllerPrefix = StringHelper::substr($routeData[1], 0, StringHelper::strlen($this->controllerPrefix));
-                if ($this->controllerPrefix == $controllerPrefix) {
-                    //if ($path != $controllerPrefix) {
-                    $isRoute = true;
-                    //}
-                }
-            }
-        }
-
-
-        /*if ($routeData)
+        if ($routeData)
         {
-            foreach ($routeData as $count => $path)
-            {
-                if (!$path)
-                {
-                    continue;
-                }
-
-                if ($count == 0) {
-                    $controllerPrefix = StringHelper::substr($path, 0, StringHelper::strlen($this->controllerPrefix));
-                    if ($this->controllerPrefix == $controllerPrefix)
-                    {
-                        if ($path != $controllerPrefix) {
-                            $isRoute = true;
+            if (count($routeData) === 3) {
+                $path = $routeData[1];
+                $controllerPrefix = StringHelper::substr($path, 0, StringHelper::strlen($this->controllerPrefix));
+                if ($this->controllerPrefix == $controllerPrefix) {
+                    if ($path != $controllerPrefix) {
+                        $isRoute = true;
+                    } else {
+                        $controllerData = \Yii::$app->createController($route);
+                        if ($controllerData) {
+                            $r = new \ReflectionClass($controllerData[0]);
+                            if (Inflector::camel2id($r->getName()) == $path) {
+                                $isRoute = true;
+                            }
                         }
                     }
                 }
-
-                if ($count == 1) {
-                    $controllerPrefix = StringHelper::substr($path, 0, StringHelper::strlen($this->controllerPrefix));
-                    if ($this->controllerPrefix == $controllerPrefix)
+            } else {
+                foreach ($routeData as $path)
+                {
+                    if (!$path)
                     {
+                        continue;
+                    }
+
+                    $controllerPrefix = StringHelper::substr($path, 0, StringHelper::strlen($this->controllerPrefix));
+                    if ($this->controllerPrefix == $controllerPrefix) {
+                    if ($path != $controllerPrefix) {
                         $isRoute = true;
+                    } else {
+                        $controllerData = \Yii::$app->createController($route);
+                        if ($controllerData) {
+                            $r = new \ReflectionClass($controllerData[0]);
+                            if (Inflector::camel2id($r->getName()) == $path) {
+                                $isRoute = true;
+                            }
+                        }
                     }
                 }
-
-
+                }
             }
-        }*/
+
+
+        }
+
 
         if ($isRoute === false) {
             return false;
