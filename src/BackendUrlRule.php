@@ -79,16 +79,23 @@ class BackendUrlRule
 
 
         if ($routeData) {
+
+            if (count($routeData) == 1) {
+                $controllerPrefix = StringHelper::substr($routeData[0], 0, StringHelper::strlen($this->controllerPrefix));
+                if ($this->controllerPrefix == $controllerPrefix) {
+                    //if ($path != $controllerPrefix) {
+                    $isRoute = true;
+                    //}
+                }
+            }
+
             if (count($routeData) == 2) {
-
-
                 $controllerPrefix = StringHelper::substr($routeData[1], 0, StringHelper::strlen($this->controllerPrefix));
                 if ($this->controllerPrefix == $controllerPrefix) {
                     //if ($path != $controllerPrefix) {
                     $isRoute = true;
                     //}
                 }
-
             }
 
             if (count($routeData) == 3) {
