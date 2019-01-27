@@ -79,8 +79,7 @@ class BackendUrlRule
         $isRoute = false;
 
 
-        if ($routeData)
-        {
+        if ($routeData) {
             if (count($routeData) === 3) {
                 $path = $routeData[1];
                 $controllerPrefix = StringHelper::substr($path, 0, StringHelper::strlen($this->controllerPrefix));
@@ -89,36 +88,46 @@ class BackendUrlRule
                         $isRoute = true;
                     } else {
                         $controllerData = \Yii::$app->createController($route);
+
                         if ($controllerData) {
                             $r = new \ReflectionClass($controllerData[0]);
-                            if (Inflector::camel2id($r->getName()) == $path) {
+
+                            $inflerctor = Inflector::camel2id($r->getShortName());
+                            $inflerctorName = str_replace("-controller", "", $inflerctor);
+
+                            if ($inflerctorName == $path) {
                                 $isRoute = true;
                             }
+
                         }
                     }
                 }
             } else {
-                foreach ($routeData as $path)
-                {
-                    if (!$path)
-                    {
+                foreach ($routeData as $path) {
+                    if (!$path) {
                         continue;
                     }
 
                     $controllerPrefix = StringHelper::substr($path, 0, StringHelper::strlen($this->controllerPrefix));
                     if ($this->controllerPrefix == $controllerPrefix) {
-                    if ($path != $controllerPrefix) {
-                        $isRoute = true;
-                    } else {
-                        $controllerData = \Yii::$app->createController($route);
-                        if ($controllerData) {
-                            $r = new \ReflectionClass($controllerData[0]);
-                            if (Inflector::camel2id($r->getName()) == $path) {
-                                $isRoute = true;
+                        if ($path != $controllerPrefix) {
+                            $isRoute = true;
+                        } else {
+                            $controllerData = \Yii::$app->createController($route);
+
+                            if ($controllerData) {
+                                $r = new \ReflectionClass($controllerData[0]);
+
+                                $inflerctor = Inflector::camel2id($r->getShortName());
+                                $inflerctorName = str_replace("-controller", "", $inflerctor);
+
+                                if ($inflerctorName == $path) {
+                                    $isRoute = true;
+                                }
+
                             }
                         }
                     }
-                }
                 }
             }
 
