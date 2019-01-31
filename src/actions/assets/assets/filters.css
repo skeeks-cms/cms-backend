@@ -1,0 +1,17 @@
+.sx-backend-filters-form
+{
+    box-shadow: inset 0 1px 0 #fff/*, inset 0 0 2px -1px rgba(232,19,64, 1)*/;
+    background: #EFF3F4;
+    border-radius: 0px 4px 4px 4px;
+    border-bottom: 1px solid #adbdca;
+    border-right: 1px solid #adbdca;
+    border-top: 1px solid #adbdca;
+    border-left: 1px solid #adbdca;
+    padding-left: 5px;
+    padding-right: 5px;
+    padding-bottom: 5px;
+    border-color: #d6dfe1 #ced7d8 #969d9e #bec7c8;
+    margin-bottom: 10px;
+    padding-top: 10px;
+}
+
