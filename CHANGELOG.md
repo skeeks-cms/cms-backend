@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.2.9
+-----------------
+ * Fixed rbac
+ 
 1.2.8
 -----------------
  * Add filters setting isOpened
