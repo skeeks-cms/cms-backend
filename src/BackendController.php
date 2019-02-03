@@ -49,13 +49,7 @@ abstract class BackendController extends Controller
      * @var BackendAction[]
      */
     protected $_allActions = null;
-    /**
-     * @return string
-     */
-    public function getPermissionName()
-    {
-        return $this->uniqueId;
-    }
+
     /**
      * @return array
      */
@@ -84,11 +78,20 @@ abstract class BackendController extends Controller
             $this->name = Inflector::humanize(static::class);
         }
 
-        if (!$this->permissionNames) {
-            $this->permissionNames =
-                [
-                    $this->permissionName => $this->name,
-                ];
+        /**
+         * По умолчанию главная привилегия заполняется значением полного роута контроллера
+         */
+        if ($this->permissionName === null) {
+            $this->permissionName = $this->uniqueId;
+        }
+
+        /**
+         * По умолчанию в привилегии попадает только главная привилегия
+         */
+        if ($this->permissionNames === null) {
+            $this->permissionNames = [
+                $this->permissionName => $this->name,
+            ];
         }
 
     }

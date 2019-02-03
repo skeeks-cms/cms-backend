@@ -15,7 +15,7 @@ $controller = $widget->controller;
     <? foreach ($controller->permissionNames as $parmissionName => $permissionLabel) : ?>
         <?= \skeeks\cms\rbac\widgets\adminPermissionForRoles\AdminPermissionForRolesWidget::widget([
             'permissionName'        => $parmissionName,
-            'permissionDescription' => $permissionLabel,
+            'permissionDescription' => $permissionLabel . " — " . $parmissionName,
             'label'                 => $permissionLabel,
         ]); ?>
         <!--<p><?/*= $parmissionName; */?></p>-->
@@ -30,10 +30,10 @@ $controller = $widget->controller;
                         <? foreach ($actionObj->permissionNames as $parmissionName => $permissionLabel) : ?>
                             <?= \skeeks\cms\rbac\widgets\adminPermissionForRoles\AdminPermissionForRolesWidget::widget([
                                 'permissionName'        => $parmissionName,
-                                'permissionDescription' => $permissionLabel,
-                                'label'                 => $permissionLabel,
+                                'permissionDescription' => $permissionLabel . " — " . $parmissionName,
+                                'label'                 => $actionObj->name,
                             ]); ?>
-                            <!--<p><?/*= $parmissionName; */?></p>-->
+                            <!--<small><?/*= $parmissionName; */?> (<?/*= $permissionLabel; */?>)</small>-->
                         <? endforeach; ?>
                     <? endif; ?>
                 </div>

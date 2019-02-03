@@ -57,17 +57,7 @@ class BackendAction extends Action
      */
     protected $_backendShowing = null;
     protected $_backendShowings = null;
-    /**
-     * @return string
-     */
-    public function getPermissionName()
-    {
-        if ($this->_permissionName !== false) {
-            return $this->controller->permissionName."/".$this->id;
-        }
 
-        return $this->_permissionName;
-    }
     public function init()
     {
         //Если название не задано, покажем что нибудь.
@@ -83,9 +73,19 @@ class BackendAction extends Action
             throw new InvalidConfigException('"'.static::class.'::callback Should be a valid callback"');
         }
 
-        if ($this->permissionNames === null) {
+        if ($this->permissionName === null && $this->accessCallback === null) {
+            if ($this->controller->permissionName) {
+                //Если у контроллера задана главная привилегия, то к ней добавляется текущий экшн, и эта строка становится главной привилегией текущего экшена
+                $this->permissionName = $this->controller->permissionName . "/" . $this->id;
+            } else {
+                $this->permissionName = $this->uniqueId;
+            }
+
+        }
+
+        if ($this->permissionNames === null && $this->accessCallback === null && $this->permissionName) {
             $this->permissionNames = [
-                $this->uniqueId => $this->name,
+                $this->permissionName => $this->name,
             ];
         }
 

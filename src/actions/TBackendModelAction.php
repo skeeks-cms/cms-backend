@@ -34,19 +34,6 @@ trait TBackendModelAction
     }
 
     /**
-     * @return string
-     */
-    public function getPermissionName()
-    {
-        if ($this->_permissionName !== false)
-        {
-            return $this->controller->permissionName . "/" . $this->id;
-        }
-
-        return $this->_permissionName;
-    }
-
-    /**
      * @return Model
      */
     public function getModel() {
@@ -64,14 +51,20 @@ trait TBackendModelAction
 
     public function init()
     {
-        if ($this->permissionNames === null)
+        if ($this->permissionName === null && $this->accessCallback === null) {
+            if ($this->controller->permissionName) {
+                //Если у контроллера задана главная привилегия, то к ней добавляется текущий экшн, и эта строка становится главной привилегией текущего экшена
+                $this->permissionName = $this->controller->permissionName . "/" . $this->id;
+            } else {
+                $this->permissionName = $this->uniqueId;
+            }
+        }
+
+        if ($this->permissionNames === null && $this->accessCallback === null && $this->permissionName)
         {
             $this->permissionNames = [
                 $this->permissionName       => $this->name,
             ];
-
-            /*print_r($this->controller);
-            print_r($this->permissionNames);die;*/
 
             $className = $this->modelClassName;
             $model = new $className();
@@ -216,7 +209,6 @@ trait TBackendModelAction
         {
             if (!\Yii::$app->user->can($permissionName, ['model' => $this->model]))
             {
-
                 return false;
             }
         }
