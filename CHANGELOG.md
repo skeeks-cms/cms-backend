@@ -1,6 +1,10 @@
 CHANGELOG
 ==============
 
+1.2.11.pre
+-----------------
+ * Each access callbacks in MiltiActions
+ 
 1.2.10
 -----------------
  * Fixed rbac
