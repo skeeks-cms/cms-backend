@@ -1,7 +1,7 @@
 CHANGELOG
 ==============
 
-1.2.11.pre
+1.2.11
 -----------------
  * Each access callbacks in MiltiActions
  
