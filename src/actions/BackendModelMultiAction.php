@@ -11,6 +11,7 @@ namespace skeeks\cms\backend\actions;
 use skeeks\cms\backend\BackendAction;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\sx\helpers\ResponseHelper;
+use yii\base\Exception;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 
@@ -44,6 +45,11 @@ class BackendModelMultiAction extends BackendAction
      */
     public $eachCallback = null;
 
+    /**
+     * @var null|callable
+     */
+    public $eachAccessCallback = null;
+
     public function run()
     {
         $rr = new ResponseHelper();
@@ -64,17 +70,38 @@ class BackendModelMultiAction extends BackendAction
 
 
         $data = [];
+        $result = [];
         foreach ($this->models as $model)
         {
             $raw = [];
-            if ($this->eachExecute($model))
-            {
-                $data['success'] = ArrayHelper::getValue($data, 'success', 0) + 1;
-            } else
-            {
+
+            try {
+                if ($this->eachAccessCallback && is_callable($this->eachAccessCallback)) {
+                    $eachAccessCallback = $this->eachAccessCallback;
+                    if (!$eachAccessCallback($model)) {
+                        throw new Exception("Нет доступа");
+                    }
+                }
+                
+                if ($this->eachExecute($model)) {
+                    $result[$model->id] = [
+                        'success' => true,
+                    ];
+                    $data['success'] = ArrayHelper::getValue($data, 'success', 0) + 1;
+                } else {
+                    throw new Exception("Ошибка");
+                }
+            } catch (\Exception $e) {
+                
+                $result[$model->id] = [
+                    'success' => false,
+                    'error' => $e->getMessage(),
+                ];
                 $data['errors'] = ArrayHelper::getValue($data, 'errors', 0) + 1;
             }
         }
+        
+        $data['result'] = $result;
 
         $rr->success    = true;
         $rr->message    = \Yii::t('skeeks/cms',"Mission complete");
