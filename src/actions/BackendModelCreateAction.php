@@ -98,7 +98,7 @@ class BackendModelCreateAction extends ViewBackendAction
                     $this->trigger(self::EVENT_BEFORE_VALIDATE);
 
                     foreach ($this->formModels as $fmodel) {
-                        if ($model->validate()) {
+                        if ($fmodel->validate()) {
 
                         } else {
                             $isValid = false;
