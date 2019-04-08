@@ -114,6 +114,10 @@ abstract class BackendController extends Controller
      */
     protected function _ensureUrl()
     {
+        /*if (!\Yii::$app->urlManager->enablePrettyUrl) {
+            return true;
+        }*/
+
         if (\Yii::$app->urlManager->rules) {
             foreach (\Yii::$app->urlManager->rules as $rule) {
                 if ($rule instanceof BackendUrlRule) {
@@ -135,7 +139,7 @@ abstract class BackendController extends Controller
             }
         }
 
-        throw new NotFoundHttpException("Request: ".\Yii::$app->request->pathInfo." ip: ".\Yii::$app->request->userIP);
+        throw new NotFoundHttpException("This is controller allow only with urlPrefix!");
     }
     /**
      * @return $this
