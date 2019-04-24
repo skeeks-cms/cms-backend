@@ -30,6 +30,8 @@ class BackendModelUpdateAction extends BackendModelAction
 
     const EVENT_INIT_FORM_MODELS = 'initFormModels';
     const EVENT_BEFORE_SAVE = 'beforeSave';
+    const EVENT_AFTER_SAVE = 'afterSave';
+    const EVENT_BEFORE_VALIDATE = 'beforeValidate';
 
     public $defaultView = "_form";
 
@@ -75,6 +77,13 @@ class BackendModelUpdateAction extends BackendModelAction
 
         $isValid = true;
 
+        if ($this->fields) {
+            if (is_callable($this->fields)) {
+                $fields = $this->fields;
+                $this->fields = call_user_func($fields, $this);
+            }
+        }
+
         if ($rr->isRequestPjaxPost()) {
 
             try {
@@ -83,6 +92,8 @@ class BackendModelUpdateAction extends BackendModelAction
                     foreach ($this->formModels as $model) {
                         $model->load(\Yii::$app->request->post());
                     }
+
+                    $this->trigger(self::EVENT_BEFORE_VALIDATE);
 
                     /**
                      * @var $model DynamicModel
@@ -109,6 +120,8 @@ class BackendModelUpdateAction extends BackendModelAction
                             }
                         }
 
+                        $this->trigger(self::EVENT_AFTER_SAVE);
+
                         if (!$this->successMessage) {
                             $this->successMessage = \Yii::t('skeeks/cms', 'Saved');
                         }
@@ -129,10 +142,10 @@ class BackendModelUpdateAction extends BackendModelAction
                     }
 
                 } else {
-                    foreach ($this->formModels as $model) {
+                    /*foreach ($this->formModels as $model) {
                         $model->load(\Yii::$app->request->post());
                         $model->validate();
-                    }
+                    }*/
                 }
             } catch (\Exception $e) {
                 \Yii::$app->getSession()->setFlash('error', $e->getMessage());
@@ -140,10 +153,6 @@ class BackendModelUpdateAction extends BackendModelAction
         }
 
         if ($this->fields) {
-            if (is_callable($this->fields)) {
-                $fields = $this->fields;
-                $this->fields = call_user_func($fields, $this);
-            }
 
             return $this->render('@skeeks/cms/backend/actions/views/model-update', [
                 'model'      => $this->model,

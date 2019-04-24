@@ -11,9 +11,10 @@ namespace skeeks\cms\backend;
 use skeeks\cms\backend\events\ViewRenderEvent;
 use skeeks\cms\modules\admin\widgets\ControllerActions;
 use yii\base\Event;
+use yii\web\Controller;
 
 /**
- * @property IHasInfoActions $controller
+ * @property IHasInfoActions|Controller $controller
  *
  * Class AdminViewAction
  * @package skeeks\cms\modules\admin\actions

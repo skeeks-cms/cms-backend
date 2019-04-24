@@ -87,13 +87,24 @@ class BackendModelCreateAction extends ViewBackendAction
 
         $isValid = true;
 
+
+        if ($this->fields) {
+            if (is_callable($this->fields)) {
+                $fields = $this->fields;
+                $this->fields = call_user_func($fields, $this);
+            }
+        }
+
         if ($rr->isRequestPjaxPost()) {
 
             try {
                 if (!\Yii::$app->request->post($this->reloadFormParam)) {
+
                     foreach ($this->formModels as $fmodel) {
                         $fmodel->load(\Yii::$app->request->post());
                     }
+
+
 
                     $this->trigger(self::EVENT_BEFORE_VALIDATE);
 
@@ -107,6 +118,8 @@ class BackendModelCreateAction extends ViewBackendAction
                     }
 
                     if ($isValid) {
+
+
                         $this->trigger(self::EVENT_BEFORE_SAVE);
 
                         if ($this->isSaveFormModels) {
@@ -154,6 +167,10 @@ class BackendModelCreateAction extends ViewBackendAction
                             );
 
                         }
+                    } else {
+                        /*$formModels = $this->formModels;
+
+                        print_R($formModels);die;*/
                     }
 
                 }
@@ -163,10 +180,6 @@ class BackendModelCreateAction extends ViewBackendAction
         }
 
         if ($this->fields) {
-            if (is_callable($this->fields)) {
-                $fields = $this->fields;
-                $this->fields = call_user_func($fields, $this);
-            }
 
             return $this->render('@skeeks/cms/backend/actions/views/model-update', [
                 'model' => $model,
