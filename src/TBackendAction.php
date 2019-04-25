@@ -124,15 +124,14 @@ trait TBackendAction
             [
                 'class' => $this->accessClassName,
                 'only'  => [$this->id],
-                'rules' =>
+                'rules' => [
                     [
-                        [
-                            'allow'         => true,
-                            'matchCallback' => function ($rule, $action) {
-                                return $this->isAllow;
-                            },
-                        ],
+                        'allow'         => true,
+                        'matchCallback' => function ($rule, $action) {
+                            return $this->isAllow;
+                        },
                     ],
+                ],
             ]);
 
         return $this;
