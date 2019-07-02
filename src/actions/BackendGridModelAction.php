@@ -199,6 +199,9 @@ JS
 
         $defaultFilters = [
             'class'              => \skeeks\cms\backend\widgets\FiltersWidget::class,
+            'filtersModel'              => [
+                'formName' => 'f' . $this->id
+            ],
             'activeForm'         => [
                 'action' => $this->getShowingUrl($this->getBackendShowing()),
                 'options' => [

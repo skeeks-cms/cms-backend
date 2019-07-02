@@ -162,6 +162,14 @@ $backendShowings = $action->backendShowings;
         $widgetClassName::end();
         ?>
 
+        <? if (\Yii::$app->request->post('__gird-all-ids') == '__gird-all-ids') : ?>
+            <?
+                $query = $grid->dataProvider->query;
+
+
+            ?>
+        <? endif; ?>
+
         <? if (YII_ENV === 'dev' && isset($grid->dataProvider->query)) : ?>
             <a href="#" onclick="$('.sx-grid-sql').toggle(); return false;" style="text-decoration: none; border-bottom: 1px dashed;">Показать SQL</a>
             <div class="sx-grid-sql" style="display: none; padding: 1px solid; padding: 10px;">

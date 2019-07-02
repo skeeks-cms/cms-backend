@@ -51,9 +51,20 @@ class BackendModelMultiDialogEditAction extends BackendModelMultiAction
 
             this.Blocker = new sx.classes.Blocker(this.jDialogContent);
 
+            $('form', this.jDialog).on('beforeSubmit', function() {
+                return false;
+            });
+            
+            this.CurrentAjax = false;
+            
             $('form', this.jDialog).on('submit', function()
             {
-                console.log('MultiDialogAction submit');
+                /*console.log('MultiDialogAction submit');*/
+                //Пресечь повторную отправку
+                if (self.CurrentAjax !== false) {
+                    /*console.log('alrady submited');*/
+                    return false;
+                }
                 
                 var data = _.extend(self.Grid.getDataForRequest(), {
                     'formData' : $(this).serialize()
@@ -64,22 +75,26 @@ class BackendModelMultiDialogEditAction extends BackendModelMultiAction
                 //self.set("url", $(this).attr("action"));
                 
                 var ajax = self.createAjaxQuery(data);
-                
+                self.CurrentAjax = ajax;
+
                 ajax.onComplete(function(e, data)
                 {
                     self.jDialog.modal('hide');
                     self.Blocker.unblock();
+                    self.CurrentAjax = false;
                     /*_.delay(function()
                     {
                         self.jDialog.modal('hide');
                     }, 1000);
 */
                 });
-                ajax.execute();
                 
-                
+                _.delay(function() {
+                    ajax.execute();
+                }, 300);
 
                 return false;
+                
             });
 
         },
