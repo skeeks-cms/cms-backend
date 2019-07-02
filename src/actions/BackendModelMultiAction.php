@@ -104,7 +104,7 @@ class BackendModelMultiAction extends BackendAction
         $data['result'] = $result;
 
         $rr->success    = true;
-        $rr->message    = \Yii::t('skeeks/cms',"Mission complete");
+        $rr->message    = \Yii::t('skeeks/cms',"Mission complete") . " Обновлено записей: " . count($result);
         $rr->data       = $data;
         return (array) $rr;
     }

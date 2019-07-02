@@ -165,8 +165,20 @@ $backendShowings = $action->backendShowings;
         <? if (\Yii::$app->request->post('__gird-all-ids') == '__gird-all-ids') : ?>
             <?
                 $query = $grid->dataProvider->query;
-
-
+                ob_get_clean();
+                $rr = new \skeeks\cms\helpers\RequestResponse();
+                $pks = [];
+                foreach ($query->each(100) as $element)
+                {
+                    $pks[] = $element->id;
+                }
+                $rr->success = true;
+                $rr->message = [
+                    'total' => count($pks),
+                    'pks' => $pks
+                ];
+                \Yii::$app->response->data = $rr;
+                \Yii::$app->end();
             ?>
         <? endif; ?>
 

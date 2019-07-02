@@ -66,9 +66,9 @@ class BackendModelMultiDialogEditAction extends BackendModelMultiAction
                     return false;
                 }
                 
-                var data = _.extend(self.Grid.getDataForRequest(), {
+                var data = _.extend({
                     'formData' : $(this).serialize()
-                });
+                }, self.Grid.getDataForRequest());
 
                 self.Blocker.block();
 
