@@ -70,7 +70,7 @@ class BackendUrlRule
     {
         if (\Yii::$app instanceof Application) {
             if ($systemParams = \Yii::$app->request->get(BackendUrlHelper::BACKEND_PARAM_NAME)) {
-                $params = BackendUrlHelper::createByParams($params)->setBackendParamsByCurrentRequest()->params;
+                $params = BackendUrlHelper::createByParams($params)->mergeBackendParamsByCurrentRequest()->params;
             }
         }
 

@@ -94,6 +94,23 @@ class BackendUrlHelper extends Component
 
         return $this;
     }
+    /**
+     * @return $this
+     */
+    public function mergeBackendParamsByCurrentRequest()
+    {
+        if ($systemParams = \Yii::$app->request->get(static::BACKEND_PARAM_NAME))
+        {
+            if ($this->getBackendParams()) {
+                $this->setBackendParams(ArrayHelper::merge($systemParams, $this->getBackendParams()));
+            } else {
+                $this->setBackendParams($systemParams);
+            }
+
+        }
+
+        return $this;
+    }
 
     /**
      * @return array
