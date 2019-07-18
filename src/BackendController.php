@@ -32,7 +32,7 @@ use yii\web\NotFoundHttpException;
  * Class BackendController
  * @package skeeks\cms\backend
  */
-abstract class BackendController extends Controller
+abstract class BackendController extends \skeeks\cms\base\Controller
     implements IHasPermissions, IHasName, IHasImage, IHasIcon, IHasUrl, IHasInfoActions, IHasMenu, IHasBreadcrumbs
 {
     use THasName;
