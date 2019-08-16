@@ -47,6 +47,10 @@ class BackendComponent extends Component
      */
     public $controllerPrefix = "";
     /**
+     * @var string
+     */
+    public $defaultRoute = "";
+    /**
      * @var array
      */
     public $urlRule = [];

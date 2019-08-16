@@ -194,7 +194,14 @@ class BackendUrlRule
             $this->backend->run();
             $route = str_replace($this->urlPrefix, "", $pathInfo);
             if (!$route || $route == "/") {
-                $route = "/".$this->controllerPrefix."/index";
+                if ($this->backend->defaultRoute) {
+                    $route = $this->backend->defaultRoute;
+                } else {
+                    //todo: может надо доработать
+                    $route = "/".$this->controllerPrefix."/index";
+                }
+
+
                 /*print_r($route);
                 die;*/
             }
