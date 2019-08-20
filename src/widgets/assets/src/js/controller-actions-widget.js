@@ -19,7 +19,7 @@
 
             this._window.bind('close', function()
             {
-                self.updateSuccess();
+                /*self.updateSuccess();*/
             });
 
             this._window.bind('error', function(e, data)
