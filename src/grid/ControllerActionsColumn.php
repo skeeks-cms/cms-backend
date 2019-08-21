@@ -9,13 +9,10 @@
 namespace skeeks\cms\backend\grid;
 
 use skeeks\cms\backend\controllers\BackendModelController;
-use skeeks\cms\backend\widgets\DropdownControllerActionsWidget;
 use skeeks\cms\modules\admin\widgets\ControllerActions;
 use skeeks\cms\modules\admin\widgets\ControllerModelActions;
 use yii\base\InvalidConfigException;
 use yii\grid\DataColumn;
-use yii\helpers\Html;
-use yii\web\JsExpression;
 
 /**
  * Class ControllerActionsColumn
@@ -101,15 +98,15 @@ JS
 )
             ]);*/
             $result = \skeeks\cms\backend\widgets\ContextMenuControllerActionsWidget::widget([
-                'actions' => $controller->modelActions,
-                'isOpenNewWindow' => $this->isOpenNewWindow,
-                'rightClickSelectors' => ['tr[data-key=' . $key . ']'],
-                'button' => [
+                'actions'             => $controller->modelActions,
+                'isOpenNewWindow'     => $this->isOpenNewWindow,
+                'rightClickSelectors' => ['tr[data-key='.$key.']'],
+                'button'              => [
                     'class' => 'btn btn-xs btn-default sx-btn-caret-action',
                     'style' => '',
-                    'tag' => 'a',
+                    'tag'   => 'a',
                     'label' => '<i class="fa fa-caret-down"></i>',
-                ]
+                ],
             ]);
 
             return $result;
@@ -125,13 +122,19 @@ JS
 
             $this->grid->view->registerJs(<<<JS
             
-            
-            
-            $('tr', $("#{$this->grid->id}")).on('dblclick', function()
-            {
-                //$('.sx-row-action', $(this)).click();
-                $(this).contextmenu();
+
+            $("#{$this->grid->id}").on("dblclick", 'tr', function() {
+                $('.sx-first-action', $(this)).click();
+                return false;
             });
+
+            $("#{$this->grid->id}").on("click", '.sx-trigger-action', function() {
+                
+                $('.sx-first-action', $(this).closest("tr")).click();
+                return false;
+            });
+
+            
 JS
             );
             self::$grids[$this->grid->id] = $this->grid->id;

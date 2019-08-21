@@ -12,6 +12,7 @@ use skeeks\cms\backend\BackendAction;
 use skeeks\cms\backend\helpers\BackendUrlHelper;
 use skeeks\cms\backend\widgets\assets\ControllerActionsWidgetAsset;
 use skeeks\yii2\contextmenu\JqueryContextMenuWidget;
+use yii\helpers\Html;
 use yii\helpers\Json;
 
 /**
@@ -42,8 +43,12 @@ class ContextMenuControllerActionsWidget extends ContextMenuWidget
         
         $this->items = [];
 
+        $firstAction = "";
+        $counter = 0;
         foreach ($actions as $id => $action)
         {
+            $counter ++;
+
             if (!$action->isVisible)
             {
                 continue;
@@ -58,6 +63,15 @@ class ContextMenuControllerActionsWidget extends ContextMenuWidget
                 new sx.classes.backend.widgets.Action({$actionDataJson}).go();
             }");
 
+            if ($counter == 1) {
+                $firstAction = Html::a("test", "#", [
+                    'onclick' => "new sx.classes.backend.widgets.Action({$actionDataJson}).go(); return false;",
+                    'style' => 'display: none;',
+                    'class' => 'sx-first-action'
+                ]);
+            }
+
+
             if (isset($this->items[$action->id])) {
                 $this->items[$action->id . uniqid()] = $options;
             } else {
@@ -66,7 +80,7 @@ class ContextMenuControllerActionsWidget extends ContextMenuWidget
             //$this->items[] = $options;
         }
         
-        return parent::run();
+        return $firstAction . parent::run();
     }
     
     /**
