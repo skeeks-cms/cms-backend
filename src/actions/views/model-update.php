@@ -11,6 +11,7 @@
 /* @var $model \skeeks\cms\models\CmsLang */
 $controller = $this->context;
 $action = $controller->action;
+
 ?>
 
 <? if ($action->beforeContent) : ?>
@@ -21,11 +22,33 @@ $action = $controller->action;
 
 
 <?php $form = $action->beginActiveForm([
-    'enableAjaxValidation' => false,
+    'enableAjaxValidation'   => false,
     'enableClientValidation' => false,
 ]); ?>
 
+<? if ($is_saved && @$is_create) : ?>
+    <?php $this->registerJs(<<<JS
+    sx.Window.openerWidgetTriggerEvent('model-create', {
+        'submitBtn' : '{$submitBtn}'
+    });
+JS
+    ); ?>
 
+<? elseif ($is_saved) : ?>
+    <?php $this->registerJs(<<<JS
+sx.Window.openerWidgetTriggerEvent('model-update', {
+        'submitBtn' : '{$submitBtn}'
+    });
+JS
+    ); ?>
+<? endif; ?>
+
+<? if (@$redirect) : ?>
+<?php $this->registerJs(<<<JS
+window.location.href = '{$redirect}';
+JS
+    ); ?>
+<? endif; ?>
 <?php $this->registerJs(<<<JS
 
 (function(sx, $, _)
@@ -66,24 +89,24 @@ $action = $controller->action;
 JS
 ); ?>
 
-    <?= $form->errorSummary($formModels); ?>
+<?= $form->errorSummary($formModels); ?>
 
-        <? echo \Yii::createObject([
-            'class' => \skeeks\yii2\form\Builder::class,
+<? echo \Yii::createObject([
+    'class'      => \skeeks\yii2\form\Builder::class,
+    'model'      => $model,
+    'models'     => $formModels,
+    'activeForm' => $form,
+    'fields'     => $action->fields,
+])->render(); ?>
+<? /* echo (new \skeeks\yii2\form\Builder([
             'model' => $model,
             'models' => $formModels,
             'activeForm' => $form,
             'fields' => $action->fields,
-        ])->render(); ?>
-        <?/* echo (new \skeeks\yii2\form\Builder([
-            'model' => $model,
-            'models' => $formModels,
-            'activeForm' => $form,
-            'fields' => $action->fields,
-        ]))->render(); */?>
+        ]))->render(); */ ?>
 
-    <?= $form->buttonsStandart($model, $action->buttons); ?>
-    <?= $form->errorSummary($formModels); ?>
+<?= $form->buttonsStandart($model, $action->buttons); ?>
+<?= $form->errorSummary($formModels); ?>
 <?php $action->endActiveForm(); ?>
 
 

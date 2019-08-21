@@ -56,6 +56,9 @@ class BackendModelCreateAction extends ViewBackendAction
 
     public function run()
     {
+        $is_saved = false;
+        $redirect = "";
+
         if ($this->callback) {
             return call_user_func($this->callback, $this);
         }
@@ -139,6 +142,7 @@ class BackendModelCreateAction extends ViewBackendAction
                         }
 
                         \Yii::$app->getSession()->setFlash('success', $this->successMessage);
+                        $is_saved = true;
 
                         if (\Yii::$app->request->post('submit-btn') == 'apply') {
                             $url = '';
@@ -155,17 +159,14 @@ class BackendModelCreateAction extends ViewBackendAction
                                 $url = $this->controller->url;
                             }
 
-                            return $this->controller->redirect($url);
+                            $redirect = $url;
                         } else {
 
                             if (!$this->afterSaveUrl) {
                                 $this->afterSaveUrl = $this->controller->url;
                             }
 
-                            return $this->controller->redirect(
-                                $this->afterSaveUrl
-                            );
-
+                            $redirect = $this->afterSaveUrl;
                         }
                     } else {
                         /*$formModels = $this->formModels;
@@ -184,6 +185,10 @@ class BackendModelCreateAction extends ViewBackendAction
             return $this->render('@skeeks/cms/backend/actions/views/model-update', [
                 'model' => $model,
                 'formModels' => $this->formModels,
+                'is_saved' => $is_saved,
+                'redirect' => $redirect,
+                'is_create' => true,
+                'submitBtn' => \Yii::$app->request->post('submit-btn'),
             ]);
             //return $this->render('@skeeks/cms/backend/actions/views/model-update');
         }

@@ -17,14 +17,32 @@
             this._window = new sx.classes.Window(this.get('url'), this.get('newWindowName'));
             this._window.setCenterOptions().disableResize().disableLocation();
 
-            this._window.bind('close', function()
-            {
-                /*self.updateSuccess();*/
+            this.isUpdateAfterClose = false;
+
+            this._window.on('close', function() {
+                if (self.isUpdateAfterClose) {
+                    self.updateSuccess();
+                }
+                self.isUpdateAfterClose = false;
             });
 
-            this._window.bind('error', function(e, data)
-            {
-                sx.notify.error(data.message + '. Обратитесь к разарботчикам');
+            this._window.on('model-update', function(e, data) {
+                self.isUpdateAfterClose = true;
+                sx.Window.openerWidgetTriggerEvent('model-update');
+
+                if (data.submitBtn == 'save') {
+                    self._window.close();
+                }
+
+            });
+
+            this._window.on('model-create', function(e, data) {
+                self.isUpdateAfterClose = true;
+                sx.Window.openerWidgetTriggerEvent('model-create');
+
+                if (data.submitBtn == 'save') {
+                    self._window.close();
+                }
             });
         },
 
@@ -54,7 +72,6 @@
         _go: function()
         {
             var self = this;
-            console.log(this.toArray());
             //Надо делать ajax запрос
             if (this.get("request") == 'ajax')
             {
@@ -106,13 +123,7 @@
                 window.location.reload();
             }
         },
-
-        _onDomReady: function()
-        {},
-
-        _onWindowReady: function()
-        {},
-
+        
         /**
          * @returns {sx.classes.Window|*}
          */

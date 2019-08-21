@@ -33,7 +33,7 @@ class ControllerActionsColumn extends DataColumn
     /**
      * @var null
      */
-    public $isOpenNewWindow = null;
+    public $isOpenNewWindow = true;
 
     /**
      * @var array
