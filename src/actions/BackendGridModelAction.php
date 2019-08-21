@@ -186,7 +186,7 @@ JS
                     'controller'    => function ($action) {
                         return $this->controller;
                     },
-                    'label'         => \Yii::t('skeeks/backend', 'Actions'),
+                    /*'label'         => \Yii::t('skeeks/backend', 'Actions'),*/
                     'headerOptions' => [
                         'class' => 'sx-grid-actions',
                     ],
