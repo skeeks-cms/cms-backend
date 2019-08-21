@@ -30,7 +30,7 @@
                 self.isUpdateAfterClose = true;
                 sx.Window.openerWidgetTriggerEvent('model-update');
 
-                if (data.submitBtn == 'save') {
+                if (data && data.submitBtn == 'save') {
                     self._window.close();
                 }
 
@@ -40,7 +40,7 @@
                 self.isUpdateAfterClose = true;
                 sx.Window.openerWidgetTriggerEvent('model-create');
 
-                if (data.submitBtn == 'save') {
+                if (data && data.submitBtn == 'save') {
                     self._window.close();
                 }
             });
