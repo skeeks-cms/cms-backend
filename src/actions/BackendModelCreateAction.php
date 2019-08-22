@@ -14,6 +14,7 @@ use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\IHasUrl;
 use yii\base\Exception;
 use yii\helpers\ArrayHelper;
+use yii\helpers\Url;
 use yii\widgets\ActiveForm;
 
 /**
@@ -108,7 +109,6 @@ class BackendModelCreateAction extends ViewBackendAction
                     }
 
 
-
                     $this->trigger(self::EVENT_BEFORE_VALIDATE);
 
                     foreach ($this->formModels as $fmodel) {
@@ -168,6 +168,11 @@ class BackendModelCreateAction extends ViewBackendAction
 
                             $redirect = $this->afterSaveUrl;
                         }
+
+                        if (is_array($redirect)) {
+                            $redirect = Url::to($redirect);
+                        }
+
                     } else {
                         /*$formModels = $this->formModels;
 
@@ -183,19 +188,18 @@ class BackendModelCreateAction extends ViewBackendAction
         if ($this->fields) {
 
             return $this->render('@skeeks/cms/backend/actions/views/model-update', [
-                'model' => $model,
+                'model'      => $model,
                 'formModels' => $this->formModels,
-                'is_saved' => $is_saved,
-                'redirect' => $redirect,
-                'is_create' => true,
-                'submitBtn' => \Yii::$app->request->post('submit-btn'),
+                'is_saved'   => $is_saved,
+                'redirect'   => $redirect,
+                'is_create'  => true,
+                'submitBtn'  => \Yii::$app->request->post('submit-btn'),
             ]);
             //return $this->render('@skeeks/cms/backend/actions/views/model-update');
         }
 
         return parent::run();
     }
-
 
 
     /**

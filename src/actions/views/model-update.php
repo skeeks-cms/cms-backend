@@ -44,8 +44,10 @@ JS
 <? endif; ?>
 
 <? if (@$redirect) : ?>
-<?php $this->registerJs(<<<JS
+    <?php $this->registerJs(<<<JS
 window.location.href = '{$redirect}';
+console.log('window.location.href');
+console.log('{$redirect}');
 JS
     ); ?>
 <? endif; ?>
