@@ -55,9 +55,12 @@ abstract class BackendController extends \skeeks\cms\base\Controller
      */
     public function behaviors()
     {
+        $backend = BackendComponent::getCurrent();
+        $class = $backend ? $backend->accessControl : AccessControl::class;
+
         return [
             'access' => [
-                'class' => AccessControl::className(),
+                'class' => $class,
                 'rules' => [
                     [
                         'allow'         => true,

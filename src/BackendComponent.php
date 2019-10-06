@@ -13,6 +13,7 @@ use yii\base\BootstrapInterface;
 use yii\base\Component;
 use yii\base\Event;
 use yii\base\InvalidConfigException;
+use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Inflector;
 
@@ -62,6 +63,12 @@ class BackendComponent extends Component
      * @var bool
      */
     public $isMergeControllerMenu = false;
+
+    /**
+     * @var string
+     */
+    public $accessControl = AccessControl::class;
+
     /**
      * @var null
      */

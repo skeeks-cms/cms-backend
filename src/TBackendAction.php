@@ -86,7 +86,10 @@ trait TBackendAction
     public function getAccessClassName()
     {
         if ($this->_accessClassName === null) {
-            $this->_accessClassName = AccessControl::class;
+            $backend = BackendComponent::getCurrent();
+            $class = $backend ? $backend->accessControl : AccessControl::class;
+
+            $this->_accessClassName = $class;
         }
 
         return (string)$this->_accessClassName;
@@ -120,6 +123,7 @@ trait TBackendAction
      */
     protected function _initAccess()
     {
+
         $this->controller->attachBehavior('access'.$this->uniqueId,
             [
                 'class' => $this->accessClassName,
