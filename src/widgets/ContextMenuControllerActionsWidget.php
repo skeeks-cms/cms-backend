@@ -38,7 +38,7 @@ class ContextMenuControllerActionsWidget extends ContextMenuWidget
 
         if (!$actions)
         {
-            return [];
+            return "";
         }
         
         $this->items = [];
