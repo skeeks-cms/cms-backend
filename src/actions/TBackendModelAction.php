@@ -53,7 +53,7 @@ trait TBackendModelAction
 
     public function init()
     {
-        if ($this->permissionName === null && $this->accessCallback === null) {
+        if ($this->permissionName === null && $this->accessCallback === null && $this->controller->generateAccessActions === true) {
             if ($this->controller->permissionName) {
                 //Если у контроллера задана главная привилегия, то к ней добавляется текущий экшн, и эта строка становится главной привилегией текущего экшена
                 $this->permissionName = $this->controller->permissionName."/".$this->id;
@@ -62,7 +62,7 @@ trait TBackendModelAction
             }
         }
 
-        if ($this->permissionNames === null && $this->accessCallback === null && $this->permissionName) {
+        if ($this->permissionNames === null && $this->accessCallback === null && $this->permissionName && $this->controller->generateAccessActions === true) {
             $this->permissionNames = [
                 $this->permissionName => $this->name,
             ];

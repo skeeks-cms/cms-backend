@@ -25,9 +25,11 @@ use yii\helpers\ArrayHelper;
  */
 class BackendModelStandartController extends BackendModelController
 {
+
+
     public function actions()
     {
-        return ArrayHelper::merge(parent::actions(), [
+        $actions = ArrayHelper::merge(parent::actions(), [
             'index' => [
                 'class' => BackendGridModelAction::class,
             ],
@@ -49,5 +51,7 @@ class BackendModelStandartController extends BackendModelController
                 'class'        => BackendModelMultiDeleteAction::class,
             ],
         ]);
+
+        return $actions;
     }
 }

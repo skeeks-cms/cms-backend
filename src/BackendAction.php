@@ -73,7 +73,7 @@ class BackendAction extends Action
             throw new InvalidConfigException('"'.static::class.'::callback Should be a valid callback"');
         }
 
-        if ($this->permissionName === null && $this->accessCallback === null) {
+        if ($this->permissionName === null && $this->accessCallback === null && $this->controller->generateAccessActions === true) {
             if ($this->controller->permissionName) {
                 //Если у контроллера задана главная привилегия, то к ней добавляется текущий экшн, и эта строка становится главной привилегией текущего экшена
                 $this->permissionName = $this->controller->permissionName . "/" . $this->id;
@@ -83,7 +83,7 @@ class BackendAction extends Action
 
         }
 
-        if ($this->permissionNames === null && $this->accessCallback === null && $this->permissionName) {
+        if ($this->permissionNames === null && $this->accessCallback === null && $this->permissionName && $this->controller->generateAccessActions === true) {
             $this->permissionNames = [
                 $this->permissionName => $this->name,
             ];

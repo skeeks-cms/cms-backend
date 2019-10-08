@@ -40,6 +40,15 @@ abstract class BackendController extends \skeeks\cms\base\Controller
     use THasIcon;
     use THasPermissions;
 
+    /**
+     * Генерировать привелегии для доступа к действиям
+     * @var bool
+     */
+    public $generateAccessActions = true;
+
+    /**
+     * @var array
+     */
     public $actionsMap = [];
     /**
      * @var BackendAction[]
