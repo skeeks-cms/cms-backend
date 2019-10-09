@@ -44,7 +44,7 @@ class BackendModelStandartController extends BackendModelController
             ],
             "delete" => [
                 'class' => BackendModelDeleteAction::class,
-                'priority' => 9999
+                'priority' => 9999,
             ],
 
             "delete-multi" => [
