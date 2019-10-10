@@ -41,11 +41,14 @@ class SelectModelDialogTreeWidget extends SelectModelDialogWidget
         {
             $this->initClientDataModelCallback = function(CmsTree $cmsTree)
             {
-                return ArrayHelper::merge($cmsTree->toArray(), [
+                $result = ArrayHelper::merge($cmsTree->toArray(), [
                     'image' => $cmsTree->image ? $cmsTree->image->src : '',
                     'url' => $cmsTree->url,
                     'fullName' => $cmsTree->fullName,
                 ]);
+                ArrayHelper::remove($result, 'description_full');
+                ArrayHelper::remove($result, 'description_short');
+                return $result;
             };
         }
 
