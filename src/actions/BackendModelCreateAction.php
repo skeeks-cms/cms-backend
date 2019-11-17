@@ -33,6 +33,7 @@ class BackendModelCreateAction extends ViewBackendAction
     const EVENT_AFTER_SAVE = 'afterSave';
     const EVENT_BEFORE_VALIDATE = 'beforeValidate';
 
+    public $isOpenNewWindow = true;
 
     public $defaultView = "_form";
 

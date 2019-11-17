@@ -52,6 +52,7 @@ class BackendAction extends Action
      * @var bool Показывать отображения?
      */
     public $isDisplayBackendShowings = true;
+    public $isOpenNewWindow = false;
     /**
      * @var BackendShowing
      */

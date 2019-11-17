@@ -180,11 +180,18 @@ class ControllerActionsWidget extends Widget
      */
     public function getActionData($action)
     {
+        $isOpenNewWindow = false;
+        if ($this->isOpenNewWindow) {
+            $isOpenNewWindow = true;
+        } elseif (isset($action->isOpenNewWindow)) {
+            $isOpenNewWindow = $action->isOpenNewWindow;
+        }
+
         $actionData = array_merge($this->clientOptions, [
             "url"               => $this->getActionUrl($action),
 
             //TODO:// is deprecated
-            "isOpenNewWindow"   => $this->isOpenNewWindow,
+            "isOpenNewWindow"   => $isOpenNewWindow,
             "confirm"           => isset($action->confirm) ? $action->confirm : "",
             "method"            => isset($action->method) ? $action->method : "",
             "request"           => isset($action->request) ? $action->request : "",
@@ -228,7 +235,14 @@ class ControllerActionsWidget extends Widget
      */
     public function getActionUrl($action)
     {
-        if (is_array($action->urlData) && $this->isOpenNewWindow)
+        $isOpenNewWindow = false;
+        if ($this->isOpenNewWindow) {
+            $isOpenNewWindow = true;
+        } elseif (isset($action->isOpenNewWindow)) {
+            $isOpenNewWindow = $action->isOpenNewWindow;
+        }
+
+        if (is_array($action->urlData) && $isOpenNewWindow)
         {
             $action->url = BackendUrlHelper::createByParams($action->urlData)
                 ->enableEmptyLayout()

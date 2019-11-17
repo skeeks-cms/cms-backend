@@ -69,6 +69,9 @@ class BackendGridModelAction extends ViewBackendAction
         return (string)$this->controller->modelClassName;
     }
 
+    /**
+     * @throws \ReflectionException
+     */
     public function init()
     {
         if (!$this->icon) {
@@ -235,6 +238,7 @@ JS
         BackendGridModelActionAsset::register(\Yii::$app->view);
 
     }
+
     /**
      * @return string
      */
@@ -249,6 +253,8 @@ JS
         $this->_initMultiActions($gridViewWidget);
         return $this->_buttonsMulti;
     }
+
+
     protected function _initMultiActions(GridViewWidget $gridViewWidget)
     {
         if ($this->_initMultiOptions === true) {
