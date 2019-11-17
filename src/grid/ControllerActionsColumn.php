@@ -134,11 +134,11 @@ JS
                 return false;
             });
             
-            $("#{$this->grid->id}").on("contextmenu", 'tr', function() {
+            /*$("#{$this->grid->id}").on("contextmenu", 'tr', function() {
                 
                 $('.sx-first-action', $(this)).click();
                 return false;
-            });
+            });*/
 
             
 JS
