@@ -52,6 +52,11 @@ class BackendGridModelAction extends ViewBackendAction
      */
     public $filters;
 
+    /**
+     * Включить стандартную ajax навигацию
+     * @var bool
+     */
+    public $isStandartAjaxPager = true;
 
     /**
      * @var
@@ -120,16 +125,16 @@ class BackendGridModelAction extends ViewBackendAction
                 \Yii::$app->request->url;
 
                 $url = Url::current([
-                    $gridViewWidget->exportParam => $gridViewWidget->id
+                    $gridViewWidget->exportParam => $gridViewWidget->id,
                 ]);
 
                 return '<div class="sx-grid-settings">'.
 
                     Html::a('<i class="fa fa-download"></i>', $url, [
-                        'target'   => '_blank',
-                        'data-pjax'   => '0',
-                        'title'   => 'Экспорт в CSV',
-                        'class'   => 'btn btn-sm',
+                        'target'    => '_blank',
+                        'data-pjax' => '0',
+                        'title'     => 'Экспорт в CSV',
+                        'class'     => 'btn btn-sm',
                     ])
                     .
                     Html::a('<i class="fa fa-cog"></i>',
@@ -139,10 +144,10 @@ class BackendGridModelAction extends ViewBackendAction
             new sx.classes.backend.EditComponent({$editComponent}); return false;
 JS
                             ),
-                            
+
                         ])
 
-                    .$callableDataInput .
+                    .$callableDataInput.
 
                     Html::a('<i class="fa fa-expand"></i>', '#', [
                         'class'   => 'btn btn-sm',
@@ -156,12 +161,11 @@ JS
                         }
             
 JS
-                            ),
+                        ),
                     ])
 
 
-                        
-                        . "</div>";
+                    ."</div>";
             },
             'modelClassName'     => $this->modelClassName,
             'configBehaviorData' => [
@@ -198,20 +202,31 @@ JS
             ],
         ];
 
+        if ($this->isStandartAjaxPager) {
+            $defaultGrid['pager'] = [
+                'class'              => \skeeks\cms\themes\unify\widgets\ScrollAndSpPager::class,
+                'container'          => '.grid-view tbody',
+                'item'               => 'tr',
+                //'triggerOffset'               => '2',
+                'paginationSelector' => '.grid-view .pagination',
+                'triggerTemplate'    => '<tr class="ias-trigger"><td colspan="100%" style="text-align: center"><a style="cursor: pointer">{text}</a></td></tr>',
+            ];
+        }
+
         parent::init();
 
         $defaultFilters = [
             'class'              => \skeeks\cms\backend\widgets\FiltersWidget::class,
-            'filtersModel'              => [
-                'formName' => 'f' . $this->id
+            'filtersModel'       => [
+                'formName' => 'f'.$this->id,
             ],
             'activeForm'         => [
-                'action' => $this->getShowingUrl($this->getBackendShowing()),
+                'action'  => $this->getShowingUrl($this->getBackendShowing()),
                 'options' => [
                     'data' => [
                         'real-action' => $this->getShowingUrl($this->getBackendShowing()),
-                    ]
-                ]
+                    ],
+                ],
             ],
             'configBehaviorData' => [
                 'configKey'     => $this->configKey,
@@ -231,7 +246,7 @@ JS
         if ($this->filters === false) {
             $this->filters = false;
         } else {
-            $this->filters = (array)ArrayHelper::merge($defaultFilters, (array) $this->filters);
+            $this->filters = (array)ArrayHelper::merge($defaultFilters, (array)$this->filters);
         }
 
 
@@ -339,11 +354,11 @@ CSS
     {
         $filters = $this->filters;
         ArrayHelper::remove($filters, 'class');
-        return (array) $filters;
+        return (array)$filters;
     }
     public function getFiltersClassName()
     {
-        return (string) ArrayHelper::getValue($this->filters, 'class');
+        return (string)ArrayHelper::getValue($this->filters, 'class');
     }
     public function getGridClassName()
     {

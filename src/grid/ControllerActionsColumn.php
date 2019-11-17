@@ -133,6 +133,12 @@ JS
                 $('.sx-first-action', $(this).closest("tr")).click();
                 return false;
             });
+            
+            $("#{$this->grid->id}").on("contextmenu", 'tr', function() {
+                
+                $('.sx-first-action', $(this)).click();
+                return false;
+            });
 
             
 JS
