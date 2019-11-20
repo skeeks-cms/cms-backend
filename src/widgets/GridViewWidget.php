@@ -23,6 +23,10 @@ class GridViewWidget extends GridView
         'class' => 'table-striped'
     ];
 
+    public $defaultTableCssClasses = [
+        'table', 'sx-table'
+    ];
+
     public $options = [
         'class' => 'grid-view'
     ];
@@ -73,8 +77,12 @@ class GridViewWidget extends GridView
     {
         parent::init();
 
-        Html::addCssClass($this->tableOptions, 'table');
-        Html::addCssClass($this->tableOptions, 'sx-table');
+        if ($this->defaultTableCssClasses) {
+            foreach ((array) $this->defaultTableCssClasses as $cssClass)
+            {
+                Html::addCssClass($this->tableOptions, $cssClass);
+            }
+        }
 
         Html::addCssClass($this->options, 'sx-grid-view');
     }
