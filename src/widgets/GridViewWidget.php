@@ -159,16 +159,28 @@ HTML;
 
         $min = $pagination->pageSizeLimit[0];
         $max = $pagination->pageSizeLimit[1];
+        
+        $step = 5; 
+        if ($max - $min > 50) {
+            $step = ($max - $min) / 30;
+            $step = round($step);
+        }
 
         $items = [];
         $i = 0;
         for ($i >= $min; $i <= $max; $i++) {
-            if ($i % 5 == 0 && $i > 0) {
+            if ($i % $step == 0 && $i > 0) {
                 $items[$i] = $i;
             }
         }
+        
+        if ($i != $max) {
+            $items[$max] = $max;
+        }
 
         $id = $this->id."-per-page";
+        
+        
 
         $get = \Yii::$app->request->get();
         ArrayHelper::remove($get, $pagination->pageSizeParam);
