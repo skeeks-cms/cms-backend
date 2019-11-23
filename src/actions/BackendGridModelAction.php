@@ -194,9 +194,6 @@ JS
                         return $this->controller;
                     },
                     /*'label'         => \Yii::t('skeeks/backend', 'Actions'),*/
-                    'headerOptions' => [
-                        'class' => 'sx-grid-actions',
-                    ],
                 ],
 
             ],

@@ -1,0 +1,26 @@
+.sx-popover-ajax-controller-actions ul li {
+    display: block;
+    padding: 4px 15px;
+    font-size: 15px;
+}
+.sx-popover-ajax-controller-actions ul li a {
+    text-decoration: none;
+    color: #2f2f2f;
+}
+
+.sx-popover-ajax-controller-actions ul li a:hover {
+    text-decoration: none;
+}
+
+.sx-popover-ajax-controller-actions ul li:hover {
+    color: white;
+    background: #d51849;
+}
+.sx-popover-ajax-controller-actions ul li:hover a {
+    color: white;
+}
+
+.sx-popover-ajax-controller-actions .popover-body
+{
+    padding: 0;
+}

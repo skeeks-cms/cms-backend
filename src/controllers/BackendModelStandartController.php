@@ -18,6 +18,7 @@ use skeeks\cms\backend\BackendModelControllerInterface;
 use skeeks\cms\backend\BackendPermissionsInterface;
 use skeeks\cms\backend\BackendUrlInterface;
 use skeeks\cms\backend\HasModelInterface;
+use skeeks\cms\helpers\RequestResponse;
 use yii\helpers\ArrayHelper;
 
 /**

@@ -10,6 +10,8 @@ namespace skeeks\cms\backend\controllers;
 
 use skeeks\cms\backend\actions\IBackendModelAction;
 use skeeks\cms\backend\actions\IBackendModelMultiAction;
+use skeeks\cms\backend\widgets\ControllerActionsWidget;
+use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\IHasName;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
@@ -412,6 +414,31 @@ trait TBackendModelController
         if (!class_exists($this->modelClassName)) {
             throw new InvalidConfigException("{$this->modelClassName} ".\Yii::t('skeeks/cms', 'the class is not found, you must specify the existing class model'));
         }
+    }
+
+
+
+    /**
+     * @return RequestResponse
+     */
+    public function actionModelActions()
+    {
+        //sleep(5);
+        $rr = new RequestResponse();
+
+        $this->model;
+
+        $rr->data['html'] = ControllerActionsWidget::widget([
+            'actions' => $this->modelActions,
+            'isOpenNewWindow' => true,
+            'options' => [
+                'class' => 'nav flex-column nav-pills'
+            ],
+        ]);
+
+        $rr->success = true;
+
+        return $rr;
     }
 
 }

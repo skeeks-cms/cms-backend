@@ -8,20 +8,26 @@
 
 namespace skeeks\cms\backend\grid;
 
+use skeeks\cms\backend\BackendController;
 use skeeks\cms\backend\controllers\BackendModelController;
+use skeeks\cms\backend\widgets\AjaxControllerActionsWidget;
 use skeeks\cms\modules\admin\widgets\ControllerActions;
 use skeeks\cms\modules\admin\widgets\ControllerModelActions;
 use yii\base\InvalidConfigException;
 use yii\grid\DataColumn;
 
 /**
- * Class ControllerActionsColumn
- * @package skeeks\cms\backend\grid
+ * @author Semenov Alexander <semenov@skeeks.com>
  */
 class ControllerActionsColumn extends DataColumn
 {
     static public $grids = [];
+
+    /**
+     * @var bool
+     */
     public $filter = false;
+
     /**
      * @var BackendModelController|callable
      */
@@ -33,9 +39,25 @@ class ControllerActionsColumn extends DataColumn
     public $isOpenNewWindow = true;
 
     /**
+     * @var bool Включен двойной клик
+     */
+    public $isDbClick = true;
+
+    /**
+     * @var bool Включен клик правой кнопкой
+     */
+    public $isRightClick = true;
+
+    /**
+     * @var bool
+     */
+    public $isHidden = false;
+
+    /**
      * @var array
      */
     public $clientOptions = [];
+
     /**
      * @inheritdoc
      */
@@ -62,87 +84,113 @@ class ControllerActionsColumn extends DataColumn
 
         return $this->_controller;
     }
+
+    /**
+     * @var array
+     */
+    public $contentOptions = [
+        'class' => 'sx-controller-actions-td'
+    ];
+
+    /**
+     * @var array
+     */
+    public $headerOptions = [
+        'class' => 'sx-controller-actions-th sx-grid-actions'
+    ];
+
     /**
      * @inheritdoc
      */
     protected function renderDataCellContent($model, $key, $index)
     {
-        //print_r($this->grid->pjax);die;
-        //Строемся в гриде который использует pjax
-        /*if ($this->grid->pjax) {
-            $this->clientOptions['pjax-id'] = $this->grid->pjax->options['id'];
-        }*/
+        $this->_initAssets();
 
-        $controller = clone $this->controller;
-        $controller->model = $model;
-
-        $this->gridDoubleClickAction();
-
-        /*return DropdownControllerActionsWidget::widget([
-            "actions"         => $controller->modelActions,
-            "isOpenNewWindow" => $this->isOpenNewWindow,
-            "clientOptions"   => $this->clientOptions,
-        ]);*/
-
-        if ($controller->modelActions) {
-            /*$first = array_keys($controller->modelActions)[0];
-            $action = $controller->modelActions[$first];
-
-            $result .= Html::tag("div", "", [
-                'style' => "display:none;",
-                'class' => "sx-row-action",
-                'onclick' => new JsExpression(<<<JS
-            new sx.classes.backend.widgets.Action({$actionDataJson}).go();
-            return false;
-JS
-)
-            ]);*/
-            $result = \skeeks\cms\backend\widgets\ContextMenuControllerActionsWidget::widget([
-                'actions'             => $controller->modelActions,
-                'isOpenNewWindow'     => $this->isOpenNewWindow,
-                'rightClickSelectors' => ['tr[data-key='.$key.']'],
-                'button'              => [
-                    'class' => 'btn btn-xs btn-default sx-btn-caret-action',
-                    'style' => '',
-                    'tag'   => 'a',
-                    'label' => '<i class="fa fa-caret-down"></i>',
-                ],
-            ]);
-
-            return $result;
-        } else {
-            return null;
-        }
+        return AjaxControllerActionsWidget::widget([
+            'controllerId' => $this->controller->uniqueId,
+            'modelId'      => $model->id,
+        ]);
 
     }
 
-    protected function gridDoubleClickAction()
+    protected function _initAssets()
     {
         if (!isset(self::$grids[$this->grid->id])) {
 
+            if ($this->isHidden) {
+                $this->grid->view->registerCss(<<<CSS
+#{$this->grid->id} .sx-controller-actions-td,
+#{$this->grid->id} .sx-controller-actions-th
+{
+    display: none;
+}
+CSS
+                );
+
+            }
+
+            if ($this->isDbClick) {
+                $this->grid->view->registerJs(<<<JS
+
+                $("#{$this->grid->id}").on("dblclick", 'tr', function() {
+                //$('.sx-first-action', $(this)).click();
+                var jMainBtn = $(".sx-btn-ajax-actions", $(this));
+                
+                var jTr = $(this);
+                var jBlocker = sx.block(jTr.closest("table"));
+                
+                jMainBtn.trigger("firstAction");
+
+                jMainBtn.on("firstActionOpen", function() {
+                    jBlocker.unblock();
+                });
+                
+                return false;
+            });
+
+JS
+                );
+
+            }
+
+            if ($this->isRightClick) {
+                $this->grid->view->registerJs(<<<JS
+
+                $("#{$this->grid->id}").on("contextmenu", 'tr', function(event) {
+                
+                var key = $(this).data("key");
+                //$(".sx-btn-ajax-actions", $(this)).click();
+                var jNewElement = $(".sx-btn-ajax-actions", $(this)).clone();
+                
+                $("body").append(jNewElement);
+                
+                jNewElement.css("top", event.clientY);
+                jNewElement.css("left", event.clientX);
+                jNewElement.css("position", "fixed");
+                jNewElement.css("height", "0");
+                jNewElement.css("width", "0");
+                jNewElement.css("overflow", "hidden");
+                jNewElement.removeClass("is-rendered");
+                
+                jNewElement.click();
+
+                return false;
+            });
+JS
+                );
+            }
+
             $this->grid->view->registerJs(<<<JS
             
-
-            $("#{$this->grid->id}").on("dblclick", 'tr', function() {
-                $('.sx-first-action', $(this)).click();
-                return false;
-            });
-
             $("#{$this->grid->id}").on("click", '.sx-trigger-action', function() {
                 
-                $('.sx-first-action', $(this).closest("tr")).click();
+                $(this).closest("tr").trigger("dblclick");
                 return false;
             });
-            
-            /*$("#{$this->grid->id}").on("contextmenu", 'tr', function() {
-                
-                $('.sx-first-action', $(this)).click();
-                return false;
-            });*/
-
             
 JS
             );
+
             self::$grids[$this->grid->id] = $this->grid->id;
         }
     }
