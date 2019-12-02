@@ -123,6 +123,7 @@ class ControllerActionsWidget extends Widget
      */
     public function run()
     {
+        ControllerActionsWidgetAsset::register($this->getView());
         $actions = $this->actions;
 
         if (!$actions || count($actions) < $this->minViewCount)

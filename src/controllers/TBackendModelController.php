@@ -430,6 +430,7 @@ trait TBackendModelController
 
         $rr->data['html'] = ControllerActionsWidget::widget([
             'actions' => $this->modelActions,
+            'minViewCount' => 1,
             'isOpenNewWindow' => true,
             'options' => [
                 'class' => 'nav flex-column nav-pills'
