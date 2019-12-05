@@ -108,7 +108,7 @@ class ControllerActionsColumn extends DataColumn
 
         return AjaxControllerActionsWidget::widget([
             'controllerId' => $this->controller->uniqueId,
-            'modelId'      => $model->id,
+            'modelId'      => $model->{$this->controller->modelPkAttribute},
         ]);
 
     }
