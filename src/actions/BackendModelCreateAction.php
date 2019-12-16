@@ -182,7 +182,12 @@ class BackendModelCreateAction extends ViewBackendAction
 
                 }
             } catch (\Exception $e) {
-                \Yii::$app->getSession()->setFlash('error', $e->getMessage());
+                if (YII_ENV_DEV) {
+                    throw $e;
+                } else {
+                    \Yii::$app->getSession()->setFlash('error', $e->getMessage());
+                }
+                //\Yii::$app->getSession()->setFlash('error', $e->getMessage());
             }
         }
 
