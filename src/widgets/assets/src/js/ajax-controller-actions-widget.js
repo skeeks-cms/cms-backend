@@ -20,7 +20,10 @@
             var self = this;
 
             //Вызов первого действия
+
             $("body").on("firstAction", '.sx-btn-ajax-actions', function(e) {
+
+                console.log("firstAction");
 
                 var jQueryBtn = $(this);
 
@@ -36,7 +39,6 @@
                     self._goFirstAction(jQueryBtn);
                 }
             });
-
 
             $("body").on("click", '.sx-btn-ajax-actions', function(e) {
                 e.preventDefault();
@@ -69,6 +71,14 @@
         },
 
         _goFirstAction: function(jQueryBtn) {
+
+            if (jQueryBtn.hasClass("sx-start")) {
+                console.log("Еще не завершено предыдущее действие");
+                return false;
+            }
+
+            jQueryBtn.addClass("sx-start");
+
             var jContent = $($.parseHTML(jQueryBtn.data("content")));
             var jFirst = $("li:first", jContent);
             $('body').append($("<div>", {
@@ -79,6 +89,9 @@
 
             jQueryBtn.trigger("firstActionOpen");
 
+            _.delay(function() {
+                jQueryBtn.removeClass("sx-start");
+            }, 1000);
             return false;
         },
 

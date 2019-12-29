@@ -134,10 +134,10 @@ CSS
 
                 $("#{$this->grid->id}").on("dblclick", 'tr', function() {
                 //$('.sx-first-action', $(this)).click();
+                console.log("111");
                 var jMainBtn = $(".sx-btn-ajax-actions", $(this));
                 
-                var jTr = $(this);
-                var jBlocker = sx.block(jTr.closest("table"));
+                var jBlocker = sx.block($(this).closest("table"));
                 
                 jMainBtn.trigger("firstAction");
 
