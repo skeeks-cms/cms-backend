@@ -21,6 +21,8 @@ class BackendModelMultiDeleteAction extends BackendModelMultiAction
 {
     public function init()
     {
+        ini_set('memory_limit', '2048M');
+
         if (!$this->icon)
         {
             $this->icon = "fa fa-trash";
