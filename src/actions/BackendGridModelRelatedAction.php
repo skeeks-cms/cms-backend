@@ -67,6 +67,7 @@ class BackendGridModelRelatedAction extends BackendModelAction
         return $result;
     }
 
+    public $relatedController = null;
     public function run()
     {
         if ($controller = \Yii::$app->createController($this->controllerRoute)) {
@@ -75,6 +76,8 @@ class BackendGridModelRelatedAction extends BackendModelAction
              * @var $indexAction BackendGridModelAction
              */
             $controller = $controller[0];
+            $this->relatedController = $controller;
+
             $controller->actionsMap = [
                 'index' => [
                     'configKey'         => $this->uniqueId,
@@ -90,7 +93,11 @@ class BackendGridModelRelatedAction extends BackendModelAction
                 $this->relatedIndexAction->url = $this->urlData;
 
                 $this->relatedIndexAction->filters = $this->filters;
-                //$indexAction->backendShowings = $this->backendShowings;
+
+                if ($this->backendShowings === false) {
+                    $this->relatedIndexAction->backendShowings = $this->backendShowings;
+                }
+
 
                 $visibleColumns = $this->relatedIndexAction->grid['visibleColumns'];
 
