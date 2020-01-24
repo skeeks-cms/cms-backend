@@ -92,7 +92,10 @@ class BackendGridModelRelatedAction extends BackendModelAction
 
                 $this->relatedIndexAction->url = $this->urlData;
 
-                $this->relatedIndexAction->filters = $this->filters;
+                if ($this->filters === false) {
+                    $this->relatedIndexAction->filters = $this->filters;
+                }
+                
 
                 if ($this->backendShowings === false) {
                     $this->relatedIndexAction->backendShowings = $this->backendShowings;
