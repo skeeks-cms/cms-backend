@@ -33,6 +33,8 @@
         {
             var self = this;
 
+            this._isChangeAllow = false;
+
             this.jQueryCreateBtn        = $(".sx-btn-create", this.jQuryWrapper());
             this.jQueryInput            = $("input", this.jQuryWrapper());
             this.jQueryContentWrapper   = $(".sx-view-cms-content", this.jQuryWrapper());
@@ -55,6 +57,8 @@
             {
                 self.update(this.get('initClientData'));
             }
+
+            self._isChangeAllow = true;
         },
 
 
@@ -62,8 +66,6 @@
         update: function(data)
         {
             var self = this;
-
-
 
             this.jQueryContentWrapper.empty();
             this.jQueryDeselectBtn.hide();
@@ -113,7 +115,12 @@
          */
         setVal: function(id)
         {
-            this.jQueryInput.val(id).change();
+            console.log('setVal');
+            this.jQueryInput.val(id);
+            if (this._isChangeAllow) {
+                console.log('trigger change');
+                this.jQueryInput.change();
+            }
             return this;
         },
 

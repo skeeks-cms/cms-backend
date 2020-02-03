@@ -27,7 +27,7 @@ class ActiveFormBackend extends ActiveForm implements IActiveFormHasFieldSets
     use ActiveFormHasCustomSelectTrait;
     use ActiveFormHasPjaxTrait;
 
-    /**
+    /**ActiveFormBackend
      * @var bool Подключить стандартные js и css?
      */
     public $registerStandartAsset = true;
