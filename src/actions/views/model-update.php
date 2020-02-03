@@ -21,7 +21,7 @@ $action = $controller->action;
 <? endif; ?>
 
 
-<?php $form = $action->beginActiveForm([
+<?php $form = $action->beginDynamicActiveForm([
     'enableAjaxValidation'   => false,
     'enableClientValidation' => false,
 ]); ?>
@@ -51,45 +51,6 @@ console.log('{$redirect}');
 JS
     ); ?>
 <? endif; ?>
-<?php $this->registerJs(<<<JS
-
-(function(sx, $, _)
-{
-    sx.classes.DynamicForm = sx.classes.Component.extend({
-
-        _onDomReady: function()
-        {
-            var self = this;
-
-            $("[" + this.get('formreload') + "=true]").on('change', function()
-            {
-                self.update();
-            });
-        },
-
-        update: function()
-        {
-            var self = this;
-            
-            _.delay(function()
-            {
-                var jForm = $("#" + self.get('id'));
-                jForm.append($('<input>', {'type': 'hidden', 'name' : self.get('nosubmit'), 'value': 'true'}));
-                jForm.submit();
-            }, 200);
-        }
-    });
-
-    sx.DynamicForm = new sx.classes.DynamicForm({
-        'id' : '{$form->id}',
-        'formreload' : '{$action->reloadFieldParam}',
-        'nosubmit' : '{$action->reloadFormParam}',
-    });
-})(sx, sx.$, sx._);
-
-
-JS
-); ?>
 
 <?= $form->errorSummary($formModels); ?>
 
@@ -100,12 +61,6 @@ JS
     'activeForm' => $form,
     'fields'     => $action->fields,
 ])->render(); ?>
-<? /* echo (new \skeeks\yii2\form\Builder([
-            'model' => $model,
-            'models' => $formModels,
-            'activeForm' => $form,
-            'fields' => $action->fields,
-        ]))->render(); */ ?>
 
 <?= $form->buttonsStandart($model, $action->buttons); ?>
 <?= $form->errorSummary($formModels); ?>
@@ -114,6 +69,6 @@ JS
 
 <? if ($action->afterContent) : ?>
     <div class="sx-box sx-p-10 sx-bg-primary" style="margin-bottom: 10px;">
-        <? echo $action->preContent; ?>
+        <? echo $action->afterContent; ?>
     </div>
 <? endif; ?>
