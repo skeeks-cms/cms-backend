@@ -1,0 +1,121 @@
+/** Backend forms */
+
+form.sx-backend-form
+{
+    border: 1px solid rgba(32, 168, 216, 0.23);
+    padding: 10px;
+}
+
+    form.sx-backend-form .error-summary
+    {
+        background: #fee5e5;
+        border-color: #f86c6b;
+        color: #c10a09;
+        padding: 15px;
+        margin-bottom: 10px;
+        margin-top: 10px;
+        border: 1px solid transparent;
+        border-radius: 2px;
+        border-color: transparent;
+    }
+
+        form.sx-backend-form .error-summary p
+        {
+            font-weight: bold;
+        }
+
+    form.sx-backend-form .hint-block
+    {
+        font-size: 11px;
+    }
+
+    form.sx-backend-form .sx-from-required
+    {
+        color: red;
+    }
+
+        form.sx-backend-form .tab-content
+        {
+            background: #ffffff;
+        }
+
+    form.sx-backend-form .sx-buttons-standart
+    {
+        border-top: 1px solid #ddd;
+        padding-top: 10px;
+        margin-bottom: 0px;
+        margin-top: 15px;
+    }
+
+.sx-input-int
+{
+    max-width: 20%;
+}
+
+    form.sx-backend-form .nav-tabs>li>a
+    {
+        font-size: 14px;
+    }
+
+    form.sx-backend-form .form-group
+    {
+        padding: 5px;
+        margin-bottom: 0px;
+    }
+    form.sx-backend-form .form-group:hover
+    {
+        background: rgba(93, 195, 231, 0.15);
+    }
+
+
+.sx-backend-form .error-summary
+{
+    padding: 15px;
+    margin-bottom: 20px;
+    border: 1px solid transparent;
+    background: #fee5e5;
+    color: #c10a09;
+    border-radius: 2px;
+    border-color: transparent!important;
+}
+    .sx-backend-form .error-summary p
+    {
+        font-weight: bold;
+    }
+
+
+form.sx-backend-form .form-group {
+    padding: 10px 15px;
+    margin-bottom: 0px;
+}
+
+form.sx-backend-form .form-group:hover {
+    background: #e6ecec;
+}
+
+form.sx-backend-form {
+    border: 0px;
+    padding: 0px;
+}
+
+form.sx-backend-form .tab-content {
+    background: #f5f9f9;
+    padding: 0px;
+    border: 0px;
+}
+
+
+.sx-form-fieldset-title {
+    background: #e0e8ea;
+    padding: 8px 15px 10px!important;
+    font-weight: bold;
+    color: #4b6267;
+    text-shadow: 0 1px #fff;
+    font-size: 14px;
+}
+
+.sx-form-fieldset-content {
+    border-left: 1px solid #ddd;
+    border-right: 1px solid #ddd;
+    border-bottom: 1px solid #ddd;
+}
