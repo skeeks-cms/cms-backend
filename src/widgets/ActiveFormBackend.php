@@ -11,8 +11,8 @@ namespace skeeks\cms\backend\widgets;
 use skeeks\cms\backend\forms\ActiveFormHasButtonsTrait;
 use skeeks\cms\backend\forms\ActiveFormHasCustomSelectTrait;
 use skeeks\cms\backend\widgets\assets\BackendFormAsset;
-use skeeks\cms\forms\AdtiveFormHasFieldSetsTrait;
-use skeeks\cms\forms\AdtiveFormHasPjaxTrait;
+use skeeks\cms\forms\ActiveFormHasFieldSetsTrait;
+use skeeks\cms\forms\ActiveFormHasPjaxTrait;
 use skeeks\cms\forms\IActiveFormHasFieldSets;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
@@ -22,10 +22,10 @@ use yii\widgets\ActiveForm;
  */
 class ActiveFormBackend extends ActiveForm implements IActiveFormHasFieldSets
 {
-    use AdtiveFormHasFieldSetsTrait;
+    use ActiveFormHasFieldSetsTrait;
     use ActiveFormHasButtonsTrait;
     use ActiveFormHasCustomSelectTrait;
-    use AdtiveFormHasPjaxTrait;
+    use ActiveFormHasPjaxTrait;
 
     /**
      * @var bool Подключить стандартные js и css?
