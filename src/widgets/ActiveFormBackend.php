@@ -13,12 +13,14 @@ use skeeks\cms\backend\forms\ActiveFormHasCustomSelectTrait;
 use skeeks\cms\backend\widgets\assets\BackendFormAsset;
 use skeeks\cms\forms\AdtiveFormHasFieldSetsTrait;
 use skeeks\cms\forms\AdtiveFormHasPjaxTrait;
+use skeeks\cms\forms\IActiveFormHasFieldSets;
 use yii\helpers\Html;
+use yii\widgets\ActiveForm;
 
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
  */
-class ActiveFormBackend extends \yii\widgets\ActiveForm
+class ActiveFormBackend extends ActiveForm implements IActiveFormHasFieldSets
 {
     use AdtiveFormHasFieldSetsTrait;
     use ActiveFormHasButtonsTrait;
