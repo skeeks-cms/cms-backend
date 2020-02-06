@@ -15,7 +15,7 @@ use yii\helpers\Json;
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
  */
-trait ActiveFormHasButtonsTrait
+trait TActiveFormHasButtons
 {
     /**
      * @param Model $model

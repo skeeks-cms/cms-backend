@@ -63,47 +63,10 @@ trait THasActiveForm
         $form = $this->beginActiveForm([
             'enableAjaxValidation' => false,
             'enableClientValidation' => false,
+            'dynamicReloadNotSubmit' => $this->reloadFormParam,
+            'dynamicReloadFieldParam' => $this->reloadFieldParam,
         ]);
 
-        $jsOptions = Json::encode([
-            'id' => $form->id,
-            'reload_param' => $this->reloadFormParam,
-            'field_reload_param' => $this->reloadFieldParam
-        ]);
-        \Yii::$app->view->registerJs(<<<JS
-
-(function(sx, $, _)
-{
-    sx.classes.DynamicForm = sx.classes.Component.extend({
-
-        _onDomReady: function()
-        {
-            var self = this;
-
-            $("[" + this.get('field_reload_param') + "]").on('change', function()
-            {
-                self.update();
-            });
-        },
-
-        update: function()
-        {
-            var self = this;
-            _.delay(function()
-            {
-                var jForm = $("#" + self.get('id'));
-                jForm.append($('<input>', {'type': 'hidden', 'name' : self.get('reload_param'), 'value': 'true'}));
-                jForm.submit();
-            }, 200);
-        }
-    });
-
-    sx.DynamicForm = new sx.classes.DynamicForm({$jsOptions});
-})(sx, sx.$, sx._);
-
-
-JS
-);
         return $form;
     }
 

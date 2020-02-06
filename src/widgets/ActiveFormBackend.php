@@ -8,12 +8,16 @@
 
 namespace skeeks\cms\backend\widgets;
 
-use skeeks\cms\backend\forms\ActiveFormHasButtonsTrait;
 use skeeks\cms\backend\forms\ActiveFormHasCustomSelectTrait;
+use skeeks\cms\backend\forms\TActiveFormHasButtons;
+use skeeks\cms\backend\forms\TActiveFormHasCustomSelect;
 use skeeks\cms\backend\widgets\assets\BackendFormAsset;
 use skeeks\cms\forms\ActiveFormHasFieldSetsTrait;
 use skeeks\cms\forms\ActiveFormHasPjaxTrait;
 use skeeks\cms\forms\IActiveFormHasFieldSets;
+use skeeks\cms\forms\TActiveFormDynamicReload;
+use skeeks\cms\forms\TActiveFormHasFieldSets;
+use skeeks\cms\forms\TActiveFormHasPjax;
 use yii\helpers\Html;
 use yii\widgets\ActiveForm;
 
@@ -22,10 +26,11 @@ use yii\widgets\ActiveForm;
  */
 class ActiveFormBackend extends ActiveForm implements IActiveFormHasFieldSets
 {
-    use ActiveFormHasFieldSetsTrait;
-    use ActiveFormHasButtonsTrait;
-    use ActiveFormHasCustomSelectTrait;
-    use ActiveFormHasPjaxTrait;
+    use TActiveFormHasFieldSets;
+    use TActiveFormHasButtons;
+    use TActiveFormHasCustomSelect;
+    use TActiveFormHasPjax;
+    use TActiveFormDynamicReload;
 
     /**ActiveFormBackend
      * @var bool Подключить стандартные js и css?
@@ -40,7 +45,7 @@ class ActiveFormBackend extends ActiveForm implements IActiveFormHasFieldSets
             BackendFormAsset::register($this->view);
         }
 
-        $this->_initPjax();
+        $this->_initPjax()->_initDynamicReload();
 
         parent::init();
 

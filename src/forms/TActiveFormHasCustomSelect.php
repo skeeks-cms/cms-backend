@@ -17,7 +17,7 @@ use yii\helpers\Json;
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
  */
-trait ActiveFormHasCustomSelectTrait
+trait TActiveFormHasCustomSelect
 {
     /**
      *
