@@ -63,7 +63,7 @@ class SelectModelDialogWidget extends InputWidget
      * @var array
      */
     public $wrapperOptions = [
-        "class" => "row"
+        "class" => "row",
     ];
     /**
      * @var array
@@ -127,7 +127,7 @@ class SelectModelDialogWidget extends InputWidget
         }
 
         if (!isset($this->wrapperOptions['id'])) {
-            $this->wrapperOptions['id'] = $this->id . "-wrapper";
+            $this->wrapperOptions['id'] = $this->id."-wrapper";
         }
         $this->clientOptions['id'] = $this->wrapperOptions['id'];
 
@@ -233,7 +233,7 @@ class SelectModelDialogWidget extends InputWidget
                 }
 JS
             );
-                }
+        }
         if ($initClientData = $this->initClientData) {
             $this->clientOptions['initClientData'] = $initClientData;
         }
@@ -307,7 +307,7 @@ JS
                     } else {
                         if ($model instanceof ActiveRecord) {
                             $result[] = ArrayHelper::merge($model->toArray(), [
-                                'asText' => $model->asText
+                                'asText' => $model->asText,
                             ]);
                         } else {
                             $result[] = $model->toArray();
@@ -319,16 +319,19 @@ JS
                 $model = $modelClassName::find()->andWhere(['id' => $this->inputValue])->one();
 
                 if ($initClientDataModelCallback = $this->initClientDataModelCallback) {
-                    $result = (array)$initClientDataModelCallback($model);
-                } else {
-                    if ($model instanceof ActiveRecord) {
-                        $result = ArrayHelper::merge($model->toArray(), [
-                            'asText' => $model->asText
-                        ]);
-                    } else {
-                        $result = $model->toArray();
+                    if ($model) {
+                        $result = (array)$initClientDataModelCallback($model);
                     }
-
+                } else {
+                    if ($model) {
+                        if ($model instanceof ActiveRecord) {
+                            $result = ArrayHelper::merge($model->toArray(), [
+                                'asText' => $model->asText,
+                            ]);
+                        } else {
+                            $result = $model->toArray();
+                        }
+                    }
                 }
             }
         }
