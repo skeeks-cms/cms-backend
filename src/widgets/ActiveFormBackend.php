@@ -45,7 +45,9 @@ class ActiveFormBackend extends ActiveForm implements IActiveFormHasFieldSets
             BackendFormAsset::register($this->view);
         }
 
-        $this->_initPjax()->_initDynamicReload();
+        $this->_initPjax()
+            ->_initDynamicReload()
+        ;
 
         parent::init();
 
