@@ -32,10 +32,15 @@ class ActiveFormBackend extends ActiveForm implements IActiveFormHasFieldSets
     use TActiveFormHasPjax;
     use TActiveFormDynamicReload;
 
-    /**ActiveFormBackend
+    /**
      * @var bool Подключить стандартные js и css?
      */
     public $registerStandartAsset = true;
+
+    /**
+     * @var bool 
+     */
+    public $enableClientValidation = false;
 
     public function init()
     {
