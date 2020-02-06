@@ -58,6 +58,12 @@ trait THasActiveForm
     }
 
 
+    /**
+     * @deprecated 
+     * 
+     * @param array $config
+     * @return ActiveFormUseTab|ActiveForm
+     */
     public function beginDynamicActiveForm(array $config = [])
     {
         $form = $this->beginActiveForm([

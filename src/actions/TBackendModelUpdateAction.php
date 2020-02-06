@@ -20,11 +20,13 @@ trait TBackendModelUpdateAction
     public $modelValidate = true;
 
     /**
+     * @deprecated 
      * @var string
      */
     public $afterContent = '';
 
     /**
+     * @deprecated 
      * @var string
      */
     public $beforeContent = '';
