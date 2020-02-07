@@ -24,14 +24,4 @@ interface IHasActiveForm
      * @return ActiveForm
      */
     public function beginActiveForm(array $config = []);
-
-    /**
-     * @return mixed
-     */
-    //public function endActiveForm();
-
-    /**
-     * @return null|ActiveForm
-     */
-    public function getActiveForm();
 }

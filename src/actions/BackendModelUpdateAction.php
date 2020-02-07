@@ -91,7 +91,7 @@ class BackendModelUpdateAction extends BackendModelAction
         if ($rr->isRequestPjaxPost()) {
 
             try {
-                if (!\Yii::$app->request->post($this->reloadFormParam)) {
+                if (!\Yii::$app->request->post(RequestResponse::DYNAMIC_RELOAD_NOT_SUBMIT)) {
 
                     foreach ($this->formModels as $model) {
                         $model->load(\Yii::$app->request->post());

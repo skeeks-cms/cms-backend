@@ -103,7 +103,7 @@ class BackendModelCreateAction extends ViewBackendAction
         if ($rr->isRequestPjaxPost()) {
 
             try {
-                if (!\Yii::$app->request->post($this->reloadFormParam)) {
+                if (!\Yii::$app->request->post(RequestResponse::DYNAMIC_RELOAD_NOT_SUBMIT)) {
 
                     foreach ($this->formModels as $fmodel) {
                         $fmodel->load(\Yii::$app->request->post());
