@@ -8,12 +8,12 @@
 namespace skeeks\cms\backend\actions;
 use skeeks\cms\backend\widgets\ActiveFormBackend;
 use skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Json;
 use yii\widgets\ActiveForm;
 
 /**
  * @property null|ActiveForm $activeForm read-only;
- * @property string $activeFormClassName;
  *
  * Interface IHasActiveForm
  *
@@ -25,7 +25,12 @@ trait THasActiveForm
      * @var string
      */
     //public $activeFormClassName = 'skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab';
-    public $activeFormClassName = ActiveFormBackend::class;
+    public $activeFormClass = ActiveFormBackend::class;
+
+    /**
+     * @var array 
+     */
+    public $activeFormConfig = [];
 
     /**
      * @var null|ActiveForm|ActiveFormUseTab
@@ -58,7 +63,8 @@ trait THasActiveForm
      */
     public function beginActiveForm(array $config = [])
     {
-        $className = $this->activeFormClassName;
+        $className = $this->activeFormClass;
+        $config = ArrayHelper::merge((array) $this->activeFormConfig, $config);
         $this->_activeForm = $className::begin($config);
         return $this->_activeForm;
     }
