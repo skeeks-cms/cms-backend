@@ -6,6 +6,7 @@
  * @date 05.03.2017
  */
 namespace skeeks\cms\backend\actions;
+use skeeks\cms\backend\widgets\ActiveFormBackend;
 use skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab;
 use yii\helpers\Json;
 use yii\widgets\ActiveForm;
@@ -23,7 +24,8 @@ trait THasActiveForm
     /**
      * @var string
      */
-    public $activeFormClassName = 'skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab';
+    //public $activeFormClassName = 'skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab';
+    public $activeFormClassName = ActiveFormBackend::class;
 
     /**
      * @var null|ActiveForm|ActiveFormUseTab
@@ -31,11 +33,15 @@ trait THasActiveForm
     protected $_activeForm = null;
 
     /**
+     * @deprecated
+     *
      * @var string
      */
     public $reloadFormParam = 'sx-reload-form';
 
     /**
+     * @deprecated
+     *
      * @var string
      */
     public $reloadFieldParam = 'data-form-reload';
@@ -64,28 +70,28 @@ trait THasActiveForm
      * @param array $config
      * @return ActiveFormUseTab|ActiveForm
      */
-    public function beginDynamicActiveForm(array $config = [])
+    /*public function beginDynamicActiveForm(array $config = [])
     {
         $form = $this->beginActiveForm([
             'enableAjaxValidation' => false,
             'enableClientValidation' => false,
-            'dynamicReloadNotSubmit' => $this->reloadFormParam,
-            'dynamicReloadFieldParam' => $this->reloadFieldParam,
+            //'dynamicReloadNotSubmit' => $this->reloadFormParam,
+            //'dynamicReloadFieldParam' => $this->reloadFieldParam,
         ]);
 
         return $form;
-    }
+    }*/
 
     /**
      * @param array $config
      *
      * @return mixed
      */
-    public function endActiveForm(array $config = [])
+    /*public function endActiveForm(array $config = [])
     {
         $className = $this->activeFormClassName;
         return $className::end();
-    }
+    }*/
 
     /**
      * @return null|ActiveFormUseTab|ActiveForm

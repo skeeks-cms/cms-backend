@@ -28,7 +28,7 @@ interface IHasActiveForm
     /**
      * @return mixed
      */
-    public function endActiveForm();
+    //public function endActiveForm();
 
     /**
      * @return null|ActiveForm

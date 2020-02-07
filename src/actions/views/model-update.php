@@ -21,7 +21,7 @@ $action = $controller->action;
 <? endif; ?>
 
 
-<?php $form = $action->beginDynamicActiveForm([
+<?php $form = $action->beginActiveForm([
     'enableAjaxValidation'   => false,
     'enableClientValidation' => false,
 ]); ?>
@@ -64,7 +64,7 @@ JS
 
 <?= $form->buttonsStandart($model, $action->buttons); ?>
 <?= $form->errorSummary($formModels); ?>
-<?php $action->endActiveForm(); ?>
+<?php $form::end(); ?>
 
 
 <? if ($action->afterContent) : ?>
