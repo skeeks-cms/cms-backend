@@ -8,6 +8,7 @@
 
 namespace skeeks\cms\backend\widgets;
 
+use skeeks\cms\backend\forms\ActiveFieldBackend;
 use skeeks\cms\backend\forms\ActiveFormHasCustomSelectTrait;
 use skeeks\cms\backend\forms\TActiveFormHasButtons;
 use skeeks\cms\backend\forms\TActiveFormHasCustomSelect;
@@ -31,6 +32,11 @@ class ActiveFormBackend extends ActiveForm implements IActiveFormHasFieldSets
     use TActiveFormHasCustomSelect;
     use TActiveFormHasPjax;
     use TActiveFormDynamicReload;
+
+    /**
+     * @var string
+     */
+    public $fieldClass = ActiveFieldBackend::class;
 
     /**
      * @var bool Подключить стандартные js и css?
