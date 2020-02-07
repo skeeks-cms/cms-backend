@@ -96,6 +96,7 @@ form.sx-backend-form .form-group:hover {
 form.sx-backend-form {
     border: 0px;
     padding: 0px;
+    background: #f5f9f9;
 }
 
 form.sx-backend-form .tab-content {
