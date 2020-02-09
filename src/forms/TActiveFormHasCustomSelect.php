@@ -51,4 +51,24 @@ trait TActiveFormHasCustomSelect
             $config
         );
     }
+
+    /**
+     * @param       $model
+     * @param       $attribute
+     * @param       $items
+     * @param array $config
+     * @param array $fieldOptions
+     * @return ActiveField
+     */
+    public function fieldSelectMulti($model, $attribute, $items, $config = [], $fieldOptions = [])
+    {
+        $config = ArrayHelper::merge(
+            $config, //Опции по умолчанию
+            [
+                'multiple' => 'multiple',
+                'size' => 5
+            ]
+        );
+        return $this->fieldSelect($model, $attribute, $items, $config, $fieldOptions);
+    }
 }
