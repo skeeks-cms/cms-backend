@@ -129,26 +129,6 @@ class BackendMenuItem extends Component
         return $this->_controller;
     }
 
-    /**
-     * @return string
-     * @throws \yii\base\InvalidConfigException
-     */
-    public function getImage()
-    {
-        if ($this->_image === null) {
-            return "";
-        }
-        if (is_array($this->_image) && count($this->_image) == 2) {
-            list($assetClassName, $localPath) = $this->_image;
-            return (string)\Yii::$app->getAssetManager()->getAssetUrl(\Yii::$app->assetManager->getBundle($assetClassName), $localPath);
-        }
-        if (is_string($this->_image)) {
-            return $this->_image;
-        }
-
-        return "";
-    }
-
 
     /**
      * @return string
