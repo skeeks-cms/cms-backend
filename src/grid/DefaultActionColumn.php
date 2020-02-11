@@ -26,14 +26,19 @@ class DefaultActionColumn extends DataColumn
      * @var bool
      */
     public $filter = false;
-    
 
+    /**
+     * @var string 
+     */
+    public $viewAttribute = "";
+    
     /**
      * @inheritdoc
      */
     protected function renderDataCellContent($model, $key, $index)
     {
-        return \yii\helpers\Html::a($model->asText, "#", [
+        $attribute = $this->viewAttribute ? $this->viewAttribute : $this->attribute;
+        return \yii\helpers\Html::a($model->{$attribute}, "#", [
             'class' => "sx-trigger-action",
         ]);
 
