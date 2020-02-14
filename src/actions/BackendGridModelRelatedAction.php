@@ -102,9 +102,9 @@ class BackendGridModelRelatedAction extends BackendModelAction
                 }
 
 
-                $visibleColumns = $this->relatedIndexAction->grid['visibleColumns'];
+                /*$visibleColumns = $this->relatedIndexAction->grid['visibleColumns'];
 
-                $this->relatedIndexAction->grid['visibleColumns'] = $visibleColumns;
+                $this->relatedIndexAction->grid['visibleColumns'] = $visibleColumns;*/
                 $this->relatedIndexAction->grid['columns']['actions']['isOpenNewWindow'] = true;
 
                 if ($this->relation) {
