@@ -148,18 +148,9 @@ class BackendGridModelRelatedAction extends BackendModelAction
                                 'minViewCount'    => 1,
                                 'itemTag'         => 'button',
                                 'itemOptions'     => ['class' => 'btn btn-primary'],
-                                /*'button'          => [
-                                    'class' => 'btn btn-primary',
-                                    //'style' => 'font-size: 11px; cursor: pointer;',
-                                    'tag'   => 'a',
-                                    'label' => 'Зарегистрировать номер',
-                                ],*/
                             ])."<br>";
                     }
-
-
                 });
-
 
                 return $this->relatedIndexAction->run();
             }
