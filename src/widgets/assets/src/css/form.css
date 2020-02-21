@@ -39,12 +39,16 @@ form.sx-backend-form
             background: #ffffff;
         }
 
+    form.sx-backend-form .sx-buttons-standart-wrapper {
+        margin-top: 15px;
+    }
+
     form.sx-backend-form .sx-buttons-standart
     {
-        border-top: 1px solid #ddd;
+        /*border-top: 1px solid #ddd;*/
         padding-top: 10px;
         margin-bottom: 0px;
-        margin-top: 15px;
+        /*margin-top: 15px;*/
     }
 
 .sx-input-int
