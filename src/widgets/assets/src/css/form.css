@@ -43,6 +43,10 @@ form.sx-backend-form
         margin-top: 15px;
     }
 
+    form.sx-backend-form .sx-buttons-standart-wrapper .sx-btns-group {
+        margin-left: 30px;
+    }
+
     form.sx-backend-form .sx-buttons-standart
     {
         /*border-top: 1px solid #ddd;*/
