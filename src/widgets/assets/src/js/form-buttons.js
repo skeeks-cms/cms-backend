@@ -11,8 +11,42 @@
 
     sx.classes.form.FormButtonsBackend = sx.classes.Component.extend({
 
+        _initCloseWindow: function () {
+            if (this.onBeforeUnload === false) {
+                this.onBeforeUnload = true;
+
+                /*window.onbeforeunload = function () {
+                    return 'Данные в форме НЕ СОХРАНЕНЫ. Вы действительно хотите уйти со страницы?'
+                };*/
+            }
+        },
+
+        _init: function () {
+            this.onBeforeUnload = false;
+        },
+
+        /**
+         * Выполнить действие с проверкой потери данных
+         * @param callback
+         * @returns {*}
+         */
+        checkAction: function (callback) {
+            if (this.isFormDataChanged()) {
+                sx.confirm('Данные в форме НЕ СОХРАНЕНЫ. Вы действительно хотите уйти со страницы?', {
+                    'no': function () {
+                    },
+                    'yes': function () {
+                        return callback();
+                    }
+                });
+            } else {
+                return callback();
+            }
+        },
+
         go: function (value) {
             if (value == "close") {
+
                 if (sx.Window.openerWidget()) {
                     sx.Window.openerWidget().close();
                     return false;
@@ -32,72 +66,186 @@
         _onDomReady: function () {
             var self = this;
             //Клик по стандартной кнопки сохранить и закрыть
-            $(".sx-btn-save-and-close", this.getJButtons()).on("click", function() {
+            $(".sx-btn-save-and-close", this.getJButtons()).on("click", function () {
                 return self.go("save");
             });
 
-            $(".sx-btn-save", this.getJButtons()).on("click", function() {
+            $(".sx-btn-save", this.getJButtons()).on("click", function () {
                 return self.go("apply");
             });
 
-            $(".sx-btn-close", this.getJButtons()).on("click", function() {
-                return self.go("close");
-            });
-
-
-
-
-
-            $(".sx-btn-prev", this.getJButtons()).on("click", function() {
-                var currentUrl = window.location.href;
-                var currentId = self.get("model-id");
-                var newUrl = currentUrl.replace("pk=" + currentId, "pk=" + $(this).data('pk'));
-                window.location.href = newUrl;;
+            $(".sx-btn-close", this.getJButtons()).on("click", function () {
+                self.go("close");
                 return false;
             });
 
-            $(".sx-btn-next", this.getJButtons()).on("click", function() {
-                var currentUrl = window.location.href;
-                var currentId = self.get("model-id");
-                var newUrl = currentUrl.replace("pk=" + currentId, "pk=" + $(this).data('pk'));
-                window.location.href = newUrl;;
-                return false;
+
+            //Клавиши ctrl+s
+            document.addEventListener("keydown", function (e) {
+                //Горячая клавиша ctrl+z закрывает страницу
+                if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && e.keyCode == 90) {
+                    e.preventDefault();
+
+                    if ($(".sx-btn-close", self.getJForm()).length) {
+                        $(".sx-btn-close", self.getJForm()).click();
+                        return false;
+                    }
+
+                    return false;
+                }
+
+                //Горячая клавиша ctrl+s пытается сохранить форму и остаться на странице
+                if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && e.keyCode == 83) {
+                    e.preventDefault();
+
+                    if ($(".sx-btn-save", self.getJForm()).length) {
+                        $(".sx-btn-save", self.getJForm()).click();
+                        return false;
+                    }
+                    if ($(".sx-btn-save-and-close", self.getJForm()).length) {
+                        $(".sx-btn-save-and-close", self.getJForm()).click();
+                        return false;
+                    }
+
+                    return false;
+                }
+
+                //Горячая клавиша ctrl+enter пытается сохранить форму и закрыть окно
+                if ((window.navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey) && ((event.keyCode == 0xA) || (event.keyCode == 0xD))) {
+                    e.preventDefault();
+
+                    if ($(".sx-btn-save-and-close", self.getJForm()).length) {
+                        $(".sx-btn-save-and-close", self.getJForm()).click();
+                        return false;
+                    }
+
+                    if ($(".sx-btn-save", self.getJForm()).length) {
+                        $(".sx-btn-save", self.getJForm()).click();
+                        return false;
+                    }
+
+                    return false;
+                }
+
+            }, false);
+
+
+            //Отслеживание изменения данных в форме
+            $("input, select, textarea", this.getJForm()).on("change", function () {
+                self.getJForm().addClass("sx-form-data-changed");
+                self._initCloseWindow();
+            });
+            $("input, select, textarea", this.getJForm()).on("keyup", function () {
+                self.getJForm().addClass("sx-form-data-changed");
+                self._initCloseWindow();
             });
 
             if (sx.Window.openerWidget()) {
-                var modelId = this.get("model-id");
-                if (modelId) {
-                    var currentTr = sx.Window.openerWindow().$(".sx-grid-view [data-key=" + modelId + "]");
-                    if (currentTr.length) {
-                        var prevTr = currentTr.prev("tr");
-                        var nextTr = currentTr.next("tr");
+                var widget = sx.Window.openerWidget();
+                widget.on("beforeClose", function(e, data) {
+                    console.log("beforeClose");
+                    widget.isAllowClose = false;
+                    self.checkAction(function () {
+                        widget.isAllowClose = true;
+                    });
+                });
+            }
 
-                        if (prevTr.length) {
-                            var prevKey = prevTr.data("key");
-                            if (prevKey) {
-                                $(".sx-next-prev-btns", this.getJButtons()).show();
-                                $(".sx-btn-prev", this.getJButtons()).attr("data-pk", prevKey).show();
-                            }
+
+            //Если разрешены кнопки впред назад
+            if (this.get('isprevnext')) {
+
+                if (this.get('isprevnextkeyboard')) {
+                    //Прехеоды стрелками вправо и влево
+                    addEventListener("keydown", function (e) {
+                        switch (e.keyCode) {
+                            case 39:  //стрелка вправо
+                                if ($(":focus").closest("#" + self.getJForm().attr("id")).length) {
+                                    return false;
+                                }
+                                if ($(":focus").hasClass("form-control")) {
+                                    return false;
+                                }
+
+                                var jNext = $(".sx-btn-next", self.getJButtons());
+                                if (jNext.is(":visible")) {
+                                    jNext.click();
+                                }
+
+                                break;
+
+                            case 37:  //стрелка влево
+                                if ($(":focus").hasClass("form-control")) {
+                                    return false;
+                                }
+                                if ($(":focus").closest("#" + self.getJForm().attr("id")).length) {
+                                    return false;
+                                }
+
+                                var jPrev = $(".sx-btn-prev", self.getJButtons());
+                                if (jPrev.is(":visible")) {
+                                    jPrev.click();
+                                }
+
+                                break;
                         }
+                    });
+                }
 
-                        if (nextTr.length) {
-                            var nextKey = nextTr.data("key");
-                            if (nextKey) {
-                                $(".sx-next-prev-btns", this.getJButtons()).show();
-                                $(".sx-btn-next", this.getJButtons()).attr("data-pk", nextKey).show();
+
+                $(".sx-btn-prev", this.getJButtons()).on("click", function () {
+                    var currentUrl = window.location.href;
+                    var currentId = self.get("model-id");
+                    var newUrl = currentUrl.replace("pk=" + currentId, "pk=" + $(this).data('pk'));
+                    self.checkAction(function() {
+                        window.location.href = newUrl;
+                    });
+                    return false;
+                });
+
+                $(".sx-btn-next", this.getJButtons()).on("click", function () {
+                    var currentUrl = window.location.href;
+                    var currentId = self.get("model-id");
+                    var newUrl = currentUrl.replace("pk=" + currentId, "pk=" + $(this).data('pk'));
+                    self.checkAction(function() {
+                        window.location.href = newUrl;
+                    });
+                    return false;
+                });
+
+                if (sx.Window.openerWidget()) {
+                    var modelId = this.get("model-id");
+                    if (modelId) {
+                        var currentTr = sx.Window.openerWindow().$(".sx-grid-view [data-key=" + modelId + "]");
+                        if (currentTr.length) {
+                            var prevTr = currentTr.prev("tr");
+                            var nextTr = currentTr.next("tr");
+
+                            if (prevTr.length) {
+                                var prevKey = prevTr.data("key");
+                                if (prevKey) {
+                                    $(".sx-next-prev-btns", this.getJButtons()).show();
+                                    $(".sx-btn-prev", this.getJButtons()).attr("data-pk", prevKey).show();
+                                }
+                            }
+
+                            if (nextTr.length) {
+                                var nextKey = nextTr.data("key");
+                                if (nextKey) {
+                                    $(".sx-next-prev-btns", this.getJButtons()).show();
+                                    $(".sx-btn-next", this.getJButtons()).attr("data-pk", nextKey).show();
+                                }
                             }
                         }
                     }
                 }
             }
-
-
-
         },
 
         _onWindowReady: function () {
             var self = this;
 
+            //Разрешить фиксирование внизу экрана
             if (this.get("isfixed")) {
                 this._initStartPoint();
                 self.updatePositions();
@@ -125,7 +273,9 @@
         },
 
 
-
+        isFormDataChanged: function () {
+            return this.getJForm().hasClass("sx-form-data-changed");
+        },
 
         getJForm: function () {
             return $("#" + this.get("form-id"));
@@ -134,7 +284,6 @@
         getJButtons: function () {
             return $(".sx-buttons-standart-wrapper", this.getJForm());
         },
-
 
 
         _initStartPoint: function () {

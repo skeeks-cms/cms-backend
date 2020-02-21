@@ -56,9 +56,16 @@ class FormButtonsBackendWidget extends Widget
     public $isSave = true;
 
     /**
+     * Использовать кнопки вперед назад
      * @var bool
      */
     public $isPrevNext = true;
+
+    /**
+     * Включить перемещение кнопками клавиатуры
+     * @var bool
+     */
+    public $isPrevNextKeyboard = true;
 
 
     /**
@@ -68,6 +75,7 @@ class FormButtonsBackendWidget extends Widget
 
 
     /**
+     * Разрешить возможность фиксирования кнопок внизу экрана
      * @var bool
      */
     public $isFixed = true;
@@ -128,8 +136,10 @@ class FormButtonsBackendWidget extends Widget
         $baseData['input-id'] = $this->activeForm->id.'-submit-btn';
         $baseData['form-id'] = $this->activeForm->id;
         $baseData['isfixed'] = $this->isFixed;
+        $baseData['isprevnext'] = $this->isPrevNext;
+        $baseData['isprevnextkeyboard'] = $this->isPrevNextKeyboard;
         //todo: хардкод
-        $baseData['model-id'] = $this->model->id;
+        $baseData['model-id'] = isset($this->model->id) ? $this->model->id : null;
 
         $baseDataJson = Json::encode($baseData);
 
@@ -141,7 +151,7 @@ JS
         );
 
         return "<div class='sx-buttons-standart-wrapper'>".Html::tag('div',
-                $content .
+                $content.
                 Html::hiddenInput("submit-btn", 'apply', [
                     'id' => $baseData['input-id'],
                 ]),
@@ -158,8 +168,8 @@ JS
 
         if ($this->isSaveAndClose) {
             $this->parts['{saveAndClose}'] = Html::submitButton("<i class=\"fa fa-check\"></i> ".\Yii::t('skeeks/backend', 'Save and close'), [
-                'title'   => \Yii::t("skeeks/backend", "The result will be saved and the editing window will be closed"),
-                'class'   => 'btn btn-primary sx-btn-save-and-close',
+                'title' => \Yii::t("skeeks/backend", "The result will be saved and the editing window will be closed")." (ctrl+↵)",
+                'class' => 'btn btn-primary sx-btn-save-and-close',
             ]);
         }
 
@@ -185,10 +195,9 @@ JS
         if ($this->isSave) {
 
             $this->parts['{save}'] = Html::submitButton("<i class=\"fa fa-check\"></i> ".\Yii::t('skeeks/backend', 'Save'), [
-                    'title'   => \Yii::t('skeeks/backend', 'The result will be saved and you can further edit the data'),
-                    'class'   => 'btn btn-primary sx-btn-save',
-                ])
-                ;
+                'title' => \Yii::t('skeeks/backend', 'The result will be saved and you can further edit the data')." (ctrl+s)",
+                'class' => 'btn btn-primary sx-btn-save',
+            ]);
         }
 
         return $this;
@@ -204,7 +213,8 @@ JS
         if ($this->isClose) {
 
             $this->parts['{close}'] = Html::submitButton("<i class=\"fa fa-times\"></i> ".\Yii::t('skeeks/cms', 'Cancel'), [
-                'class'   => 'btn btn-secondary sx-btn-close',
+                'title' => \Yii::t('skeeks/backend', 'The result will not be saved and the page will be closed')." (ctrl+z)",
+                'class' => 'btn btn-secondary sx-btn-close',
             ]);
         }
 
@@ -221,13 +231,15 @@ JS
         if ($this->isPrevNext) {
 
             $submit = '<span class="sx-next-prev-btns" style="display: none;">'.Html::button("<i class=\"fas fa-arrow-left\"></i> ", [
-                    'class'   => 'btn u-btn-blue sx-btn-prev',
-                    'style'   => 'display: none;',
+                    'class' => 'btn u-btn-blue sx-btn-prev',
+                    'title' => \Yii::t('skeeks/backend', 'Go to previous post')." (ctrl+←)",
+                    'style' => 'display: none;',
                 ]);
 
             $submit .= ' '.Html::button("<i class=\"fas fa-arrow-right\"></i> ", [
-                    'class'   => 'btn u-btn-blue sx-btn-next',
-                    'style'   => 'display: none;',
+                    'class' => 'btn u-btn-blue sx-btn-next',
+                    'title' => \Yii::t('skeeks/backend', 'Go to next post')." (ctrl+→)",
+                    'style' => 'display: none;',
                 ])."</span>";
 
             $this->parts['{prevNext}'] = $submit;

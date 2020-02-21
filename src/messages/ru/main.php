@@ -10,6 +10,9 @@ return [
     'Save'                                                           => 'Сохранить',
     'The result will be saved and the editing window will be closed' => 'Результат будет сохранен и окно редактирования будет закрыто',
     'The result will be saved and you can further edit the data'     => 'Результат будет сохранен и вы сможете дальше редактировать данные',
+    'The result will not be saved and the page will be closed'       => 'Результат не будет сохранен и страница будет закрыта',
+    'Go to previous post'                                            => 'Перейти к предыдущей записи',
+    'Go to next post'                                                => 'Перейти к следующей записи',
 
     'Only your'                         => 'Только свои',
     'Access settings'                   => 'Настройки доступа',
