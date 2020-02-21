@@ -23,8 +23,6 @@
 
             $("body").on("firstAction", '.sx-btn-ajax-actions', function(e) {
 
-                console.log("firstAction");
-
                 var jQueryBtn = $(this);
 
                 if (!jQueryBtn.data("content") || jQueryBtn.data("content").length == 0) {

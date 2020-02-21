@@ -142,8 +142,8 @@
 
             if (sx.Window.openerWidget()) {
                 var widget = sx.Window.openerWidget();
+                widget.off("beforeClose");
                 widget.on("beforeClose", function(e, data) {
-                    console.log("beforeClose");
                     widget.isAllowClose = false;
                     self.checkAction(function () {
                         widget.isAllowClose = true;
