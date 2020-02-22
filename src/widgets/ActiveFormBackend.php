@@ -33,6 +33,8 @@ class ActiveFormBackend extends ActiveForm implements IActiveFormHasFieldSets
     use TActiveFormHasPjax;
     use TActiveFormDynamicReload;
 
+    public static $autoIdPrefix = "bf";
+    
     /**
      * @var string
      */
