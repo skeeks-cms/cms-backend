@@ -129,3 +129,7 @@ form.sx-backend-form .tab-content {
     border-bottom: 1px solid #ddd;
     padding: 10px;
 }
+
+.sx-backend-form .sx-inline-row label {
+    margin-bottom: 0px;
+}

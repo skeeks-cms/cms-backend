@@ -15,7 +15,7 @@ use yii\widgets\ActiveField;
  */
 class ActiveFieldBackend extends ActiveField
 {
-    const INLINE_TEMPLATE = '<div class="row"><div class="col-md-3 text-md-right">{label}</div><div class="col-md-9">{input}{hint}{error}</div></div>';
+    const INLINE_TEMPLATE = '<div class="row sx-inline-row"><div class="col-md-3 text-md-right my-auto">{label}</div><div class="col-md-9">{input}{hint}{error}</div></div>';
 
     public $template = self::INLINE_TEMPLATE;
     
