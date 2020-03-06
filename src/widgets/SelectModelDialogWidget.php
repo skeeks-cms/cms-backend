@@ -111,7 +111,7 @@ class SelectModelDialogWidget extends InputWidget
         'tag'     => 'a',
         'content' => '<i class="fa fa-list" aria-hidden="true"></i>',
         'options' => [
-            'class' => 'btn btn-default sx-btn-create btn-xs',
+            'class' => 'btn btn-default sx-btn-create',
             'title' => 'Выбрать значение',
         ],
     ];
