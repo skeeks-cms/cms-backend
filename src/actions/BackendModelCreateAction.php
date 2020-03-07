@@ -123,15 +123,18 @@ class BackendModelCreateAction extends ViewBackendAction
 
                     if ($isValid) {
 
+                        
 
                         $this->trigger(self::EVENT_BEFORE_SAVE);
 
                         if ($this->isSaveFormModels) {
                             foreach ($this->formModels as $model) {
-                                if (method_exists($model, 'save') && $model->save($this->modelValidate)) {
-                                    $model->refresh();
-                                } else {
-                                    throw new Exception("Не удалось сохранить данные: ".print_r($model->errors, true));
+                                if (method_exists($model, 'save')) {
+                                    if ($model->save($this->modelValidate)) {
+                                        $model->refresh();
+                                    } else {
+                                        throw new Exception("Не удалось сохранить данные: " . print_r($model->errors, true));
+                                    }
                                 }
                             }
                         }
