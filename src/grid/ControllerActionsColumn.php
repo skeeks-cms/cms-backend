@@ -8,7 +8,6 @@
 
 namespace skeeks\cms\backend\grid;
 
-use skeeks\cms\backend\BackendController;
 use skeeks\cms\backend\controllers\BackendModelController;
 use skeeks\cms\backend\widgets\AjaxControllerActionsWidget;
 use skeeks\cms\modules\admin\widgets\ControllerActions;
@@ -89,14 +88,14 @@ class ControllerActionsColumn extends DataColumn
      * @var array
      */
     public $contentOptions = [
-        'class' => 'sx-controller-actions-td'
+        'class' => 'sx-controller-actions-td',
     ];
 
     /**
      * @var array
      */
     public $headerOptions = [
-        'class' => 'sx-controller-actions-th sx-grid-actions'
+        'class' => 'sx-controller-actions-th sx-grid-actions',
     ];
 
     /**
@@ -134,7 +133,7 @@ CSS
 
                 $("#{$this->grid->id}").on("dblclick", 'tr', function() {
                 //$('.sx-first-action', $(this)).click();
-                var jMainBtn = $(".sx-btn-ajax-actions", $(this));
+                var jMainBtn = $(".sx-btn-ajax-actions:first", $(this));
                 
                 var jBlocker = sx.block($(this).closest("table"));
                 
@@ -157,9 +156,11 @@ JS
 
                 $("#{$this->grid->id}").on("contextmenu", 'tr', function(event) {
                 
+                event.preventDefault();
+                
                 var key = $(this).data("key");
                 //$(".sx-btn-ajax-actions", $(this)).click();
-                var jNewElement = $(".sx-btn-ajax-actions", $(this)).clone();
+                var jNewElement = $(".sx-btn-ajax-actions:first", $(this)).clone();
                 
                 $("body").append(jNewElement);
                 
@@ -173,7 +174,7 @@ JS
                 
                 jNewElement.click();
 
-                return false;
+                /*return false;*/
             });
 JS
                 );

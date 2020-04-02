@@ -217,7 +217,7 @@ class ControllerActionsWidget extends Widget
         $icon = '';
         if ($action->icon)
         {
-            $icon = Html::tag('span', '', ['class' => $action->icon]);
+            $icon = Html::tag('span', '', ['class' => $action->icon . " sx-action-icon"]);
         }
 
         if ($this->activeId == $action->id)

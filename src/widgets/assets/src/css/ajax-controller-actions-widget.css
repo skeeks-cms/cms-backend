@@ -2,6 +2,7 @@
     display: block;
     padding: 4px 15px;
     font-size: 15px;
+    cursor: pointer;
 }
 .sx-popover-ajax-controller-actions ul li a {
     text-decoration: none;
@@ -23,4 +24,13 @@
 .sx-popover-ajax-controller-actions .popover-body
 {
     padding: 0;
+}
+
+.sx-popover-ajax-controller-actions ul li .sx-action-icon {
+    width: 20px;
+    text-align: center;
+}
+
+.sx-opened-actions {
+    background: #dedede;
 }

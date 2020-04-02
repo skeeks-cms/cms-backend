@@ -38,8 +38,28 @@
                 }
             });
 
+            
+            $("body").on("contextmenu", '.sx-btn-ajax-actions', function(e) {
+                e.preventDefault();
+
+                $(this).addClass('sx-opened-actions');
+
+                $('.popover').popover('hide');
+
+                if ($(this).hasClass('is-rendered')) {
+                    $(this).popover('show');
+                } else {
+                    var data = _.clone($(this).data());
+                    self._createPopover($(this), data);
+                }
+                
+                return false;
+            });
+            
             $("body").on("click", '.sx-btn-ajax-actions', function(e) {
                 e.preventDefault();
+
+                $(this).addClass('sx-opened-actions');
 
                 $('.popover').popover('hide');
 
@@ -56,6 +76,8 @@
 
                 var l = $(e.target);
 
+                $('.sx-btn-ajax-actions').removeClass('sx-opened-actions');
+                
                 if (l.closest('.popover').length > 0) {
                     return this;
                 }

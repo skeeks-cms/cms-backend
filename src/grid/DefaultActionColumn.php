@@ -8,12 +8,8 @@
 
 namespace skeeks\cms\backend\grid;
 
-use skeeks\cms\backend\BackendController;
-use skeeks\cms\backend\controllers\BackendModelController;
-use skeeks\cms\backend\widgets\AjaxControllerActionsWidget;
 use skeeks\cms\modules\admin\widgets\ControllerActions;
 use skeeks\cms\modules\admin\widgets\ControllerModelActions;
-use yii\base\InvalidConfigException;
 use yii\grid\DataColumn;
 
 /**
@@ -28,10 +24,10 @@ class DefaultActionColumn extends DataColumn
     public $filter = false;
 
     /**
-     * @var string 
+     * @var string
      */
     public $viewAttribute = "";
-    
+
     /**
      * @inheritdoc
      */
