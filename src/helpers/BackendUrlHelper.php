@@ -121,8 +121,9 @@ class BackendUrlHelper extends Component
     }
 
     /**
-     * @param array $data
-     * @return array
+     * @param $paramName
+     * @param $paramValue
+     * @return $this
      */
     public function setBackendParam($paramName, $paramValue)
     {
