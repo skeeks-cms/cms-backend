@@ -37,7 +37,7 @@ use yii\web\JsExpression;
 class BackendGridModelAction extends ViewBackendAction
 {
     /**
-     * @var
+     * @var GridViewWidget
      */
     public $grid;
 
