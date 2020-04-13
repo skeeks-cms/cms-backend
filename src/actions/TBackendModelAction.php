@@ -156,6 +156,12 @@ trait TBackendModelAction
                     \Yii::$app->authManager->addChild($roleRoot, $permission);
                 }
             }
+            
+            /*if ($roleAdmin = \Yii::$app->authManager->getRole(CmsManager::ROLE_ADMIN)) {
+                if (!\Yii::$app->authManager->hasChild($roleAdmin, $permission)) {
+                    \Yii::$app->authManager->addChild($roleAdmin, $permission);
+                }
+            }*/
 
 
             $className = $this->modelClassName;
@@ -181,6 +187,14 @@ trait TBackendModelAction
                         \Yii::$app->authManager->addChild($roleRoot, $permissionOwn);
                     }
                 }
+                
+                
+                /*if ($roleAdmin = \Yii::$app->authManager->getRole(CmsManager::ROLE_ADMIN)) {
+                    if (!\Yii::$app->authManager->hasChild($roleAdmin, $permissionOwn)) {
+                        \Yii::$app->authManager->addChild($roleAdmin, $permissionOwn);
+                    }
+                }*/
+            
 
                 if (!\Yii::$app->authManager->hasChild($permissionOwn, $permission)) {
                     \Yii::$app->authManager->addChild($permissionOwn, $permission);

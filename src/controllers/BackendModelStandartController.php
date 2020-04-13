@@ -33,6 +33,7 @@ class BackendModelStandartController extends BackendModelController
         $actions = ArrayHelper::merge(parent::actions(), [
             'index' => [
                 'class' => BackendGridModelAction::class,
+                'accessCallback'  => true,
             ],
 
             "create" => [
