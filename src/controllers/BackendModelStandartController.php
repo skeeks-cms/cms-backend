@@ -26,8 +26,6 @@ use yii\helpers\ArrayHelper;
  */
 class BackendModelStandartController extends BackendModelController
 {
-
-
     public function actions()
     {
         $actions = ArrayHelper::merge(parent::actions(), [
@@ -51,6 +49,12 @@ class BackendModelStandartController extends BackendModelController
 
             "delete-multi" => [
                 'class' => BackendModelMultiDeleteAction::class,
+                "eachAccessCallback" => function($model) {
+                    return \Yii::$app->user->can($this->permissionName . "/delete", ['model' => $model]);
+                },
+                "accessCallback" => function() {
+                    return \Yii::$app->user->can($this->permissionName . "/delete");
+                },
             ],
         ]);
 

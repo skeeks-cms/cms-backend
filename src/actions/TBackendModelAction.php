@@ -149,19 +149,21 @@ trait TBackendModelAction
                 $permission = \Yii::$app->authManager->createPermission($permissionName);
                 $permission->description = $this->name;
                 \Yii::$app->authManager->add($permission);
+
+                //После первого создания назначение администратору
+                if ($roleAdmin = \Yii::$app->authManager->getRole(CmsManager::ROLE_ADMIN)) {
+                    if (!\Yii::$app->authManager->hasChild($roleAdmin, $permission)) {
+                        \Yii::$app->authManager->addChild($roleAdmin, $permission);
+                    }
+                }
             }
 
+            //Всегда назначается руту
             if ($roleRoot = \Yii::$app->authManager->getRole(CmsManager::ROLE_ROOT)) {
                 if (!\Yii::$app->authManager->hasChild($roleRoot, $permission)) {
                     \Yii::$app->authManager->addChild($roleRoot, $permission);
                 }
             }
-            
-            /*if ($roleAdmin = \Yii::$app->authManager->getRole(CmsManager::ROLE_ADMIN)) {
-                if (!\Yii::$app->authManager->hasChild($roleAdmin, $permission)) {
-                    \Yii::$app->authManager->addChild($roleAdmin, $permission);
-                }
-            }*/
 
 
             $className = $this->modelClassName;
@@ -173,6 +175,13 @@ trait TBackendModelAction
                     $permissionOwn->description = $this->name.' ('.\Yii::t('skeeks/backend', 'Only your').')';
                     $permissionOwn->ruleName = (new \skeeks\cms\rbac\AuthorRule())->name;
                     \Yii::$app->authManager->add($permissionOwn);
+
+                    //После создания назначить админу
+                    if ($roleAdmin = \Yii::$app->authManager->getRole(CmsManager::ROLE_ADMIN)) {
+                        if (!\Yii::$app->authManager->hasChild($roleAdmin, $permissionOwn)) {
+                            \Yii::$app->authManager->addChild($roleAdmin, $permissionOwn);
+                        }
+                    }
                 }
 
                 if (!$permissionOwn->ruleName) {
@@ -182,19 +191,13 @@ trait TBackendModelAction
             }
 
             if (method_exists($model, 'hasAttribute') && $model->hasAttribute('created_by')) {
+
                 if ($roleRoot = \Yii::$app->authManager->getRole(CmsManager::ROLE_ROOT)) {
                     if (!\Yii::$app->authManager->hasChild($roleRoot, $permissionOwn)) {
                         \Yii::$app->authManager->addChild($roleRoot, $permissionOwn);
                     }
                 }
-                
-                
-                /*if ($roleAdmin = \Yii::$app->authManager->getRole(CmsManager::ROLE_ADMIN)) {
-                    if (!\Yii::$app->authManager->hasChild($roleAdmin, $permissionOwn)) {
-                        \Yii::$app->authManager->addChild($roleAdmin, $permissionOwn);
-                    }
-                }*/
-            
+
 
                 if (!\Yii::$app->authManager->hasChild($permissionOwn, $permission)) {
                     \Yii::$app->authManager->addChild($permissionOwn, $permission);
