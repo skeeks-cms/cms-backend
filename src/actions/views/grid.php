@@ -43,10 +43,20 @@ $createModal = \yii\bootstrap\Modal::begin([
 ?>
 
 <? $form = \skeeks\cms\base\widgets\ActiveFormAjaxSubmit::begin([
-    'id'                    => 'sx-create-showing-form',
-    'action'                => \yii\helpers\Url::to([$controllerRoute.'/create']),
-    'validationUrl'         => \yii\helpers\Url::to([$controllerRoute.'/create', 'sx-validate' => true]),
-    'afterValidateCallback' => new \yii\web\JsExpression(<<<JS
+    'id'             => 'sx-create-showing-form',
+    'action'         => \yii\helpers\Url::to([$controllerRoute.'/create']),
+    'validationUrl'  => \yii\helpers\Url::to([$controllerRoute.'/create', 'sx-validate' => true]),
+    'clientCallback' => new \yii\web\JsExpression(<<<JS
+    function (ActiveFormAjaxSubmit) {
+        ActiveFormAjaxSubmit.on('success', function(e, response) {
+            $("#sx-modal-create .close").click();
+            _.delay(function() {
+                window.location.reload();
+            }, 300);
+        });
+    }
+    
+    /*'afterValidateCallback' => new \yii\web\JsExpression(<<<JS
         function(jForm, AjaxQuery)
         {
             var Handler = new sx.classes.AjaxHandlerStandartRespose(AjaxQuery);
@@ -61,7 +71,7 @@ $createModal = \yii\bootstrap\Modal::begin([
                     window.location.reload();
                 }, 1000);
             });
-        }
+        }*/
 JS
     ),
 ]); ?>
@@ -101,7 +111,14 @@ $backendShowings = $action->backendShowings;
         <? foreach ($backendShowings as $backendShowing) : ?>
             <li class="sx-tab nav-item <?= $backendShowing->id == $action->backendShowing->id ? "active sx-active-tab" : "sx-no-active-tab"; ?>" id="sx-tab-<?= $backendShowing->id; ?>">
                 <a href="<?= $action->getShowingUrl($backendShowing); ?>" class="nav-link <?= $backendShowing->id == $action->backendShowing->id ? "active" : ""; ?>">
-                    <?= $backendShowing->displayName; ?>
+                    <? if ($backendShowing->cms_user_id == \Yii::$app->user->id) : ?> 
+                        <img src="<?= \Yii::$app->user->identity->image ? \Yii::$app->user->identity->avatarSrc : \skeeks\cms\helpers\Image::getCapSrc(); ?>" 
+                             class="g-width-20 g-width-20 g-height-20 g-height-20 rounded-circle g-mr-5--sm sx-avatar"
+                             title="Это представление видите только вы"
+                        />
+                    <? endif; ?> 
+                    <?= $backendShowing->displayName; ?> 
+
                     <? if ($backendShowing->id == $action->backendShowing->id) : ?>
 
                         <?
@@ -164,21 +181,20 @@ $backendShowings = $action->backendShowings;
 
         <? if (\Yii::$app->request->post('__gird-all-ids') == '__gird-all-ids') : ?>
             <?
-                $query = $grid->dataProvider->query;
-                ob_get_clean();
-                $rr = new \skeeks\cms\helpers\RequestResponse();
-                $pks = [];
-                foreach ($query->each(100) as $element)
-                {
-                    $pks[] = $element->id;
-                }
-                $rr->success = true;
-                $rr->message = [
-                    'total' => count($pks),
-                    'pks' => $pks
-                ];
-                \Yii::$app->response->data = $rr;
-                \Yii::$app->end();
+            $query = $grid->dataProvider->query;
+            ob_get_clean();
+            $rr = new \skeeks\cms\helpers\RequestResponse();
+            $pks = [];
+            foreach ($query->each(100) as $element) {
+                $pks[] = $element->id;
+            }
+            $rr->success = true;
+            $rr->message = [
+                'total' => count($pks),
+                'pks'   => $pks,
+            ];
+            \Yii::$app->response->data = $rr;
+            \Yii::$app->end();
             ?>
         <? endif; ?>
 

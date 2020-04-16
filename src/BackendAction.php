@@ -133,6 +133,7 @@ class BackendAction extends Action
             $backendShowing = BackendShowing::find()
                 ->where(['key' => $this->backendShowingKey])
                 //->andWhere(['cms_user_id' => \Yii::$app->user->id])
+                ->andWhere(['cms_site_id' => \Yii::$app->cms->site->id])
                 ->andWhere(['is_default' => 1])
                 ->one();
 
@@ -197,6 +198,7 @@ class BackendAction extends Action
             $this->_backendShowings = BackendShowing::find()->where([
                 'key' => $this->backendShowingKey,
             ])
+                ->andWhere(["cms_site_id" => \Yii::$app->cms->site->id])
                 ->andWhere([
                     'or',
                     ['cms_user_id' => null],

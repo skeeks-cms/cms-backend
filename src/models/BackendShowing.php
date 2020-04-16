@@ -25,6 +25,7 @@ use Yii;
  * @property string|null  $name
  * @property string       $key
  * @property integer      $priority
+ * @property integer      $cms_site_id
  * @property string       $config_jsoned
  *
  * @property integer      $isPublic
@@ -102,10 +103,24 @@ class BackendShowing extends \skeeks\cms\models\Core
             [
                 ['name'],
                 'required',
-                'when'     => function($model) {
+                'when' => function ($model) {
                     return !$model->is_default;
                 },
             ],
+            
+            [['cms_site_id'], 'integer'],
+
+            [
+                'cms_site_id',
+                'default',
+                'value' => function () {
+                    if (\Yii::$app->cms->site) {
+                        return \Yii::$app->cms->site->id;
+                    }
+                },
+            ],
+            
+            ['isPublic', 'integer']
 
         ]);
     }
@@ -124,7 +139,7 @@ class BackendShowing extends \skeeks\cms\models\Core
             'name'        => Yii::t('skeeks/backend', 'Name'),
             'key'         => Yii::t('skeeks/backend', 'Namespace'),
             'is_default'  => Yii::t('skeeks/backend', 'Is Default'),
-            'isPublic'  => Yii::t('skeeks/backend', 'Visible to everyone'),
+            'isPublic'    => Yii::t('skeeks/backend', 'Visible to everyone'),
         ]);
     }
     public function getIsPublic()
@@ -134,7 +149,7 @@ class BackendShowing extends \skeeks\cms\models\Core
 
     public function setIsPublic($value)
     {
-        if ($value) {
+        if ((int) $value) {
             $this->cms_user_id = null;
         } else {
             $this->cms_user_id = \Yii::$app->user->id;
