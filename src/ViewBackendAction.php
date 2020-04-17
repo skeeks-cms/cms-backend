@@ -72,8 +72,9 @@ class ViewBackendAction extends BackendAction
         $this->trigger(self::EVENT_BEFORE_RENDER, $e);
         $result = (string)$e->content;
 
-        $result .= $this->controller->getView()->render($viewName, $params, $this->controller);
-
+        if ($e->isRenderContent) {
+            $result .= $this->controller->getView()->render($viewName, $params, $this->controller);
+        }
 
         //$result .= $this->controller->render($viewName);
 

@@ -163,6 +163,7 @@ class ControllerActionsWidget extends Widget
 
             $options = $this->itemWrapperOptions;
             $options['onclick'] = "new sx.classes.backend.widgets.Action({$actionDataJson}).go(); return false;";
+            $options['data-id'] = $action->id;
 
             if ($this->activeId == $action->id)
             {

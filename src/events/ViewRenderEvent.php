@@ -18,4 +18,9 @@ class ViewRenderEvent extends Event {
      * @var string 
      */
     public $content = '';
+
+    /**
+     * @var bool Рендерить контентент?
+     */
+    public $isRenderContent = true;
 }
