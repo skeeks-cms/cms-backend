@@ -1,3 +1,9 @@
+ul.sx-view-cms-content {
+    margin: 0px;
+}
+ul.sx-view-cms-content {
+    padding-bottom: 0;
+}
 ul.sx-view-cms-content > li
 {
     padding: 5px;
