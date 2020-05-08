@@ -28,6 +28,10 @@ class BackendGridModelRelatedAction extends BackendModelAction
     public $controllerRoute = '';
     public $actionName = 'index';
 
+    /**
+     * @var bool
+     */
+    public $isStandartBeforeRender = true;
     public $filters = true;
     public $backendShowings = true;
     public $relation = [];
@@ -58,8 +62,7 @@ class BackendGridModelRelatedAction extends BackendModelAction
     {
         $result = [];
         if ($this->relation) {
-            foreach ($this->relation as $key => $value)
-            {
+            foreach ($this->relation as $key => $value) {
                 $result[$key] = $model->{$value};
             }
         }
@@ -95,7 +98,7 @@ class BackendGridModelRelatedAction extends BackendModelAction
                 if ($this->filters === false) {
                     $this->relatedIndexAction->filters = $this->filters;
                 }
-                
+
 
                 if ($this->backendShowings === false) {
                     $this->relatedIndexAction->backendShowings = $this->backendShowings;
@@ -122,35 +125,38 @@ class BackendGridModelRelatedAction extends BackendModelAction
 
                 $this->trigger(self::EVENT_GRID_INIT);
 
-                $relation = $this->relation;
+                if ($this->isStandartBeforeRender) {
+                    $relation = $this->relation;
 
-                $this->relatedIndexAction->on('beforeRender', function (Event $event) use ($controller, $relation) {
+                    $this->relatedIndexAction->on('beforeRender', function (Event $event) use ($controller, $relation) {
 
-                    if ($createAction = ArrayHelper::getValue($controller->actions, 'create')) {
+                        if ($createAction = ArrayHelper::getValue($controller->actions, 'create')) {
 
-                        /**
-                         * @var $controller BackendModelController
-                         * @var $createAction BackendModelCreateAction
-                         */
-                        $r = new \ReflectionClass($controller->modelClassName);
+                            /**
+                             * @var $controller BackendModelController
+                             * @var $createAction BackendModelCreateAction
+                             */
+                            $r = new \ReflectionClass($controller->modelClassName);
 
-                        if ($relation) {
-                            $createAction->url = ArrayHelper::merge($createAction->urlData, [
-                                $r->getShortName() => $this->getBindRelation($this->model),
-                            ]);
+                            if ($relation) {
+                                $createAction->url = ArrayHelper::merge($createAction->urlData, [
+                                    $r->getShortName() => $this->getBindRelation($this->model),
+                                ]);
+                            }
+
+                            //$createAction->name = "Добавить платеж";
+
+                            $event->content = ControllerActionsWidget::widget([
+                                    'actions'         => [$createAction],
+                                    'isOpenNewWindow' => true,
+                                    'minViewCount'    => 1,
+                                    'itemTag'         => 'button',
+                                    'itemOptions'     => ['class' => 'btn btn-primary'],
+                                ])."<br>";
                         }
+                    });
+                }
 
-                        //$createAction->name = "Добавить платеж";
-
-                        $event->content = ControllerActionsWidget::widget([
-                                'actions'         => [$createAction],
-                                'isOpenNewWindow' => true,
-                                'minViewCount'    => 1,
-                                'itemTag'         => 'button',
-                                'itemOptions'     => ['class' => 'btn btn-primary'],
-                            ])."<br>";
-                    }
-                });
 
                 return $this->relatedIndexAction->run();
             }
