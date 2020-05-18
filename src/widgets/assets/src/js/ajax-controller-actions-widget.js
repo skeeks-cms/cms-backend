@@ -21,6 +21,30 @@
 
             //Вызов первого действия
 
+            $("body").on("goAction", '.sx-btn-ajax-actions', function(e, eventData) {
+
+                var jQueryBtn = $(this);
+
+                if (!eventData && !eventData.action) {
+                    return false;
+                }
+
+                if (!jQueryBtn.data("content") || jQueryBtn.data("content").length == 0) {
+                    var data = _.clone(jQueryBtn.data());
+                    //Загружаем контент
+                    self._createPopover(jQueryBtn, data, false);
+
+                    jQueryBtn.on("contentComplete", function () {
+                        self._goAction(jQueryBtn, eventData.action);
+                    });
+                } else {
+                    self._goAction(jQueryBtn, eventData.action);
+                }
+            });
+            
+            
+            //Вызов первого действия
+
             $("body").on("firstAction", '.sx-btn-ajax-actions', function(e) {
 
                 var jQueryBtn = $(this);
@@ -108,6 +132,33 @@
             jFirst.click();
 
             jQueryBtn.trigger("firstActionOpen");
+
+            _.delay(function() {
+                jQueryBtn.removeClass("sx-start");
+            }, 1000);
+            return false;
+        },
+
+        _goAction: function(jQueryBtn, actionId) {
+
+            console.log(actionId);
+            if (jQueryBtn.hasClass("sx-start")) {
+                console.log("Еще не завершено предыдущее действие");
+                return false;
+            }
+
+            jQueryBtn.addClass("sx-start");
+
+            var jContent = $($.parseHTML(jQueryBtn.data("content")));
+            console.log(jContent);
+            var jFirst = $("li[data-id=" + actionId + "]", jContent);
+            $('body').append($("<div>", {
+                'style': 'display: none;'
+            }).append(jFirst));
+
+            jFirst.click();
+
+            jQueryBtn.trigger("actionOpen");
 
             _.delay(function() {
                 jQueryBtn.removeClass("sx-start");
