@@ -20,7 +20,7 @@ use yii\helpers\Html;
 class GridViewWidget extends GridView
 {
     public $tableOptions = [
-        'class' => 'table-striped'
+        'class' => 'table-bordered'
     ];
 
     public $defaultTableCssClasses = [
