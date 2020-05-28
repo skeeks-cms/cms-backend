@@ -111,13 +111,13 @@ $backendShowings = $action->backendShowings;
         <? foreach ($backendShowings as $backendShowing) : ?>
             <li class="sx-tab nav-item <?= $backendShowing->id == $action->backendShowing->id ? "active sx-active-tab" : "sx-no-active-tab"; ?>" id="sx-tab-<?= $backendShowing->id; ?>">
                 <a href="<?= $action->getShowingUrl($backendShowing); ?>" class="nav-link <?= $backendShowing->id == $action->backendShowing->id ? "active" : ""; ?>">
-                    <? if ($backendShowing->cms_user_id == \Yii::$app->user->id) : ?> 
-                        <img src="<?= \Yii::$app->user->identity->image ? \Yii::$app->user->identity->avatarSrc : \skeeks\cms\helpers\Image::getCapSrc(); ?>" 
+                    <? if ($backendShowing->cms_user_id == \Yii::$app->user->id) : ?>
+                        <img src="<?= \Yii::$app->user->identity->image ? \Yii::$app->user->identity->avatarSrc : \skeeks\cms\helpers\Image::getCapSrc(); ?>"
                              class="g-width-20 g-width-20 g-height-20 g-height-20 rounded-circle g-mr-5--sm sx-avatar"
                              title="Это представление видите только вы"
                         />
-                    <? endif; ?> 
-                    <?= $backendShowing->displayName; ?> 
+                    <? endif; ?>
+                    <?= $backendShowing->displayName; ?>
 
                     <? if ($backendShowing->id == $action->backendShowing->id) : ?>
 
@@ -199,9 +199,13 @@ $backendShowings = $action->backendShowings;
         <? endif; ?>
 
         <? if (YII_ENV === 'dev' && isset($grid->dataProvider->query)) : ?>
-            <a href="#" onclick="$('.sx-grid-sql').toggle(); return false;" style="text-decoration: none; border-bottom: 1px dashed;">Показать SQL</a>
-            <div class="sx-grid-sql" style="display: none; padding: 1px solid; padding: 10px;">
-                <code><?= $grid->dataProvider->query->createCommand()->rawSql; ?></code>
+            <div style="margin-bottom: 10px;">
+                <a href="#" onclick="$('.sx-grid-sql').toggle(); return false;" style="text-decoration: none; border-bottom: 1px dashed;">Показать SQL</a>
+                <div class="sx-grid-sql" style="display: none; padding: 1px solid; margin-top: 10px;">
+                    <code>
+                        <pre style="margin-bottom: 0;"><?= $grid->dataProvider->query->createCommand()->rawSql; ?></pre>
+                    </code>
+                </div>
             </div>
         <? endif; ?>
 
