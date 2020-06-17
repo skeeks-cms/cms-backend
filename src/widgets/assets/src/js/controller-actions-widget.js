@@ -10,14 +10,14 @@
 
     sx.classes.backend.widgets.Action = sx.classes.Component.extend({
 
-        _init: function()
-        {
+        _init: function() {
             var self = this;
 
             this._window = new sx.classes.Window(this.get('url'), this.get('newWindowName'));
             this._window.setCenterOptions().disableResize().disableLocation();
 
             this.isUpdateAfterClose = false;
+
 
             this._window.on('close', function() {
                 if (self.isUpdateAfterClose) {
@@ -113,22 +113,19 @@
             location.href = this.get('url');
         },
 
-        updateSuccess: function()
-        {
-            if (this.get('pjax-id'))
-            {
+        updateSuccess: function() {
+            if (this.get('pjax-id')) {
                 $.pjax.reload('#' + this.get('pjax-id'), {});
-            } else
-            {
-                window.location.reload();
+            } else {
+                //window.location.reload();
+                sx.Window.trigger('reload');
             }
         },
         
         /**
          * @returns {sx.classes.Window|*}
          */
-        getWindow: function()
-        {
+        getWindow: function() {
             return this._window;
         }
     });
