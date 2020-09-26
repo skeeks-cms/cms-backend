@@ -59,7 +59,7 @@ class FiltersWidget extends QueryFiltersWidget
 
         parent::init();
 
-        Html::addCssClass($this->wrapperOptions, 'sx-backend-filters-wrapper');
+        Html::addCssClass($this->wrapperOptions, 'sx-backend-filters-wrapper sx-bg-secondary');
     }
 
     public function run()
