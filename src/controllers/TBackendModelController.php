@@ -250,7 +250,7 @@ trait TBackendModelController
 
             if ($pk) {
                 $modelClass = $this->modelClassName;
-                $this->_model = $modelClass::findOne($pk);
+                $this->_model = $modelClass::find()->where([$this->modelPkAttribute => $pk])->limit(1)->one();
             }
         }
 
