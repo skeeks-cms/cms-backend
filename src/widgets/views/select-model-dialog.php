@@ -61,7 +61,7 @@ $widget = $this->context;
                         <i class="fa fa-list" title="Выбрать"></i>
                     </a>-->
                     <? if ($widget->allowDeselect) : ?>
-                        <a class="btn btn-default btn-danger btn-xs sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
+                        <a class="btn btn-default btn-danger btn-xs g-color-white sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
                             <i class="fa fa-times"></i>
                         </a>
                     <? endif; ?>
@@ -76,7 +76,7 @@ $widget = $this->context;
                             <i class="fa fa-list" aria-hidden="true"></i>
                         </a>-->
                         <? if ($widget->allowDeselect) : ?>
-                            <a class="btn btn-default btn-danger btn-xs sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
+                            <a class="btn btn-default btn-danger g-color-white btn-xs sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
                                 <i class="fa fa-times"></i>
                             </a>
                         <? endif; ?>

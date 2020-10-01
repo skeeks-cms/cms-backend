@@ -103,6 +103,7 @@ class SelectModelDialogWidget extends InputWidget
      * @var null
      */
     public $modelClassName = null;
+    public $modelPk = "id";
 
 
     public $viewFile = '@skeeks/cms/backend/widgets/views/select-model-dialog';
@@ -130,6 +131,7 @@ class SelectModelDialogWidget extends InputWidget
             $this->wrapperOptions['id'] = $this->id."-wrapper";
         }
         $this->clientOptions['id'] = $this->wrapperOptions['id'];
+        $this->clientOptions['modelpk'] = $this->modelPk;
 
         parent::init();
     }
@@ -181,7 +183,7 @@ class SelectModelDialogWidget extends InputWidget
                     foreach (array_values($this->inputValue) as $id) {
                         if (is_object($id)) {
                             //TODO: не всегда id
-                            $items[$id->id] = $id->id;
+                            $items[$id->{$this->modelPk}] = $id->{$this->modelPk};
                         } else {
                             $items[$id] = $id;
                         }
@@ -204,7 +206,7 @@ class SelectModelDialogWidget extends InputWidget
                     foreach (array_values($this->inputValue) as $id) {
                         if (is_object($id)) {
                             //TODO: не всегда id
-                            $items[$id->id] = $id->id;
+                            $items[$id->{$this->modelPk}] = $id->{$this->modelPk};
                         } else {
                             $items[$id] = $id;
                         }
@@ -300,7 +302,7 @@ JS
         if ($this->inputValue) {
             if (is_array($this->inputValue)) {
                 $result = [];
-                $models = $modelClassName::find()->andWhere(['id' => $this->inputValue])->all();
+                $models = $modelClassName::find()->andWhere([$this->modelPk => $this->inputValue])->all();
                 foreach ($models as $model) {
                     if ($initClientDataModelCallback = $this->initClientDataModelCallback) {
                         $result[] = (array)$initClientDataModelCallback($model);
@@ -316,7 +318,7 @@ JS
 
                 }
             } else {
-                $model = $modelClassName::find()->andWhere(['id' => $this->inputValue])->one();
+                $model = $modelClassName::find()->andWhere([$this->modelPk => $this->inputValue])->one();
 
                 if ($initClientDataModelCallback = $this->initClientDataModelCallback) {
                     if ($model) {

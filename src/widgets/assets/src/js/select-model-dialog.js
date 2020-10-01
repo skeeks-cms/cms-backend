@@ -76,7 +76,7 @@
                     this.renderItem(data)
                 );
 
-                self.setVal(data.id);
+                self.setVal(data[self.get('modelpk')]);
                 this.jQueryDeselectBtn.show();
             } else
             {
@@ -203,7 +203,7 @@
             if (_.size(itemData) > 0)
             {
                 var jLi = $('<li>', {
-                    'data-id' : itemData.id
+                    'data-id' : itemData[self.get('modelpk')]
                 });
 
                 jLi.append(
@@ -237,10 +237,10 @@
                 var val = this.getVal();
                 if (val)
                 {
-                    val.push(String(itemData.id));
+                    val.push(String(itemData[self.get('modelpk')]));
                 } else
                 {
-                    val = [itemData.id];
+                    val = [itemData[self.get('modelpk')]];
                 }
 
                 val = _.uniq(val);
