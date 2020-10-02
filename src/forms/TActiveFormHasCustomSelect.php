@@ -8,11 +8,8 @@
 
 namespace skeeks\cms\backend\forms;
 
-use skeeks\widget\chosen\Chosen;
-use yii\base\Model;
+use skeeks\cms\widgets\Select;
 use yii\helpers\ArrayHelper;
-use yii\helpers\Html;
-use yii\helpers\Json;
 
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
@@ -23,9 +20,9 @@ trait TActiveFormHasCustomSelect
      *
      * Стилизованный селект админки
      *
-     * @param $model
-     * @param $attribute
-     * @param $items
+     * @param       $model
+     * @param       $attribute
+     * @param       $items
      * @param array $config
      * @param array $fieldOptions
      * @return ActiveField
@@ -33,21 +30,20 @@ trait TActiveFormHasCustomSelect
     public function fieldSelect($model, $attribute, $items, $config = [], $fieldOptions = [])
     {
         $config = ArrayHelper::merge(
-            ['allowDeselect' => false],
+            //['allowDeselect' => false],
             $config,
             [
                 'items' => $items,
             ]
         );
 
-        foreach ($config as $key => $value) {
-            if (property_exists(Chosen::className(), $key) === false) {
+        /*foreach ($config as $key => $value) {
+            if (property_exists(Select::class, $key) === false) {
                 unset($config[$key]);
             }
-        }
-
+        }*/
         return $this->field($model, $attribute, $fieldOptions)->widget(
-            Chosen::className(),
+            Select::class,
             $config
         );
     }
@@ -63,10 +59,9 @@ trait TActiveFormHasCustomSelect
     public function fieldSelectMulti($model, $attribute, $items, $config = [], $fieldOptions = [])
     {
         $config = ArrayHelper::merge(
-            $config, //Опции по умолчанию
-            [
-                'multiple' => 'multiple',
-                'size' => 5
+            $config, [
+                'multiple' => true,
+                //'size'     => 5,
             ]
         );
         return $this->fieldSelect($model, $attribute, $items, $config, $fieldOptions);
