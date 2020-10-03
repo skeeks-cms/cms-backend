@@ -14,6 +14,7 @@ use skeeks\cms\backend\actions\BackendModelUpdateAction;
 use skeeks\cms\backend\controllers\BackendModelController;
 use skeeks\cms\backend\models\BackendShowing;
 use skeeks\cms\models\CmsAgent;
+use skeeks\cms\rbac\CmsManager;
 use skeeks\hosting\models\HostingCreateVps;
 use skeeks\sx\helpers\ResponseHelper;
 use skeeks\yii2\config\ConfigComponent;
@@ -29,6 +30,9 @@ class AdminBackendShowingController extends BackendModelController
         $this->name = \Yii::t('skeeks/backend', 'Showings');
         $this->modelShowAttribute = "name";
         $this->modelClassName = BackendShowing::class;
+
+        $this->generateAccessActions = false;
+        $this->permissionName = CmsManager::PERMISSION_ROLE_ADMIN_ACCESS;
 
         parent::init();
     }

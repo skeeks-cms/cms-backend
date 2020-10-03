@@ -15,6 +15,7 @@ use skeeks\cms\backend\ViewBackendAction;
 use skeeks\cms\backend\widgets\GridViewWidget;
 use skeeks\cms\cmsWidgets\gridView\GridViewCmsWidget;
 use skeeks\cms\modules\admin\widgets\gridViewStandart\GridViewStandartAsset;
+use skeeks\cms\rbac\CmsManager;
 use skeeks\cms\widgets\DynamicFiltersWidget;
 use skeeks\cms\widgets\FiltersWidget;
 use skeeks\cms\widgets\GridView;
@@ -103,24 +104,40 @@ class BackendGridModelAction extends ViewBackendAction
             'beforeTableRight'   => function (GridViewWidget $gridViewWidget) {
 
                 $id = \Yii::$app->controller->action->backendShowing->id;
-                $editComponent = [
-                    'url' => \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams([
-                        BackendComponent::getCurrent()->backendShowingControllerRoute.'/component-call-edit',
-                    ])
-                        ->merge([
-                            'id'                 => $id,
-                            'componentClassName' => $gridViewWidget::className(),
-                            'callable_id'        => $gridViewWidget->id."-edit",
+                $editIcon = '';
+                if (\Yii::$app->user->can(CmsManager::PERMISSION_ROLE_ADMIN_ACCESS)) {
+
+                    $editComponent = [
+                        'url' => \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams([
+                            BackendComponent::getCurrent()->backendShowingControllerRoute.'/component-call-edit',
                         ])
-                        ->enableEmptyLayout()
-                        ->enableNoActions()
-                        ->url,
-                ];
-                $editComponent = Json::encode($editComponent);
-                $callableDataInput = Html::textarea('callableData', base64_encode(serialize($gridViewWidget->editData)), [
-                    'id'    => $gridViewWidget->id."-edit",
-                    'style' => 'display: none;',
-                ]);
+                            ->merge([
+                                'id'                 => $id,
+                                'componentClassName' => $gridViewWidget::className(),
+                                'callable_id'        => $gridViewWidget->id."-edit",
+                            ])
+                            ->enableEmptyLayout()
+                            ->enableNoActions()
+                            ->url,
+                    ];
+                    $editComponent = Json::encode($editComponent);
+                    $callableDataInput = Html::textarea('callableData', base64_encode(serialize($gridViewWidget->editData)), [
+                        'id'    => $gridViewWidget->id."-edit",
+                        'style' => 'display: none;',
+                    ]);
+
+                    $editIcon = Html::a('<i class="fa fa-cog"></i>',
+                        '#', [
+                            'class'   => 'btn btn-sm',
+                            'onclick' => new JsExpression(<<<JS
+            new sx.classes.backend.EditComponent({$editComponent}); return false;
+JS
+                            ),
+
+                        ]);
+
+                }
+
 
                 \Yii::$app->request->url;
 
@@ -136,17 +153,7 @@ class BackendGridModelAction extends ViewBackendAction
                         'title'     => 'Экспорт в CSV',
                         'class'     => 'btn btn-sm',
                     ])
-                    .
-                    Html::a('<i class="fa fa-cog"></i>',
-                        '#', [
-                            'class'   => 'btn btn-sm',
-                            'onclick' => new JsExpression(<<<JS
-            new sx.classes.backend.EditComponent({$editComponent}); return false;
-JS
-                            ),
-
-                        ])
-
+                    .  $editIcon
                     .$callableDataInput.
 
                     Html::a('<i class="fa fa-expand"></i>', '#', [
@@ -178,10 +185,10 @@ JS
                 ],
             ],
             'columns'            => [
-                'serial'   => [
+                /*'serial'   => [
                     'class'   => 'yii\grid\SerialColumn',
                     'visible' => false,
-                ],
+                ],*/
                 'checkbox' => [
                     'class'         => 'skeeks\cms\grid\CheckboxColumn',
                     'headerOptions' => [

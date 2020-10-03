@@ -31,7 +31,7 @@ trait TBackendModelAction
      */
     public function getOwnPermissionName()
     {
-        return $this->permissionName.'/own';
+        return $this->permissionName . '/own';
     }
 
     /**
@@ -53,7 +53,7 @@ trait TBackendModelAction
 
     public function init()
     {
-        if ($this->permissionName === null && $this->accessCallback === null && $this->controller->generateAccessActions === true) {
+        if ($this->permissionName === null && $this->generateAccess === true) {
             if ($this->controller->permissionName) {
                 //Если у контроллера задана главная привилегия, то к ней добавляется текущий экшн, и эта строка становится главной привилегией текущего экшена
                 $this->permissionName = $this->controller->permissionName."/".$this->id;
@@ -62,7 +62,9 @@ trait TBackendModelAction
             }
         }
 
-        if ($this->permissionNames === null && $this->accessCallback === null && $this->permissionName && $this->controller->generateAccessActions === true) {
+        if ($this->permissionNames === null && $this->permissionName
+            //&& $this->generateAccess === true
+        ) {
             $this->permissionNames = [
                 $this->permissionName => $this->name,
             ];
@@ -130,19 +132,18 @@ trait TBackendModelAction
     /**
      * @return bool
      */
-    public function getIsVisible()
+    /*public function getIsVisible()
     {
         if (!parent::getIsVisible()) {
             return false;
         }
 
         return $this->isAllow;
-    }
+    }*/
 
 
-    protected function _isAllow()
+    protected function _isAllowPermissions()
     {
-        //Привилегия доступу к админке
         $permissionName = $this->permissionName;
         if ($permissionName) {
             if (!$permission = \Yii::$app->authManager->getPermission($permissionName)) {

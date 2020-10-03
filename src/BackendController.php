@@ -12,11 +12,13 @@ use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\IHasIcon;
 use skeeks\cms\IHasImage;
 use skeeks\cms\IHasName;
+use skeeks\cms\IHasPermission;
 use skeeks\cms\IHasPermissions;
 use skeeks\cms\IHasUrl;
 use skeeks\cms\traits\THasIcon;
 use skeeks\cms\traits\THasImage;
 use skeeks\cms\traits\THasName;
+use skeeks\cms\traits\THasPermission;
 use skeeks\cms\traits\THasPermissions;
 use yii\filters\AccessControl;
 use yii\helpers\ArrayHelper;
@@ -33,18 +35,19 @@ use yii\web\NotFoundHttpException;
  * @package skeeks\cms\backend
  */
 abstract class BackendController extends \skeeks\cms\base\Controller
-    implements IHasPermissions, IHasName, IHasImage, IHasIcon, IHasUrl, IHasInfoActions, IHasMenu, IHasBreadcrumbs
+    implements IHasPermission,IHasPermissions, IHasName, IHasImage, IHasIcon, IHasUrl, IHasInfoActions, IHasMenu, IHasBreadcrumbs
 {
     use THasName;
     use THasImage;
     use THasIcon;
+    use THasPermission;
     use THasPermissions;
 
     /**
      * Генерировать привелегии для доступа к действиям
      * @var bool
      */
-    public $generateAccessActions = true;
+    public $generateAccessActions = false;
 
     /**
      * @var array

@@ -103,6 +103,7 @@ trait TBackendAction
         $this->_accessClassName = $className;
         return $this;
     }
+
     /**
      * @return $this
      */
@@ -123,20 +124,18 @@ trait TBackendAction
      */
     protected function _initAccess()
     {
-
-        $this->controller->attachBehavior('access'.$this->uniqueId,
-            [
-                'class' => $this->accessClassName,
-                'only'  => [$this->id],
-                'rules' => [
-                    [
-                        'allow'         => true,
-                        'matchCallback' => function ($rule, $action) {
-                            return $this->isAllow;
-                        },
-                    ],
+        $this->controller->attachBehavior('access'.$this->uniqueId, [
+            'class' => $this->accessClassName,
+            'only'  => [$this->id],
+            'rules' => [
+                [
+                    'allow'         => true,
+                    'matchCallback' => function ($rule, $action) {
+                        return $this->isAllow;
+                    },
                 ],
-            ]);
+            ],
+        ]);
 
         return $this;
     }

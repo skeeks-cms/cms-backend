@@ -16,6 +16,7 @@ use skeeks\cms\IHasUrl;
 use skeeks\cms\traits\THasIcon;
 use skeeks\cms\traits\THasImage;
 use skeeks\cms\traits\THasName;
+use skeeks\cms\traits\THasPermission;
 use skeeks\cms\traits\THasPermissions;
 use skeeks\cms\traits\THasUrl;
 use yii\base\Component;
@@ -38,6 +39,7 @@ class BackendMenuItem extends Component
     use THasImage;
     use THasIcon;
     use THasUrl;
+    use THasPermission;
     use THasPermissions;
 
     /**
@@ -93,13 +95,13 @@ class BackendMenuItem extends Component
         $controller = null;
         //Default access rights
 
-        if (!$this->permissionNames && is_array($this->_url)) {
+        /*if (!$this->permissionNames && is_array($this->_url)) {
             if ($controller = $this->_getController()) {
                 if ($controller instanceof IHasPermissions) {
                     $this->permissionNames = $controller->permissionNames;
                 }
             }
-        }
+        }*/
 
         //No name specified
         if (!$this->name) {
@@ -245,7 +247,7 @@ class BackendMenuItem extends Component
             return false;
         }
 
-        if ($this->permissionNames) {
+        /*if ($this->permissionNames) {
             foreach ($this->permissionNames as $permissionName => $permissionLabel) {
                 if ($permission = \Yii::$app->authManager->getPermission($permissionName)) {
                     if (!\Yii::$app->user->can($permission->name)) {
@@ -255,7 +257,7 @@ class BackendMenuItem extends Component
                     return false;
                 }
             }
-        }
+        }*/
 
         return true;
     }

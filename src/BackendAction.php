@@ -14,12 +14,14 @@ use skeeks\cms\helpers\StringHelper;
 use skeeks\cms\IHasIcon;
 use skeeks\cms\IHasImage;
 use skeeks\cms\IHasName;
+use skeeks\cms\IHasPermission;
 use skeeks\cms\IHasPermissions;
 use skeeks\cms\IHasUrl;
 use skeeks\cms\modules\admin\widgets\ControllerActions;
 use skeeks\cms\traits\THasIcon;
 use skeeks\cms\traits\THasImage;
 use skeeks\cms\traits\THasName;
+use skeeks\cms\traits\THasPermission;
 use skeeks\cms\traits\THasPermissions;
 use skeeks\cms\traits\THasUrl;
 use yii\base\Action;
@@ -31,19 +33,21 @@ use yii\helpers\Inflector;
 /**
  * @property IHasInfoActions $controller
  * @property string          $backendShowingKey
- * @property []|null $backendShowings
+ * @property []|null        $backendShowings
+ * @property bool            $generateAccess
  *
  * Class AdminViewAction
  * @package skeeks\cms\modules\admin\actions
  */
 class BackendAction extends Action
-    implements IHasName, IHasIcon, IHasImage, IHasUrl, IBackendAction, IHasPermissions
+    implements IHasName, IHasIcon, IHasImage, IHasUrl, IBackendAction, IHasPermissions, IHasPermission
 {
     use THasName;
     use THasImage;
     use THasIcon;
     use THasUrl;
     use TBackendAction;
+    use THasPermission;
     use THasPermissions;
 
     const EVENT_INIT = "init";
@@ -58,6 +62,26 @@ class BackendAction extends Action
      */
     protected $_backendShowing = null;
     protected $_backendShowings = null;
+
+    protected $_generateAccess = null;
+
+    /**
+     * @return bool
+     */
+    public function getGenerateAccess()
+    {
+        if ($this->_generateAccess === null) {
+            return $this->controller->generateAccessActions;
+        }
+
+        return (bool)$this->_generateAccess;
+    }
+
+    public function setGenerateAccess($value)
+    {
+        $this->_generateAccess = $value;
+        return $this;
+    }
 
     public function init()
     {
@@ -74,17 +98,16 @@ class BackendAction extends Action
             throw new InvalidConfigException('"'.static::class.'::callback Should be a valid callback"');
         }
 
-        if ($this->permissionName === null && $this->accessCallback === null && $this->controller->generateAccessActions === true) {
+        if ($this->permissionName === null && $this->generateAccess === true) {
             if ($this->controller->permissionName) {
                 //Если у контроллера задана главная привилегия, то к ней добавляется текущий экшн, и эта строка становится главной привилегией текущего экшена
-                $this->permissionName = $this->controller->permissionName . "/" . $this->id;
+                $this->permissionName = $this->controller->permissionName."/".$this->id;
             } else {
                 $this->permissionName = $this->uniqueId;
             }
-
         }
 
-        if ($this->permissionNames === null && $this->accessCallback === null && $this->permissionName && $this->controller->generateAccessActions === true) {
+        if ($this->permissionNames === null && $this->permissionName) {
             $this->permissionNames = [
                 $this->permissionName => $this->name,
             ];
@@ -96,6 +119,8 @@ class BackendAction extends Action
 
         $this->trigger(self::EVENT_INIT, new Event());
     }
+
+
     /**
      * @return $this|mixed
      */
