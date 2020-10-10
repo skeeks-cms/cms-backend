@@ -94,7 +94,7 @@ class BackendAction extends Action
             throw new InvalidParamException('This action is designed to work with the controller: '.IHasInfoActions::class);
         }
 
-        if ($this->callback && !is_callable($this->callback)) {
+        if ($this->callback && (!is_callable($this->callback) && !is_array($this->callback))) {
             throw new InvalidConfigException('"'.static::class.'::callback Should be a valid callback"');
         }
 
