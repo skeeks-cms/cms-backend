@@ -124,7 +124,7 @@ class ControllerActionsWidget extends Widget
     public function run()
     {
         ControllerActionsWidgetAsset::register($this->getView());
-        $actions = $this->actions;
+        $actions = $this->getVisibleActions();
 
         if (!$actions || count($actions) < $this->minViewCount)
         {
@@ -144,7 +144,7 @@ class ControllerActionsWidget extends Widget
     {
         $result = [];
 
-        $actions = $this->actions;
+        $actions = $this->getVisibleActions();
 
         if (!$actions)
         {
@@ -254,5 +254,21 @@ class ControllerActionsWidget extends Widget
         };
 
         return $action->url;
+    }
+    
+    
+    public function getVisibleActions()
+    {
+        $result = [];
+        if ($this->actions) {
+            foreach ($this->actions as $id => $action)
+            {
+                if ($action->isVisible) {
+                    $result[$id] = $action;
+                }
+            }
+        }
+        
+        return $result;
     }
 }

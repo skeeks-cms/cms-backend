@@ -321,9 +321,9 @@ trait TBackendModelController
                 $action = $this->createAction($id);
 
                 if ($action instanceof IBackendModelMultiAction) {
-                    if ($action->isVisible) {
+                    //if ($action->isVisible) {
                         $this->_modelMultiActions[$action->id] = $action;
-                    }
+                    //}
                 }
             }
         } else {
@@ -355,9 +355,9 @@ trait TBackendModelController
                 $action = $this->createAction($id);
 
                 if (!$action instanceof IBackendModelAction && !$action instanceof IBackendModelMultiAction) {
-                    if ($action->isVisible) {
+                    //if ($action->isVisible) {
                         $this->_actions[$id] = $action;
-                    }
+                    //}
                 }
             }
         } else {

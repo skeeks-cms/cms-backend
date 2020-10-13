@@ -77,12 +77,12 @@ class BackendModelCreateAction extends ViewBackendAction
 
         $rr = new RequestResponse();
 
-        if (\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax) {
+        /*if (\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax) {
             foreach ($this->formModels as $model) {
                 $model->load(\Yii::$app->request->post());
             }
             return ActiveForm::validateMultiple($this->formModels);
-        }
+        }*/
 
         if ($post = \Yii::$app->request->post()) {
             foreach ($this->formModels as $fmodel) {
