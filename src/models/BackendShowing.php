@@ -162,7 +162,7 @@ class BackendShowing extends \skeeks\cms\models\Core
     public function getDisplayName()
     {
         if (!$this->name) {
-            return \Yii::t('skeeks/backend', 'Showing');
+            return \Yii::t('skeeks/backend', 'Все');
         }
 
         return $this->name;
