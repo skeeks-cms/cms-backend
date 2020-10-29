@@ -71,7 +71,7 @@ JS
 <? if ($component->configStorage->exists($component->configBehavior)) : ?>
     <div class="row">
         <div class="col-md-12">
-            <button href="#" class="btn btn-danger btn-xs pull-right sx-btn-remove">
+            <button href="#" class="btn btn-danger btn-xs float-right sx-btn-remove">
                 <span class="fa fa-trash"></span> Удалить настройки
             </button>
         </div>

@@ -153,7 +153,7 @@ echo $builder->render();
             <button class="btn btn-default btn-secondary sx-save-values"><i class="fa fa-check"></i> Сохранить</button>
         </div>
         <div class="col-sm-2">
-            <a class="btn btn-default btn-secondary btn-sm  sx-edit-trigger pull-right" href="#">
+            <a class="btn btn-default btn-secondary btn-sm  sx-edit-trigger float-right" href="#">
                 <i class="fa fa-plus"></i>
             </a>
         </div>

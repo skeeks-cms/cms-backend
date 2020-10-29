@@ -52,7 +52,7 @@ class ActiveField extends \yii\bootstrap\ActiveField {
     {
         $this->parts['{controlls}'] = <<<HTML
         <div class="col-sm-2 sx-field-controll">
-            <div class="sx-field-config-controll pull-right">
+            <div class="sx-field-config-controll float-right">
                 <a href="#" class="btn btn-xs sx-move" title="Поменять порядок">
                     <i class="fas fa-arrows-alt-v"></i>
                 </a>

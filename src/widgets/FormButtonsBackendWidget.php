@@ -34,7 +34,7 @@ class FormButtonsBackendWidget extends Widget
     /**
      * @var string
      */
-    public $template = "<span class='sx-save-btns-group'>{saveAndClose} {save}</span><span class='sx-prev-next-btns-group sx-btns-group'>{prevNext}</span><span class='sx-other-btns-group sx-btns-group'>{other}</span><span class='sx-close-btns-group sx-btns-group pull-right'>{close}</span>";
+    public $template = "<span class='sx-save-btns-group'>{saveAndClose} {save}</span><span class='sx-prev-next-btns-group sx-btns-group'>{prevNext}</span><span class='sx-other-btns-group sx-btns-group'>{other}</span><span class='sx-close-btns-group sx-btns-group float-right'>{close}</span>";
 
     /**
      * @var string Дополнительные кнопки или контент

@@ -212,7 +212,7 @@
 
                 jLiCloseBtm = $("<a>", {
                     'href' : '#',
-                    'class' : 'sx-close-btn pull-right',
+                    'class' : 'sx-close-btn float-right',
                 }).append('<i class="fa fa-times"></i>').appendTo(jLi);
 
                 jLiCloseBtm.on('click', function()
