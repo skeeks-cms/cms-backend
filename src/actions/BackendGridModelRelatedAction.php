@@ -71,6 +71,7 @@ class BackendGridModelRelatedAction extends BackendModelAction
     }
 
     public $relatedController = null;
+
     public function run()
     {
         if ($controller = \Yii::$app->createController($this->controllerRoute)) {
