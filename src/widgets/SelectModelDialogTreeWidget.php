@@ -64,7 +64,7 @@ class SelectModelDialogTreeWidget extends SelectModelDialogWidget
                     imagesrc = data.image;
                 }
                 
-                return '<img src="' + imagesrc + '" style="max-width: 50px; max-height: 50px;" /> <a href="' + data.url + '" target="_blank" data-pjax="0">' + data.fullName + '</a>'
+                return '<img src="' + imagesrc + '" style="max-width: 30px; max-height: 30px;" /> <a href="' + data.url + '" target="_blank" data-pjax="0" title="' + data.fullName + '">' + data.name + '</a>'
             }
 JS
             );

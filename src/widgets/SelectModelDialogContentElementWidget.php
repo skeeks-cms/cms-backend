@@ -70,7 +70,7 @@ class SelectModelDialogContentElementWidget extends SelectModelDialogWidget
                     imagesrc = data.image;
                 }
                 
-                return '<img src="' + imagesrc + '" style="max-width: 50px; max-height: 50px;" /> <a href="' + data.url + '" target="_blank" data-pjax="0">' + data.name + '</a>'
+                return '<img src="' + imagesrc + '" style="max-width: 30px; max-height: 30px;" /> <a href="' + data.url + '" target="_blank" data-pjax="0">' + data.name + '</a>'
             }
 JS
             );

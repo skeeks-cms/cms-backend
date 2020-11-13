@@ -1,16 +1,20 @@
 ul.sx-view-cms-content {
     margin: 0px;
-}
-ul.sx-view-cms-content {
     padding-bottom: 0;
+    overflow: hidden;
+
 }
 ul.sx-view-cms-content > li
 {
     padding: 5px;
-    font-size: 14px;
+    font-size: 13px;
     font-weight: bold;
-    line-height: 50px;
+    /*line-height: 50px;*/
+    white-space: nowrap;
+    position: relative;
+    display: inline-block;
 }
+
 
 ul.sx-view-cms-content > li:hover
 {
@@ -22,11 +26,20 @@ ul.sx-view-cms-content
     list-style: none;
 }
 
+ul.sx-view-cms-content > li .sx-close-btn-wrapper {
+    width: 20px;
+    text-align: right;
+    font-weight: normal;
+}
+
 ul.sx-view-cms-content > li .sx-close-btn
 {
-    color: red;
+    color: gray;
     display: none;
-    line-height: 50px;
+    /*line-height: 50px;*/
+    /*position: absolute;
+    right: 5px;
+    top: 6px;*/
 }
 ul.sx-view-cms-content > li:hover .sx-close-btn
 {
