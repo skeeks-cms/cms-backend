@@ -278,6 +278,10 @@ trait TBackendModelController
 
         if ($actions) {
             foreach ($actions as $id => $data) {
+                if (!is_subclass_of($data['class'], IBackendModelAction::class)) {
+                    continue;
+                }
+
                 $action = $this->createAction($id);
 
                 if (isset($action->isVisible) && $action->isVisible) {
@@ -318,6 +322,10 @@ trait TBackendModelController
 
         if ($actions) {
             foreach ($actions as $id => $data) {
+                if (!is_subclass_of($data['class'], IBackendModelMultiAction::class)) {
+                    continue;
+                }
+                
                 $action = $this->createAction($id);
 
                 if ($action instanceof IBackendModelMultiAction) {
