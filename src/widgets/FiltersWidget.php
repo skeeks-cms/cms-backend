@@ -42,19 +42,6 @@ class FiltersWidget extends QueryFiltersWidget
 
     public function init()
     {
-        /*$defaultOptions = [
-            'class' => ActiveForm::class,
-            'fieldClass' => ActiveField::class,
-            'layout' => 'horizontal',
-            'options' => [
-                'class' => 'sx-backend-filters-form',
-                'data-pjax' => 1
-            ],
-            'fieldConfig' => [
-                'template' => "{label}\n{beginWrapper}\n<div class='sx-filter-wrapper'>{input}</div>\n{hint}\n{error}\n{endWrapper}{controlls}",
-            ]
-        ];*/
-
         $this->activeForm = ArrayHelper::merge($this->defaultActiveForm, $this->activeForm);
 
         parent::init();
