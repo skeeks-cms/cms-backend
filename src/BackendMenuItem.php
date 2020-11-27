@@ -261,4 +261,23 @@ class BackendMenuItem extends Component
 
         return true;
     }
+
+    /**
+     * @param $name
+     * @return $this
+     */
+    public function setLabel($name)
+    {
+        $this->setName($name);
+        return $this;
+    }
+    /**
+     * @param $name
+     * @return $this
+     */
+    public function setImg($imgData)
+    {
+        $this->setImage($imgData);
+        return $this;
+    }
 }
