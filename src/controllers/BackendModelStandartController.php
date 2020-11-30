@@ -53,7 +53,6 @@ class BackendModelStandartController extends BackendModelController
                     return \Yii::$app->user->can($this->permissionName . "/delete", ['model' => $model]);
                 },
                 "accessCallback" => function() {
-            print_r($this->permissionName);die;
                     return \Yii::$app->user->can($this->permissionName . "/delete");
                 },
             ],

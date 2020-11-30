@@ -114,6 +114,10 @@
         },
 
         updateSuccess: function() {
+            var successCallback = this.get('updateSuccessCallback');
+            if (successCallback) {
+                return successCallback(this);
+            }
             if (this.get('pjax-id')) {
                 $.pjax.reload('#' + this.get('pjax-id'), {});
             } else {
