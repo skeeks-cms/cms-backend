@@ -105,6 +105,7 @@ class BackendGridModelAction extends ViewBackendAction
 
                 $id = \Yii::$app->controller->action->backendShowing->id;
                 $editIcon = '';
+                $callableDataInput = '';
                 if (\Yii::$app->user->can(CmsManager::PERMISSION_ROLE_ADMIN_ACCESS)) {
 
                     $editComponent = [

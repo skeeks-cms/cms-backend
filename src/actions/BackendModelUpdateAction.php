@@ -52,6 +52,8 @@ class BackendModelUpdateAction extends BackendModelAction
 
         parent::init();
     }
+    
+    
     public function run()
     {
         $is_saved = false;
@@ -65,13 +67,6 @@ class BackendModelUpdateAction extends BackendModelAction
         $this->trigger(self::EVENT_INIT_FORM_MODELS);
 
         $rr = new RequestResponse();
-
-        /*if (\Yii::$app->request->isAjax && !\Yii::$app->request->isPjax) {
-            foreach ($this->formModels as $model) {
-                $model->load(\Yii::$app->request->post());
-            }
-            return ActiveForm::validateMultiple($this->formModels);
-        }*/
 
         if ($post = \Yii::$app->request->post()) {
             foreach ($this->formModels as $model) {
