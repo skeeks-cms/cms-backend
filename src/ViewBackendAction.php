@@ -73,7 +73,8 @@ class ViewBackendAction extends BackendAction
         $result = (string)$e->content;
 
         if ($e->isRenderContent) {
-            $result .= $this->controller->getView()->render($viewName, $params, $this->controller);
+            //$result .= $this->controller->getView()->render($viewName, $params, $this->controller);
+            $result .= $this->controller->renderPartial($viewName, $params);
         }
 
         //$result .= $this->controller->render($viewName);
