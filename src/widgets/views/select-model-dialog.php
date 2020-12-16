@@ -49,10 +49,10 @@ $widget = $this->context;
                         <?= $input; ?>
                     </div>
                 <? endif; ?>
-                <div class="col-lg-9 col-md-9 col-sm-6 col-xs-6">
+                <div class="<?php echo $widget->visibleInput ? "col-lg-9 col-md-9" : "col-lg-12 col-md-12"; ?> col-sm-6 col-xs-6">
 
                     <span class="sx-view-cms-content">
-
+                        
                     </span>
 
                     <?= \yii\helpers\Html::tag($widget->selectBtn['tag'], $widget->selectBtn['content'], $widget->selectBtn['options'])?>
@@ -61,7 +61,7 @@ $widget = $this->context;
                         <i class="fa fa-list" title="Выбрать"></i>
                     </a>-->
                     <? if ($widget->allowDeselect) : ?>
-                        <a class="btn btn-default btn-danger btn-xs g-color-white sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> title="Очистить выбранное">
+                        <a class="btn btn-default btn-danger sx-btn-deselect" <?= !$widget->hasValue() ? "style='display: none;'": ""?> data-toggle="tooltip" title="Очистить выбранное">
                             <i class="fa fa-times"></i>
                         </a>
                     <? endif; ?>
