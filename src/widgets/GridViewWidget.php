@@ -20,7 +20,7 @@ use yii\helpers\Html;
 class GridViewWidget extends GridView
 {
     public $tableOptions = [
-        'class' => 'table-bordered'
+        'class' => 'table-striped'
     ];
 
     public $defaultTableCssClasses = [
@@ -66,10 +66,10 @@ class GridViewWidget extends GridView
                       {afterTable}
                       <div class='row sx-table-additional'>
                           <div class='col-md-12'>
-                      \n<div class='float-left'>{pager}</div>
-                      \n<div class='float-left'>{perPage}</div>
-                      \n<!--<div class='float-left'>{sorter}</div>-->
-                        <div class='float-right'>{summary}</div></div>
+                      \n<div class='pull-left'>{pager}</div>
+                      \n<div class='pull-left'>{perPage}</div>
+                      \n<!--<div class='pull-left'>{sorter}</div>-->
+                        <div class='pull-right'>{summary}</div></div>
                       </div>";
 
 
@@ -119,9 +119,9 @@ class GridViewWidget extends GridView
             }
 
             return <<<HTML
-        <div class='sx-before-table sx-bg-secondary'>
-            <div class='float-left'>{$this->beforeTableLeft}</div>
-            <div class='float-right'>{$this->beforeTableRight}</div>
+        <div class='sx-before-table'>
+            <div class='pull-left'>{$this->beforeTableLeft}</div>
+            <div class='pull-right'>{$this->beforeTableRight}</div>
           </div>
 HTML;
         } else {
@@ -142,8 +142,8 @@ HTML;
                 $this->afterTableRight = call_user_func($this->afterTableRight, $this);
             }
             return "<div class='sx-after-table'>
-                        <div class='float-left'>{$this->afterTableLeft}</div>
-                        <div class='float-right'>{$this->afterTableRight}</div>
+                        <div class='pull-left'>{$this->afterTableLeft}</div>
+                        <div class='pull-right'>{$this->afterTableRight}</div>
                     </div>";
         } else {
             return "";
@@ -179,14 +179,19 @@ HTML;
         }
 
         $id = $this->id."-per-page";
-        
-        
 
         $get = \Yii::$app->request->get();
         ArrayHelper::remove($get, $pagination->pageSizeParam);
         $get[$pagination->pageSizeParam] = "";
 
         $url = '/'.\Yii::$app->request->pathInfo."?".http_build_query($get);
+
+
+        if (!isset($items[$pagination->pageSize])) {
+            $items[$pagination->pageSize] = $pagination->pageSize;
+        }
+
+        ksort($items);
 
         $this->view->registerJs(<<<JS
 (function(sx, $, _)
