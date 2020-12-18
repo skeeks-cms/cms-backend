@@ -50,10 +50,18 @@ class BackendModelStandartController extends BackendModelController
             "delete-multi" => [
                 'class' => BackendModelMultiDeleteAction::class,
                 "eachAccessCallback" => function($model) {
-                    return \Yii::$app->user->can($this->permissionName . "/delete", ['model' => $model]);
+                    if ($this->generateAccessActions) {
+                        return \Yii::$app->user->can($this->permissionName . "/delete", ['model' => $model]);
+                    }
+                    
+                    return true;
                 },
                 "accessCallback" => function() {
-                    return \Yii::$app->user->can($this->permissionName . "/delete");
+                    if ($this->generateAccessActions) {
+                        return \Yii::$app->user->can($this->permissionName . "/delete");
+                    }
+                    
+                    return true;
                 },
             ],
         ]);
