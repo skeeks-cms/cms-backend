@@ -240,6 +240,7 @@ trait TBackendModelController
 
         return isset($this->model->{$this->modelPkAttribute}) ? $this->model->{$this->modelPkAttribute} : '';
     }
+
     /**
      * @return Model|ActiveRecord
      */
@@ -250,7 +251,10 @@ trait TBackendModelController
 
             if ($pk) {
                 $modelClass = $this->modelClassName;
-                $this->_model = $modelClass::find()->where([$this->modelPkAttribute => $pk])->limit(1)->one();
+
+                $this->_model = $modelClass::find()
+                    ->where([$this->modelPkAttribute => $pk])
+                    ->limit(1)->one();
             }
         }
 
