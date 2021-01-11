@@ -289,7 +289,7 @@ trait TBackendModelController
                 $action = $this->createAction($id);
 
                 if (isset($action->isVisible) && $action->isVisible) {
-                    if (method_exists($this->model, 'getIsNewRecord')) {
+                    if ($this->model && method_exists($this->model, 'getIsNewRecord')) {
                         if ($this->model && !$this->model->isNewRecord && $action instanceof IBackendModelAction) {
                             $this->_modelActions[$action->id] = $action;
                         }
@@ -304,7 +304,7 @@ trait TBackendModelController
             }
         } else {
             $this->_modelActions = [];
-        }
+        }Builder
 
         if ($this->_modelActions) {
             ArrayHelper::multisort($this->_modelActions, 'priority');
