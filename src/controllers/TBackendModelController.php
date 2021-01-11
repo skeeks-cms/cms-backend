@@ -304,7 +304,7 @@ trait TBackendModelController
             }
         } else {
             $this->_modelActions = [];
-        }Builder
+        }
 
         if ($this->_modelActions) {
             ArrayHelper::multisort($this->_modelActions, 'priority');
