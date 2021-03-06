@@ -7,7 +7,9 @@
 
 namespace skeeks\cms\backend\widgets;
 
+use skeeks\cms\backend\widgets\assets\BackendFiltersWidgetAsset;
 use skeeks\cms\backend\widgets\filters\ActiveField;
+use skeeks\cms\backend\widgets\filters\Bootstrap4InlineActiveField;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\queryfilters\QueryFiltersWidget;
 use yii\bootstrap\ActiveForm;
@@ -23,21 +25,31 @@ use yii\helpers\Json;
 class FiltersWidget extends QueryFiltersWidget
 {
 
-    public $viewFile = 'filters';
+    public $viewFile = '@skeeks/cms/backend/widgets/views/filters';
     public $isOpened = false;
 
     public $defaultActiveForm = [
-        'class'       => ActiveForm::class,
-        'fieldClass'  => ActiveField::class,
-        'layout'      => 'horizontal',
+
+        'class'       => '\yii\bootstrap4\ActiveForm',
+        'fieldClass'  => Bootstrap4InlineActiveField::class,
+        'layout'      => 'inline',
         'options'     => [
-            'class'     => 'sx-backend-filters-form ',
+            'class'     => 'sx-backend-filters-form',
             'data-pjax' => 1,
         ],
         'method'      => 'get',
-        'fieldConfig' => [
+
+        //'class'       => ActiveForm::class,
+        //'fieldClass'  => ActiveField::class,
+        //'layout'      => 'inline',
+        /*'options'     => [
+            'class'     => 'sx-backend-filters-form ',
+            'data-pjax' => 1,
+        ],*/
+        //'method'      => 'get',
+        /*'fieldConfig' => [
             'template' => "{label}\n{beginWrapper}\n<div class='sx-filter-wrapper'>{input}</div>\n{hint}\n{error}\n{endWrapper}{controlls}",
-        ],
+        ],*/
     ];
 
     public function init()
@@ -52,7 +64,7 @@ class FiltersWidget extends QueryFiltersWidget
     public function run()
     {
         if (\Yii::$app->request->isPost && \Yii::$app->request->isAjax) {
-            if (\Yii::$app->request->post('act')) {
+            if (\Yii::$app->request->post('act') && \Yii::$app->request->post('widgetid') == $this->id) {
                 ob_get_clean();
                 $rr = new RequestResponse();
                 if (\Yii::$app->request->post('act') == 'remove-item') {
@@ -100,6 +112,17 @@ class FiltersWidget extends QueryFiltersWidget
                     } catch (\Exception $e) {
 
                     }
+                } elseif (\Yii::$app->request->post('act') == 'available-filters') {
+                    /*try {
+                        $query = \Yii::$app->request->post("search-available");
+                        $rr->success = true;
+                        $rr->data = [
+                            'attributes' => $this->getAvailableColumns($query)
+                        ];
+
+                    } catch (\Exception $e) {
+
+                    }*/
                 }
 
                 \Yii::$app->response->data = $rr;
@@ -156,6 +179,84 @@ class FiltersWidget extends QueryFiltersWidget
                 return false;
             });
             
+            //Клик добавить фильтр, запускает загрузку фильтров
+            $('.sx-add-new-filter', this.jWrapper).on('show.bs.dropdown', function () {
+                console.log("show.bs.dropdown");
+                $(".filter-search__input input", self.jWrapper).trigger("keyup");
+            });
+            
+            /*
+            $('.sx-add-new-filter', this.jWrapper).on('show.bs.dropdown', function () {
+                console.log("show.bs.dropdown");
+                $(".filter-search__input input", self.jWrapper).trigger("keyup");
+            });*/
+            
+            //Поиск фильтров
+            /*$('.filter-search__input input', this.jWrapper).on('keyup', function () {
+                
+                var Blocker = new sx.classes.Blocker($(".dropdown-menu", $(".sx-add-new-filter")));
+                var searchavailable = $(this).val();
+                
+                
+                var data = self.jForm.serializeArray();
+    
+                if ($('[name=act]', self.jForm).length) {
+                    $('[name=act]', self.jForm).val('available-filters');
+                } else {
+                    self.jForm.append(
+                        $("<input>", {
+                            'name' : 'act',
+                            'value' : 'available-filters',
+                            'type' : 'hidden'
+                        })
+                    );
+                }
+                
+                self.jForm.append(
+                    $("<input>", {
+                        'name' : 'widgetid',
+                        'value' : self.get('id'),
+                        'type' : 'hidden'
+                    })
+                );
+                
+                self.jForm.append(
+                    $("<input>", {
+                        'name' : 'search-available',
+                        'value' : searchavailable,
+                        'type' : 'hidden'
+                    })
+                );
+            
+                var data = self.jForm.serializeArray();
+        
+                var action = self.jForm.attr('action');
+                if (self.jForm.data('real-action')) {
+                    action = self.jForm.data('real-action');
+                }
+                
+                var ajaxQuery = sx.ajax.preparePostQuery(action, data);
+                
+                var handler = new sx.classes.AjaxHandlerStandartRespose(ajaxQuery, {
+                    'blocker' : Blocker,
+                    'enableBlocker' : true,
+                });
+                
+                new sx.classes.AjaxHandlerNoLoader(ajaxQuery);
+                
+                handler.on("success", function(e, data) {
+                    
+                    if (_.each(data.data.attributes, function() {
+                        
+                    }));
+                    
+                });
+                
+                ajaxQuery.execute();
+                
+            });*/
+            
+            
             this._initSortable();
         },
         
@@ -202,6 +303,14 @@ class FiltersWidget extends QueryFiltersWidget
                         );
                     }
                     
+                    self.jForm.append(
+                        $("<input>", {
+                            'name' : 'widgetid',
+                            'value' : self.get('id'),
+                            'type' : 'hidden'
+                        })
+                    );
+                    
                     self.jForm.children(".form-group").each(function(i, element)
                     {
                         newSort.push($(this).data("attribute"));
@@ -216,7 +325,12 @@ class FiltersWidget extends QueryFiltersWidget
 
                     var data = self.jForm.serializeArray();
         
-                    var ajaxQuery = sx.ajax.preparePostQuery(self.jForm.attr('action'), data);
+                    var action = self.jForm.attr('action');
+                    if (self.jForm.data('real-action')) {
+                        action = self.jForm.data('real-action');
+                    }
+                    
+                    var ajaxQuery = sx.ajax.preparePostQuery(action, data);
                     
                     var handler = new sx.classes.AjaxHandlerStandartRespose(ajaxQuery, {
                         'blocker' : self.Blocker,
@@ -249,6 +363,14 @@ class FiltersWidget extends QueryFiltersWidget
         
             self.jForm.append(
                 $("<input>", {
+                    'name' : 'widgetid',
+                    'value' : self.get('id'),
+                    'type' : 'hidden'
+                })
+            );
+        
+            self.jForm.append(
+                $("<input>", {
                     'name' : 'attribute',
                     'value' : attribute,
                     'type' : 'hidden'
@@ -257,7 +379,12 @@ class FiltersWidget extends QueryFiltersWidget
             
             var data = this.jForm.serializeArray();
         
-            var ajaxQuery = sx.ajax.preparePostQuery(this.jForm.attr('action'), data);
+            var action = this.jForm.attr('action');
+            if (this.jForm.data('real-action')) {
+                action = this.jForm.data('real-action');
+            }
+            
+            var ajaxQuery = sx.ajax.preparePostQuery(action, data);
             
             var handler = new sx.classes.AjaxHandlerStandartRespose(ajaxQuery, {
                 'blocker' : self.Blocker,
@@ -283,8 +410,14 @@ class FiltersWidget extends QueryFiltersWidget
                     })
                 );
             }
-        
-        
+            
+            self.jForm.append(
+                $("<input>", {
+                    'name' : 'widgetid',
+                    'value' : self.get('id'),
+                    'type' : 'hidden'
+                })
+            );
         
             self.jForm.append(
                 $("<input>", {
@@ -296,7 +429,12 @@ class FiltersWidget extends QueryFiltersWidget
             
             var data = this.jForm.serializeArray();
         
-            var ajaxQuery = sx.ajax.preparePostQuery(this.jForm.attr('action'), data);
+            var action = this.jForm.attr('action');
+            if (this.jForm.data('real-action')) {
+                action = this.jForm.data('real-action');
+            }
+            
+            var ajaxQuery = sx.ajax.preparePostQuery(action, data);
             
             var handler = new sx.classes.AjaxHandlerStandartRespose(ajaxQuery);
             
@@ -319,6 +457,13 @@ class FiltersWidget extends QueryFiltersWidget
                 );
             }
             
+            self.jForm.append(
+                $("<input>", {
+                    'name' : 'widgetid',
+                    'value' : self.get('id'),
+                    'type' : 'hidden'
+                })
+            );
             
             var data = this.jForm.serializeArray();
 
@@ -344,6 +489,7 @@ class FiltersWidget extends QueryFiltersWidget
 JS
         );
 
+        BackendFiltersWidgetAsset::register(\Yii::$app->view);
         return parent::run();
     }
 }

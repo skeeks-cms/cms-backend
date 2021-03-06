@@ -63,7 +63,7 @@ class SelectModelDialogWidget extends InputWidget
      * @var array
      */
     public $wrapperOptions = [
-        "class" => "row",
+        "class" => "",
     ];
     /**
      * @var array
