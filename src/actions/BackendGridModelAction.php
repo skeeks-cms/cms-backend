@@ -140,8 +140,6 @@ JS
                 }
 
 
-                \Yii::$app->request->url;
-
                 $url = Url::current([
                     $gridViewWidget->exportParam => $gridViewWidget->id,
                 ]);
