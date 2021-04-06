@@ -167,7 +167,6 @@ class BackendUrlRule
             $url .= '?'.$query;
         }
 
-
         return $url;
     }
 
