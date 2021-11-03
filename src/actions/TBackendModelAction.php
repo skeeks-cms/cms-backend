@@ -118,7 +118,7 @@ trait TBackendModelAction
 
     public function run()
     {
-        if ($this->callback) {
+        if ($this->callback && is_callable($this->callback)) {
             return call_user_func($this->callback, $this);
         }
 
