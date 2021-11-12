@@ -24,9 +24,14 @@ form.sx-backend-form
             font-weight: bold;
         }
 
+    form.sx-backend-form .hint-block:hover {
+        opacity: 1;
+    }
+
     form.sx-backend-form .hint-block
     {
         font-size: 11px;
+        opacity: 0.6;
     }
 
     form.sx-backend-form .sx-from-required
@@ -65,15 +70,6 @@ form.sx-backend-form
         font-size: 14px;
     }
 
-    form.sx-backend-form .form-group
-    {
-        padding: 5px;
-        margin-bottom: 0px;
-    }
-    form.sx-backend-form .form-group:hover
-    {
-        background: rgba(93, 195, 231, 0.15);
-    }
 
 
 .sx-backend-form .error-summary
@@ -98,7 +94,7 @@ form.sx-backend-form .form-group {
 }
 
 form.sx-backend-form .form-group:hover {
-    background: #e6ecec;
+    background: #f5f5f5;
 }
 
 form.sx-backend-form {
@@ -133,4 +129,21 @@ form.sx-backend-form .tab-content {
 
 .sx-backend-form .sx-inline-row label {
     margin-bottom: 0px;
+}
+
+
+.sx-backend-form .select2-container--krajee-bs4 .select2-selection {
+    box-shadow: none;
+}
+
+.sx-backend-form .select2-container--krajee-bs4.select2-container--open:not(.select2-container--disabled) .select2-selection,
+.sx-backend-form .select2-container--krajee-bs4:not(.select2-container--disabled) .select2-selection:focus,
+.select2-container--krajee-bs4:not(.select2-container--disabled) .select2-dropdown
+{
+    border-color: #ced4da !important;
+    box-shadow: none !important;
+}
+
+.sx-backend-form .select2-container--krajee-bs4 .select2-selection--single .select2-selection__arrow {
+    border-left: 1px solid #dbdbdb;
 }

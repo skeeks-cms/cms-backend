@@ -64,9 +64,8 @@
     opacity: 1;
 }
 
-
 .sx-backend-filters-form .form-group:hover {
-    background: rgba(93, 195, 231, 0.15);
+    background: #f5f5f5;
 }
 
 .sx-backend-filters-form .form-group {
@@ -101,9 +100,6 @@
     font-weight: bold;
 }
 
-.sx-backend-filters-form .form-group:hover {
-    background: #e6ecec;
-}
 
 .sx-backend-filters-wrapper .sx-edit {
     color: silver;

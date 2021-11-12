@@ -53,6 +53,7 @@ class ActiveFormBackend extends ActiveForm implements IActiveFormHasFieldSets
     public function init()
     {
         Html::addCssClass($this->options, "sx-backend-form");
+        Html::addCssClass($this->options, "sx-backend-form-inline");
 
         if ($this->registerStandartAsset) {
             BackendFormAsset::register($this->view);
