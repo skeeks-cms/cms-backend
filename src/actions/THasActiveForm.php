@@ -38,7 +38,7 @@ trait THasActiveForm
      *
      * @var array
      */
-    public $buttons = ['apply', 'save', 'close'];
+    public $buttons = ['apply', 'save'];
 
     /**
      * @param array $config

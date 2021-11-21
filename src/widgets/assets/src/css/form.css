@@ -110,6 +110,20 @@ form.sx-backend-form .tab-content {
     border: 0px;
 }
 
+.sx-form-fieldset:hover .sx-form-fieldset-title:after {
+    opacity: 0.7;
+}
+
+.sx-form-fieldset.sx-field-set-hidden .sx-form-fieldset-title:after {
+    content: "\e90d";
+}
+
+.sx-form-fieldset .sx-form-fieldset-title:after {
+    content: "\e910";
+    font-family: 'hs-admin-icons' !important;
+    margin-left: 13px;
+    opacity: 0.4;
+}
 
 .sx-form-fieldset-title {
     background: #ececec;

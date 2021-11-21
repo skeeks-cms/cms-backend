@@ -71,7 +71,7 @@ class FormButtonsBackendWidget extends Widget
     /**
      * @var bool
      */
-    public $isClose = true;
+    public $isClose = false;
 
 
     /**
@@ -167,7 +167,7 @@ JS
         $this->parts['{saveAndClose}'] = "";
 
         if ($this->isSaveAndClose) {
-            $this->parts['{saveAndClose}'] = Html::submitButton("<i class=\"fa fa-check\"></i> ".\Yii::t('skeeks/backend', 'Save and close'), [
+            $this->parts['{saveAndClose}'] = Html::submitButton("✓ ".\Yii::t('skeeks/backend', 'Save and close'), [
                 'title' => \Yii::t("skeeks/backend", "The result will be saved and the editing window will be closed")." (ctrl+↵)",
                 'class' => 'btn btn-primary sx-btn-save-and-close',
             ]);
@@ -194,7 +194,7 @@ JS
 
         if ($this->isSave) {
 
-            $this->parts['{save}'] = Html::submitButton("<i class=\"fa fa-check\"></i> ".\Yii::t('skeeks/backend', 'Save'), [
+            $this->parts['{save}'] = Html::submitButton("✓ ".\Yii::t('skeeks/backend', 'Save'), [
                 'title' => \Yii::t('skeeks/backend', 'The result will be saved and you can further edit the data')." (ctrl+s)",
                 'class' => 'btn btn-primary sx-btn-save',
             ]);
@@ -212,7 +212,7 @@ JS
 
         if ($this->isClose) {
 
-            $this->parts['{close}'] = Html::submitButton("<i class=\"fa fa-times\"></i> ".\Yii::t('skeeks/cms', 'Cancel'), [
+            $this->parts['{close}'] = Html::submitButton("".\Yii::t('skeeks/cms', 'Cancel'), [
                 'title' => \Yii::t('skeeks/backend', 'The result will not be saved and the page will be closed')." (ctrl+z)",
                 'class' => 'btn btn-secondary sx-btn-close',
             ]);

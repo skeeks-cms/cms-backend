@@ -171,7 +171,7 @@ JS
     right: 0px;
     bottom: 0;">
 
-            <a class="btn btn-default btn-secondary btn-sm float-right" data-toggle="dropdown" style="    background: silver;
+            <a class="btn btn-secondary btn-sm float-right" data-toggle="dropdown" style="    background: silver;
     border-color: silver;"
                href="#"
                title="Добавить новый фильтр"
@@ -210,7 +210,7 @@ JS
     padding: 5px 0;
     /* display: flex; */
     margin: 0 15px;">
-            <button class="btn btn-default btn-secondary" type="submit"><i class="glyphicon glyphicon-filter"></i> Применить</button>
+            <button class="btn btn-secondary" type="submit"><i class="glyphicon glyphicon-filter"></i> Применить</button>
         </div>
         <div class="" style="    /* min-height: 100%; */
     /* height: 100%; */
@@ -220,7 +220,7 @@ JS
     position: absolute;
     right: 14px;
     bottom: 0;">
-            <button class="btn btn-default btn-secondary btn-sm sx-save-values" style="    background: silver;
+            <button class="btn btn-secondary btn-sm sx-save-values" style="    background: silver;
     border-color: silver;" title="Сохранить примененные значения" data-toggle="tooltip"><i class="fa fa-check"></i>
             </button>
         </div>
