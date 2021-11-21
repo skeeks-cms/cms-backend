@@ -50,7 +50,7 @@ class ModalPermissionWidget extends Modal
         {
             $this->toggleButton = [
                 'tag' => 'a',
-                'class' => "btn btn-default btn-primary",
+                'class' => "btn btn-primary",
                 'label' => '<i class="glyphicon glyphicon-exclamation-sign" data-sx-widget="tooltip-b" data-original-title="' . \Yii::t('skeeks/backend','Setting up access to this section') . '"></i>'
             ];
         }
