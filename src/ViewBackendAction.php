@@ -50,8 +50,8 @@ class ViewBackendAction extends BackendAction
      */
     public function run()
     {
-        if ($this->callback) {
-            $result = call_user_func($this->callback, $this);
+        if ($this->callback && is_callable($this->callback)) {
+            return call_user_func($this->callback, $this);
         } else {
             $result = $this->render($this->defaultView);
         }

@@ -20,6 +20,7 @@ use skeeks\cms\traits\THasPermission;
 use skeeks\cms\traits\THasPermissions;
 use skeeks\cms\traits\THasUrl;
 use yii\base\Component;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
 /**
@@ -146,6 +147,14 @@ class BackendMenuItem extends Component
 
         } else if (is_string($this->_url)) {
             return $this->_url;
+        } else {
+            
+            if ($this->items) {
+                $item = ArrayHelper::getValue($this->items, 0);
+                if ($item) {
+                    return $item->url;
+                }
+            }
         }
 
         return "";
