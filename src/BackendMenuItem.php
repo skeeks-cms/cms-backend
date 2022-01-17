@@ -148,12 +148,17 @@ class BackendMenuItem extends Component
         } else if (is_string($this->_url)) {
             return $this->_url;
         } else {
-            
             if ($this->items) {
-                $item = ArrayHelper::getValue($this->items, 0);
+                foreach ($this->items as $childItem)
+                {
+                    if ($childItem->url) {
+                        return $childItem->url;
+                    }
+                }
+                /*$item = ArrayHelper::getValue($this->items, 0);
                 if ($item) {
                     return $item->url;
-                }
+                }*/
             }
         }
 
