@@ -50,7 +50,7 @@ class ControllerActionsColumn extends DataColumn
     /**
      * @var bool
      */
-    public $isHidden = false;
+    public $isHidden = true;
 
     /**
      * @var array
