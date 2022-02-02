@@ -127,6 +127,13 @@ form.sx-backend-form .tab-content {
     font-size: 10px;
 }
 
+.sx-form-fieldset .sx-form-fieldset-content .form-group:last-child {
+    padding-bottom: 15px;
+}
+.sx-form-fieldset .sx-form-fieldset-content .form-group:first-child {
+    padding-top: 15px;
+}
+
 .sx-form-fieldset-title {
     background: #ececec;
     padding: 8px 15px 10px!important;
@@ -140,11 +147,16 @@ form.sx-backend-form .tab-content {
     border-left: 1px solid #ddd;
     border-right: 1px solid #ddd;
     border-bottom: 1px solid #ddd;
-    padding: 10px;
+    padding: 0;
 }
 
 .sx-backend-form .sx-inline-row label {
     margin-bottom: 0px;
+}
+
+.sx-backend-form .control-label {
+    font-size: 12px;
+    margin-bottom: 2px;
 }
 
 

@@ -20,6 +20,7 @@ use skeeks\cms\forms\TActiveFormDynamicReload;
 use skeeks\cms\forms\TActiveFormHasFieldSets;
 use skeeks\cms\forms\TActiveFormHasPjax;
 use yii\helpers\Html;
+use yii\widgets\ActiveField;
 use yii\widgets\ActiveForm;
 
 /**
@@ -38,7 +39,8 @@ class ActiveFormBackend extends ActiveForm implements IActiveFormHasFieldSets
     /**
      * @var string
      */
-    public $fieldClass = ActiveFieldBackend::class;
+    //public $fieldClass = ActiveFieldBackend::class;
+    public $fieldClass = ActiveField::class;
 
     /**
      * @var bool Подключить стандартные js и css?
