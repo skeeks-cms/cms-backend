@@ -5,6 +5,7 @@
  * @copyright (c) 2010 SkeekS
  * @date 18.08.2017
  */
+
 namespace skeeks\cms\backend\helpers;
 
 use yii\base\Component;
@@ -16,9 +17,10 @@ use yii\helpers\Url;
  *
  * @property [] backendParams
  *
- * @property bool isEmptyLayout
- * @property bool isNoActions
- * @property bool callbackEventName
+ * @property bool   isEmptyLayout
+ * @property bool   isNoActions
+ * @property bool   isNoModelActions
+ * @property bool   callbackEventName
  *
  * @property string url
  *
@@ -29,9 +31,10 @@ class BackendUrlHelper extends Component
 {
     const BACKEND_PARAM_NAME = "_backend";
 
-    const BACKEND_PARAM_NAME_EMPTY_LAYOUT               = "empty-layout";
-    const BACKEND_PARAM_NAME_NO_ACTIONS                 = "no-actions";
-    const BACKEND_PARAM_NAME_CALLBACK_EVENT_NAME        = "callback-event-name";
+    const BACKEND_PARAM_NAME_EMPTY_LAYOUT = "empty-layout";
+    const BACKEND_PARAM_NAME_NO_ACTIONS = "no-actions";
+    const BACKEND_PARAM_NAME_NO_MODEL_ACTIONS = "no-model-actions";
+    const BACKEND_PARAM_NAME_CALLBACK_EVENT_NAME = "callback-event-name";
 
     /**
      * Url parametrs
@@ -42,8 +45,7 @@ class BackendUrlHelper extends Component
 
     public function init()
     {
-        if (!is_array($this->params))
-        {
+        if (!is_array($this->params)) {
             throw new InvalidConfigException('!!!');
         }
     }
@@ -55,7 +57,7 @@ class BackendUrlHelper extends Component
     static public function createByParams($params = [])
     {
         return new static([
-            'params' => $params
+            'params' => $params,
         ]);
     }
 
@@ -87,8 +89,7 @@ class BackendUrlHelper extends Component
      */
     public function setBackendParamsByCurrentRequest()
     {
-        if ($systemParams = \Yii::$app->request->get(static::BACKEND_PARAM_NAME))
-        {
+        if ($systemParams = \Yii::$app->request->get(static::BACKEND_PARAM_NAME)) {
             $this->setBackendParams($systemParams);
         }
 
@@ -99,8 +100,7 @@ class BackendUrlHelper extends Component
      */
     public function mergeBackendParamsByCurrentRequest()
     {
-        if ($systemParams = \Yii::$app->request->get(static::BACKEND_PARAM_NAME))
-        {
+        if ($systemParams = \Yii::$app->request->get(static::BACKEND_PARAM_NAME)) {
             if ($this->getBackendParams()) {
                 $this->setBackendParams(ArrayHelper::merge($systemParams, $this->getBackendParams()));
             } else {
@@ -117,7 +117,7 @@ class BackendUrlHelper extends Component
      */
     public function getBackendParams()
     {
-        return (array) ArrayHelper::getValue($this->params, static::BACKEND_PARAM_NAME);
+        return (array)ArrayHelper::getValue($this->params, static::BACKEND_PARAM_NAME);
     }
 
     /**
@@ -135,7 +135,7 @@ class BackendUrlHelper extends Component
     }
 
     /**
-     * @param $paramName
+     * @param      $paramName
      * @param null $default
      * @return mixed
      */
@@ -165,6 +165,15 @@ class BackendUrlHelper extends Component
     }
 
     /**
+     * @return $this
+     */
+    public function enableNoModelActions()
+    {
+        $this->setBackendParam(static::BACKEND_PARAM_NAME_NO_MODEL_ACTIONS, true);
+        return $this;
+    }
+
+    /**
      * @param $eventName
      * @return $this
      */
@@ -179,7 +188,7 @@ class BackendUrlHelper extends Component
      */
     public function getIsEmptyLayout()
     {
-        return (bool) $this->getBackenParam(static::BACKEND_PARAM_NAME_EMPTY_LAYOUT, false);
+        return (bool)$this->getBackenParam(static::BACKEND_PARAM_NAME_EMPTY_LAYOUT, false);
     }
 
     /**
@@ -187,7 +196,14 @@ class BackendUrlHelper extends Component
      */
     public function getIsNoActions()
     {
-        return (bool) $this->getBackenParam(static::BACKEND_PARAM_NAME_NO_ACTIONS, false);
+        return (bool)$this->getBackenParam(static::BACKEND_PARAM_NAME_NO_ACTIONS, false);
+    }
+    /**
+     * @return bool
+     */
+    public function getIsNoModelActions()
+    {
+        return (bool)$this->getBackenParam(static::BACKEND_PARAM_NAME_NO_MODEL_ACTIONS, false);
     }
 
     /**
@@ -195,7 +211,7 @@ class BackendUrlHelper extends Component
      */
     public function getCallbackEventName()
     {
-        return (string) $this->getBackenParam(static::BACKEND_PARAM_NAME_CALLBACK_EVENT_NAME);
+        return (string)$this->getBackenParam(static::BACKEND_PARAM_NAME_CALLBACK_EVENT_NAME);
     }
 
     /**
