@@ -16,6 +16,10 @@
             this._window = new sx.classes.Window(this.get('url'), this.get('newWindowName'));
             this._window.setCenterOptions().disableResize().disableLocation();
 
+            if (self.get("size")) {
+                this._window.set("size", self.get("size"));
+            }
+
             this.isUpdateAfterClose = false;
 
 
@@ -30,7 +34,9 @@
                 self.isUpdateAfterClose = true;
                 sx.Window.openerWidgetTriggerEvent('model-update');
 
+                //console.log('model-update');
                 if (data && data.submitBtn == 'save') {
+                    //console.log('model-update save');
                     self._window.close();
                 }
 

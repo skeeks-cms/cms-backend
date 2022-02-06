@@ -12,16 +12,14 @@
             var self = this;
 
             this.Window = null;
-
-            sx.EventManager.bind(this.get('callbackEventName'), function (e, data) {
-                /*self.update(data);*/
+            /*sx.EventManager.bind(this.get('callbackEventName'), function (e, data) {
                 if (self.get('multiple')) {
                     self.add(data);
                 } else {
                     self.update(data);
                 }
 
-            });
+            });*/
         },
 
         _onDomReady: function () {
@@ -112,7 +110,18 @@
          * @returns {sx.classes.SelectOneImage}
          */
         openModalWindow: function () {
+            var self = this;
+
+            //this.Window = new sx.classes.Window(this.get('url'), 'sx-select-input-' + this.get('id'));
             this.Window = new sx.classes.Window(this.get('url'), 'sx-select-input-' + this.get('id'));
+            this.Window.on(this.get('callbackEventName'), function (e, data) {
+                if (self.get('multiple')) {
+                    self.add(data);
+                } else {
+                    self.update(data);
+                }
+            });
+
             this.Window.open();
 
             return this;
@@ -133,9 +142,10 @@
 
             this.Window = null;
 
-            sx.EventManager.bind(this.get('callbackEventName'), function (e, data) {
+            /*sx.EventManager.bind(this.get('callbackEventName'), function (e, data) {
                 self.add(data, true);
-            });
+            });*/
+            //sx.Window.openerWidgetTriggerEvent(this.get('callbackEventName'), data);
         },
 
         _onDomReady: function () {

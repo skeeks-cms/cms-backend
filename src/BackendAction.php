@@ -66,6 +66,15 @@ class BackendAction extends Action
     protected $_generateAccess = null;
 
     /**
+     * @var null
+     */
+    public $size = null;
+
+    const SIZE_SMALL = 'small';
+    const SIZE_MEDIUM = 'medium';
+
+
+    /**
      * @return bool
      */
     public function getGenerateAccess()

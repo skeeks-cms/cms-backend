@@ -177,7 +177,7 @@ class ControllerActionsWidget extends Widget
     }
 
     /**
-     * @param AdminAction $action
+     * @param BackendAction $action
      * @return array
      */
     public function getActionData($action)
@@ -197,6 +197,7 @@ class ControllerActionsWidget extends Widget
             "confirm"           => isset($action->confirm) ? $action->confirm : "",
             "method"            => isset($action->method) ? $action->method : "",
             "request"           => isset($action->request) ? $action->request : "",
+            "size"           => isset($action->size) ? $action->size : "",
         ]);
 
         return $actionData;
