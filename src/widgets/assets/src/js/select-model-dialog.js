@@ -10,16 +10,7 @@
 
         _init: function () {
             var self = this;
-
             this.Window = null;
-            /*sx.EventManager.bind(this.get('callbackEventName'), function (e, data) {
-                if (self.get('multiple')) {
-                    self.add(data);
-                } else {
-                    self.update(data);
-                }
-
-            });*/
         },
 
         _onDomReady: function () {
@@ -27,17 +18,12 @@
 
             this._isChangeAllow = false;
 
-            this.jQueryCreateBtn = $(".sx-btn-create", this.jQuryWrapper());
-            this.jQueryInput = $("input", this.jQuryWrapper());
-            this.jQueryContentWrapper = $(".sx-view-cms-content", this.jQuryWrapper());
-            this.jQueryDeselectBtn = $(".sx-btn-deselect", this.jQuryWrapper());
-
-            this.jQueryCreateBtn.on("click", function () {
+            this.jQueryCreateBtn().on("click", function () {
                 self.openModalWindow();
                 return this;
             });
 
-            this.jQueryDeselectBtn.on("click", function () {
+            this.jQueryDeselectBtn().on("click", function () {
                 self.update({});
                 return this;
             });
@@ -54,16 +40,17 @@
         update: function (data) {
             var self = this;
 
-            this.jQueryContentWrapper.empty();
-            this.jQueryDeselectBtn.hide();
+            this.jQueryContentWrapper().empty();
+            this.jQueryDeselectBtn().hide();
 
             if (_.size(data) > 0) {
-                this.jQueryContentWrapper.append(
-                    this.renderItem(data)
+                var rendered = this.renderItem(data);
+                this.jQueryContentWrapper().append(
+                    rendered
                 );
 
                 self.setVal(data[self.get('modelpk')]);
-                this.jQueryDeselectBtn.show();
+                this.jQueryDeselectBtn().show();
             } else {
                 self.setVal();
             }
@@ -72,7 +59,6 @@
                 if (this.Window) {
                     this.Window.close();
                 }
-
             }
 
             self.trigger('change', data);
@@ -95,11 +81,9 @@
          * @returns {sx.classes.SelectModelDialog}
          */
         setVal: function (id) {
-            console.log('setVal');
-            this.jQueryInput.val(id);
+            this.jQueryInput().val(id);
             if (this._isChangeAllow) {
-                console.log('trigger change');
-                this.jQueryInput.change();
+                this.jQueryInput().change();
             }
             return this;
         },
@@ -132,6 +116,34 @@
          */
         jQuryWrapper: function () {
             return $('#' + this.get('id'));
+        },
+        /**
+         *
+         * @returns {*|HTMLElement}
+         */
+        jQueryDeselectBtn: function () {
+            return $(".sx-btn-deselect", this.jQuryWrapper());
+        },
+        /**
+         *
+         * @returns {*|HTMLElement}
+         */
+        jQueryContentWrapper: function () {
+            return $(".sx-view-cms-content", this.jQuryWrapper());
+        },
+        /**
+         *
+         * @returns {*|HTMLElement}
+         */
+        jQueryInput: function () {
+            return $("input", this.jQuryWrapper());
+        },
+        /**
+         *
+         * @returns {*|HTMLElement}
+         */
+        jQueryCreateBtn: function () {
+            return $(".sx-btn-create", this.jQuryWrapper());
         }
     });
 
@@ -148,22 +160,23 @@
             //sx.Window.openerWidgetTriggerEvent(this.get('callbackEventName'), data);
         },
 
+        /**
+         *
+         * @returns {*|HTMLElement}
+         */
+        jQueryInput: function () {
+            return $("select", this.jQuryWrapper());
+        },
+
         _onDomReady: function () {
             var self = this;
 
-            this.jQueryCreateBtn = $(".sx-btn-create", this.jQuryWrapper());
-            this.jQueryInput = $("select", this.jQuryWrapper());
-
-
-            this.jQueryContentWrapper = $(".sx-view-cms-content", this.jQuryWrapper());
-            this.jQueryDeselectBtn = $(".sx-btn-deselect", this.jQuryWrapper());
-
-            this.jQueryCreateBtn.on("click", function () {
+            this.jQueryCreateBtn().on("click", function () {
                 self.openModalWindow();
                 return this;
             });
 
-            this.jQueryDeselectBtn.on("click", function () {
+            this.jQueryDeselectBtn().on("click", function () {
                 self.update({});
                 return this;
             });
@@ -219,7 +232,7 @@
                     return false;
                 });
 
-                self.jQueryContentWrapper.append(jLi);
+                self.jQueryContentWrapper().append(jLi);
 
                 var val = this.getVal();
                 if (val) {
@@ -230,7 +243,7 @@
 
                 val = _.uniq(val);
                 self.setVal(val, triggerUpdate);
-                this.jQueryDeselectBtn.show();
+                this.jQueryDeselectBtn().show();
             }
 
             if (this.get('closeDialogAfterSelect')) {
@@ -262,10 +275,10 @@
             var triggerUpdate = triggerUpdate;
 
             var self = this;
-            self.jQueryInput.empty();
+            self.jQueryInput().empty();
 
             _.each(data, function (id, key) {
-                self.jQueryInput.append(
+                self.jQueryInput().append(
                     $('<option>', {
                         'value': id,
                         'selected': 'selected'
@@ -274,7 +287,7 @@
             });
 
             if (triggerUpdate) {
-                this.jQueryInput.change();
+                this.jQueryInput().change();
             }
             return this;
         },
