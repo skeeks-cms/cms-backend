@@ -263,7 +263,7 @@
          * @returns {*}
          */
         getVal: function () {
-            return this.jQueryInput.val();
+            return this.jQueryInput().val();
         },
 
         /**
