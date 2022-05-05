@@ -32,7 +32,7 @@ trait TActiveFormHasButtons
      * @param array $buttons - param is deprecated
      * @return string
      */
-    public function buttonsStandart(Model $model, $buttons = ['apply', 'save'])
+    public function buttonsStandart(Model $model, $buttons = ['apply'])
     {
         $widgetClass = $this->buttonsClass;
 
