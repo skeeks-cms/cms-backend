@@ -47,6 +47,10 @@ class BackendModelCreateAction extends ViewBackendAction
         if (!$this->name) {
             $this->name = \Yii::t('skeeks/backend', "Add");
         }
+        
+        if (!$this->successMessage) {
+            $this->successMessage = "✓ " . \Yii::t('skeeks/cms', 'Saved');
+        }
 
         parent::init();
     }
@@ -141,10 +145,6 @@ class BackendModelCreateAction extends ViewBackendAction
 
                         $this->trigger(self::EVENT_AFTER_SAVE);
 
-                        if (!$this->successMessage) {
-                            $this->successMessage = \Yii::t('skeeks/cms', 'Saved');
-                        }
-
                         \Yii::$app->getSession()->setFlash('success', $this->successMessage);
                         $is_saved = true;
 
@@ -153,8 +153,16 @@ class BackendModelCreateAction extends ViewBackendAction
                             $this->controller->model = $model;
 
                             if ($this->controller->modelActions) {
+                                /**
+                                 * @var $action BackendModelAction
+                                 */
                                 if ($action = ArrayHelper::getValue($this->controller->modelActions,
                                     $this->controller->modelDefaultAction)) {
+                                    
+                                    /*$action->urlData = ArrayHelper::merge($action->urlData, [
+                                        'is_created' => 1
+                                    ]);*/
+                                    
                                     $url = $action->url;
                                 }
                             }

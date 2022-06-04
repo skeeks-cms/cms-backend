@@ -15,7 +15,6 @@ use skeeks\cms\IHasUrl;
 use yii\base\DynamicModel;
 use yii\base\Exception;
 use yii\helpers\Url;
-use yii\widgets\ActiveForm;
 
 /**
  * @property IBackendModelController|IHasUrl|IHasModel $controller
@@ -50,10 +49,14 @@ class BackendModelUpdateAction extends BackendModelAction
             $this->name = \Yii::t('skeeks/backend', "Edit");
         }
 
+        if (!$this->successMessage) {
+            $this->successMessage = "✓ " . \Yii::t('skeeks/cms', 'Saved');
+        }
+
         parent::init();
     }
-    
-    
+
+
     public function run()
     {
         $is_saved = false;
@@ -121,10 +124,6 @@ class BackendModelUpdateAction extends BackendModelAction
 
                         $this->trigger(self::EVENT_AFTER_SAVE);
 
-                        if (!$this->successMessage) {
-                            $this->successMessage = \Yii::t('skeeks/cms', 'Saved');
-                        }
-
                         $is_saved = true;
                         \Yii::$app->getSession()->setFlash('success', $this->successMessage);
 
@@ -158,9 +157,9 @@ class BackendModelUpdateAction extends BackendModelAction
             return $this->render('@skeeks/cms/backend/actions/views/model-update', [
                 'model'      => $this->model,
                 'formModels' => $this->formModels,
-                'is_saved' => $is_saved,
-                'submitBtn' => \Yii::$app->request->post('submit-btn'),
-                'redirect' => $redirect,
+                'is_saved'   => $is_saved,
+                'submitBtn'  => \Yii::$app->request->post('submit-btn'),
+                'redirect'   => $redirect,
             ]);
             //return $this->render('@skeeks/cms/backend/actions/views/model-update');
         }

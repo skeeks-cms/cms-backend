@@ -22,7 +22,13 @@
         },
 
         _init: function () {
+            var self = this;
+            
             this.onBeforeUnload = false;
+            
+            this.on("changeData", function() {
+                $(".sx-success-meessage", self.getJForm()).empty(); 
+            });
         },
 
         /**
@@ -133,10 +139,12 @@
             //Отслеживание изменения данных в форме
             $("input, select, textarea", this.getJForm()).on("change", function () {
                 self.getJForm().addClass("sx-form-data-changed");
+                self.trigger("changeData");
                 self._initCloseWindow();
             });
             $("input, select, textarea", this.getJForm()).on("keyup", function () {
                 self.getJForm().addClass("sx-form-data-changed");
+                self.trigger("changeData");
                 self._initCloseWindow();
             });
 

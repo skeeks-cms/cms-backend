@@ -52,6 +52,12 @@ form.sx-backend-form
         margin-left: 30px;
     }
 
+    form.sx-backend-form .sx-buttons-standart-wrapper .sx-success-meessage {
+        margin-left: 30px;
+        color: green;
+        font-weight: bold;
+    }
+
     form.sx-backend-form .sx-buttons-standart
     {
         /*border-top: 1px solid #ddd;*/

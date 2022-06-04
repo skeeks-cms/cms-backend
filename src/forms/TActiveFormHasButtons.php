@@ -32,7 +32,7 @@ trait TActiveFormHasButtons
      * @param array $buttons - param is deprecated
      * @return string
      */
-    public function buttonsStandart(Model $model, $buttons = ['apply'])
+    public function buttonsStandart(Model $model, $buttons = ['apply'], $successMessage = '')
     {
         $widgetClass = $this->buttonsClass;
 
@@ -53,9 +53,10 @@ trait TActiveFormHasButtons
         } else {
             $this->buttonsConfig['isClose'] = false;
         }
-
+        
         $widgetConfig = ArrayHelper::merge($this->buttonsConfig, [
             'activeForm' => $this,
+            'successMessage'      => $successMessage,
             'model'      => $model,
         ]);
 

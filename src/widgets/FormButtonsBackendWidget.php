@@ -32,9 +32,18 @@ class FormButtonsBackendWidget extends Widget
     public $activeForm = null;
 
     /**
+     * @var null 
+     */
+    public $successMessage = null;
+
+    /**
      * @var string
      */
-    public $template = "<span class='sx-save-btns-group'>{saveAndClose} {save}</span><span class='sx-prev-next-btns-group sx-btns-group'>{prevNext}</span><span class='sx-other-btns-group sx-btns-group'>{other}</span><span class='sx-close-btns-group sx-btns-group float-right'>{close}</span>";
+    public $template = "<span class='sx-save-btns-group'>{saveAndClose} {save}</span>
+<span class='sx-prev-next-btns-group sx-btns-group'>{prevNext}</span>
+<span class='sx-success-meessage'>{successMessage}</span>
+<span class='sx-other-btns-group sx-btns-group'>{other}</span>
+<span class='sx-close-btns-group sx-btns-group float-right'>{close}</span>";
 
     /**
      * @var string Дополнительные кнопки или контент
@@ -120,6 +129,10 @@ class FormButtonsBackendWidget extends Widget
                 $this->_renderOther();
             }
 
+            if (!isset($this->parts['{successMessage}'])) {
+                $this->_renderSuccessMessage();
+            }
+
             $content = strtr($this->template, $this->parts);
         } elseif (!is_string($content)) {
             $content = call_user_func($content, $this);
@@ -167,7 +180,7 @@ JS
         $this->parts['{saveAndClose}'] = "";
 
         if ($this->isSaveAndClose) {
-            $this->parts['{saveAndClose}'] = Html::submitButton("✓ ".\Yii::t('skeeks/backend', 'Save and close'), [
+            $this->parts['{saveAndClose}'] = Html::submitButton(\Yii::t('skeeks/backend', 'Save'), [
                 'title' => \Yii::t("skeeks/backend", "The result will be saved and the editing window will be closed")." (ctrl+↵)",
                 'class' => 'btn btn-primary sx-btn-save-and-close',
             ]);
@@ -194,7 +207,7 @@ JS
 
         if ($this->isSave) {
 
-            $this->parts['{save}'] = Html::submitButton("✓ ".\Yii::t('skeeks/backend', 'Save'), [
+            $this->parts['{save}'] = Html::submitButton(\Yii::t('skeeks/backend', 'Save'), [
                 'title' => \Yii::t('skeeks/backend', 'The result will be saved and you can further edit the data')." (ctrl+s)",
                 'class' => 'btn btn-primary sx-btn-save',
             ]);
@@ -243,6 +256,19 @@ JS
                 ])."</span>";
 
             $this->parts['{prevNext}'] = $submit;
+        }
+
+        return $this;
+    }
+    /**
+     * @return $this
+     */
+    protected function _renderSuccessMessage()
+    {
+        $this->parts['{successMessage}'] = "";
+
+        if ($this->successMessage) {
+            $this->parts['{successMessage}'] = $this->successMessage;
         }
 
         return $this;

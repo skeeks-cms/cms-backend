@@ -20,11 +20,11 @@ $action = $controller->action;
     </div>
 <? endif; ?>
 
-
 <?php $form = $action->beginActiveForm([
     'enableAjaxValidation'   => false,
     'enableClientValidation' => false,
 ]); ?>
+
 
 <? if ($is_saved && @$is_create) : ?>
     <?php $this->registerJs(<<<JS
@@ -52,6 +52,7 @@ JS
     ); ?>
 <? endif; ?>
 
+
 <?= $form->errorSummary($formModels); ?>
 
 <? echo \Yii::createObject([
@@ -62,8 +63,20 @@ JS
     'fields'     => $action->fields,
 ])->render(); ?>
 
-<?= $form->buttonsStandart($model, $action->buttons); ?>
+
+<?php $successMessage = ''; ?>
+<?php if(@$is_create) : ?>
+
+<?php else : ?>
+<? if ($successMessageFlash = \Yii::$app->getSession()->getFlash('success')) : ?>
+    <?php $successMessage = $successMessageFlash; ?>
+<? endif; ?>
+<?php endif; ?>
+
+
+<?= $form->buttonsStandart($model, $action->buttons, $successMessage); ?>
 <?= $form->errorSummary($formModels); ?>
+
 <?php $form::end(); ?>
 
 
