@@ -83,7 +83,12 @@
             $("body").on("click", '.sx-btn-ajax-actions', function(e) {
                 e.preventDefault();
 
-                $(this).addClass('sx-opened-actions');
+                if ($(this).data("is-run-first-action-on-click") == 1) {
+                    $(this).trigger("firstAction");
+                } else {
+                    $(this).trigger("contextmenu");
+                }
+                /*$(this).addClass('sx-opened-actions');
 
                 $('.popover').popover('hide');
 
@@ -92,7 +97,7 @@
                 } else {
                     var data = _.clone($(this).data());
                     self._createPopover($(this), data);
-                }
+                }*/
             });
 
             //Скрыть лишние окошки

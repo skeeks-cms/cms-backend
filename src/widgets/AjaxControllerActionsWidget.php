@@ -48,6 +48,14 @@ class AjaxControllerActionsWidget extends Widget
      * @var
      */
     public $modelId;
+    /**
+     * @var
+     */
+    public $urlParams = [];
+    /**
+     * @var
+     */
+    public $isRunFirstActionOnClick = false;
 
     /**
      * @throws Exception
@@ -101,9 +109,10 @@ JS
 
         $this->options = ArrayHelper::merge($this->defaultOptions, [
             'data' => [
-                'url'           => Url::to(["/".$this->controllerId."/model-actions", 'pk' => $this->modelId]),
+                'url'           => Url::to(ArrayHelper::merge(["/".$this->controllerId."/model-actions", 'pk' => $this->modelId], (array) $this->urlParams)),
                 'controller-id' => $this->controllerId,
                 'model-id'      => $this->modelId,
+                'is-run-first-action-on-click'      => (int)$this->isRunFirstActionOnClick,
             ],
         ], $this->options);
 

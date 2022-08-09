@@ -145,6 +145,9 @@
 .sx-backend-filters-form.form-inline .form-control {
     width: 100%;
 }
+.sx-backend-filters-form.form-inline .form-control {
+    padding: 5px;
+}
 .sx-backend-filters-form.form-inline .dropdown-menu .filter--group--body {
     margin: 20px 10px;
 }
