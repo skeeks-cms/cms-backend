@@ -174,6 +174,33 @@ class BackendUrlHelper extends Component
     }
 
     /**
+     * @return $this
+     */
+    public function disableEmptyLayout()
+    {
+        $this->setBackendParam(static::BACKEND_PARAM_NAME_EMPTY_LAYOUT, false);
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function disableNoActions()
+    {
+        $this->setBackendParam(static::BACKEND_PARAM_NAME_NO_ACTIONS, false);
+        return $this;
+    }
+
+    /**
+     * @return $this
+     */
+    public function disableNoModelActions()
+    {
+        $this->setBackendParam(static::BACKEND_PARAM_NAME_NO_MODEL_ACTIONS, false);
+        return $this;
+    }
+
+    /**
      * @param $eventName
      * @return $this
      */
