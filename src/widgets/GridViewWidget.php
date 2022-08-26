@@ -141,10 +141,14 @@ HTML;
             if ($this->afterTableRight instanceof \Closure) {
                 $this->afterTableRight = call_user_func($this->afterTableRight, $this);
             }
-            return "<div class='sx-after-table'>
-                        <div class='pull-left'>{$this->afterTableLeft}</div>
-                        <div class='pull-right'>{$this->afterTableRight}</div>
-                    </div>";
+
+            if ($this->afterTableLeft || $this->afterTableRight) {
+                return "<div class='sx-after-table'>
+                    <div class='pull-left'>{$this->afterTableLeft}</div>
+                    <div class='pull-right'>{$this->afterTableRight}</div>
+                </div>";
+            }
+
         } else {
             return "";
         }
