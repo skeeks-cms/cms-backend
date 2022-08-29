@@ -225,8 +225,12 @@ trait TBackendModelController
                 return $callable();
             }
         }
+        
+        return $this->renderPartial("@skeeks/cms/backend/views/_model_header", [
+            'model' => $this->model
+        ]);
 
-        return Html::tag('h1', $this->modelShowName);
+        //return Html::tag('h1', $this->modelShowName);
     }
 
     /**
