@@ -88,6 +88,11 @@ class AjaxControllerActionsWidget extends Widget
             return;
         }
 
+
+        if (\Yii::$app->request->isPjax) {
+            return false;
+        }
+
         self::$_registerAsset = true;
         AjaxControllerActionsWidgetAsset::register(\Yii::$app->view);
         $jsConfig = Json::encode([
