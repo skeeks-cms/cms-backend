@@ -16,10 +16,24 @@ if (isset($model->image)) {
 } elseif (isset($model->cmsImage)) {
     $image = $model->cmsImage;
 }
+/**
+ * @var $controller \skeeks\cms\backend\controllers\BackendModelController
+ */
 $controller = $this->context;
 
-
+$isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBackendParamsByCurrentRequest()->isEmptyLayout;
 ?>
+<?php if (!$isEmpty) : ?>
+    <div class="sx-back">
+        <a href="<?php echo \yii\helpers\Url::to([$controller->defaultAction]); ?>" style="    font-style: normal;
+    font-weight: 400;
+    font-size: 12px;
+    line-height: 26px;
+    color: #656464;">
+            ←&nbsp;Вернуться назад
+        </a>
+    </div>
+<?php endif; ?>
 <div class="row" style="margin-bottom: 5px;">
     <? if ($image) : ?>
         <div class="col my-auto" style="max-width: 60px">
