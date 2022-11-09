@@ -13,6 +13,7 @@ use skeeks\cms\backend\actions\IBackendModelMultiAction;
 use skeeks\cms\backend\widgets\ControllerActionsWidget;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\IHasName;
+use skeeks\cms\models\CmsUser;
 use yii\base\InvalidConfigException;
 use yii\base\Model;
 use yii\db\ActiveRecord;
@@ -255,10 +256,20 @@ trait TBackendModelController
 
             if ($pk) {
                 $modelClass = $this->modelClassName;
+                /**
+                 * @var $newModel CmsUser
+                 */
+                $newModel = new $modelClass();
 
-                $this->_model = $modelClass::find()
-                    ->where([$this->modelPkAttribute => $pk])
-                    ->limit(1)->one();
+                $q = $modelClass::find()
+                    ->andWhere([$this->modelPkAttribute => $pk]);
+
+                if ($newModel->hasAttribute("cms_site_id")) {
+                    $q->cmsSite();
+                }
+
+                $this->_model = $q->limit(1)
+                    ->one();
             }
         }
 
