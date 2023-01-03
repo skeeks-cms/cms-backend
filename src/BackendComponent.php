@@ -113,7 +113,10 @@ class BackendComponent extends Component
                     'backendId'        => $this->id,
                 ]);
 
-                $application->urlManager->addRules([$this->urlRule]);
+                $application->urlManager->addRules([$this->urlRule], false);
+                /*if (YII_ENV_DEV) {
+                    print_r($application->urlManager);die;
+                }*/
             }
         } else if ($application instanceof \yii\console\Application) {
             /**
