@@ -120,8 +120,8 @@ class GridViewWidget extends GridView
 
             return <<<HTML
         <div class='sx-before-table'>
-            <div class='pull-left'>{$this->beforeTableLeft}</div>
-            <div class='pull-right'>{$this->beforeTableRight}</div>
+            <div class='sx-before-table-left'>{$this->beforeTableLeft}</div>
+            <div class='sx-before-table-right'>{$this->beforeTableRight}</div>
           </div>
 HTML;
         } else {
