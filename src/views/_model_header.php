@@ -34,7 +34,7 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
         </a>
     </div>
 <?php endif; ?>
-<div class="row" style="margin-bottom: 5px;">
+<div class="row no-gutters" style="margin-bottom: 5px;">
     <? if ($image) : ?>
         <div class="col my-auto" style="max-width: 60px">
             <img style="border: 2px solid #ededed; border-radius: 5px;" src="<?php echo \Yii::$app->imaging->getImagingUrl($image->src,

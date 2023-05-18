@@ -32,10 +32,12 @@ class ActiveFormAjaxBackend extends ActiveForm implements IActiveFormHasFieldSet
     use TActiveFormHasFieldSets;
     use TActiveFormHasButtons;
     use TActiveFormHasCustomSelect;
+    
+    use TActiveFormDynamicReload;
 
     use ActiveFormAjaxSubmitTrait;
 
-    public $enableAjaxValidation = true;
+    public $enableAjaxValidation = false;
     public $validateOnChange = false;
     public $validateOnBlur = false;
 
@@ -55,7 +57,7 @@ class ActiveFormAjaxBackend extends ActiveForm implements IActiveFormHasFieldSet
     /**
      * @var bool 
      */
-    public $enableClientValidation = false;
+    public $enableClientValidation = true;
 
     public function init()
     {
@@ -65,6 +67,42 @@ class ActiveFormAjaxBackend extends ActiveForm implements IActiveFormHasFieldSet
         if ($this->registerStandartAsset) {
             BackendFormAsset::register($this->view);
         }
+
+        $this->_initDynamicReload();
+        
+        if (!$this->clientCallback) {
+            $this->clientCallback = new \yii\web\JsExpression(<<<JS
+                function (ActiveFormAjaxSubmit) {
+    
+                    
+                    ActiveFormAjaxSubmit.on('success', function(e, response) {
+                        $('.sx-buttons-standart .sx-success-meessage', ActiveFormAjaxSubmit.jForm).empty().append(response.message);
+                        ActiveFormAjaxSubmit.jForm.removeClass("sx-form-data-changed");
+
+                        if (response.data.type == 'create') {
+                            setTimeout(function() {
+                                 sx.Window.openerWidgetTriggerEvent('model-create', {
+                                    'submitBtn' : 'save'
+                                });
+                            }, 1000);
+                            
+                        } else if (response.data.type == 'update') {
+                            sx.Window.openerWidgetTriggerEvent('model-update', {
+                                'submitBtn' : 'apply'
+                            });
+                        }
+                        
+                    });
+                    
+                    ActiveFormAjaxSubmit.on('error', function(e, response) {
+                        $('.sx-buttons-standart .sx-success-meessage', ActiveFormAjaxSubmit.jForm).empty().append('<span style="color: red;">Есть ошибки!</span>');
+                        
+                    });
+                }
+JS
+            );
+        }
+
 
         parent::init();
 

@@ -14,6 +14,7 @@ use skeeks\cms\IHasModel;
 use skeeks\cms\IHasUrl;
 use yii\base\DynamicModel;
 use yii\base\Exception;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Url;
 
 /**
@@ -152,6 +153,77 @@ class BackendModelUpdateAction extends BackendModelAction
             }
         }
 
+
+        //Новые формы отправляемые через Ajax
+        else if ($rr->isRequestAjaxPost()) {
+
+            //Загрузка данных в каждую модель
+            foreach ($this->formModels as $fmodel) {
+                $fmodel->load(\Yii::$app->request->post());
+            }
+
+            //Событие перед валидацией (в контроллере можно перехватить и что то еще сделать)
+            $this->trigger(self::EVENT_BEFORE_VALIDATE);
+
+            foreach ($this->formModels as $fmodel) {
+                if ($fmodel->validate()) {
+
+                } else {
+                    $isValid = false;
+                    //throw new Exception("Не удалось сохранить данные: ".print_r($model->errors, true));
+                }
+            }
+
+
+            if ($isValid) {
+
+                //Если данные корректны и загружены в модели, очередное событеие что готовы сохранять эти данные.
+                $this->trigger(self::EVENT_BEFORE_SAVE);
+
+                //Сохранение данных
+                if ($this->isSaveFormModels) {
+                    foreach ($this->formModels as $model) {
+                        if (method_exists($model, 'save')) {
+                            if ($model->save($this->modelValidate)) {
+                                $model->refresh();
+                            } else {
+                                throw new Exception("Не удалось сохранить данные: " . print_r($model->errors, true));
+                            }
+                        }
+                    }
+                }
+
+                //Событие после сохранения(в контроллере можно перехватить и что то еще сделать)
+                $this->trigger(self::EVENT_AFTER_SAVE);
+
+                if (!$this->afterSaveUrl) {
+                    $this->afterSaveUrl = $this->controller->url;
+                }
+
+                $rr->data = [
+                    'afterSaveUrl' => $this->afterSaveUrl,
+                    'type' => 'update'
+                ];
+
+                $rr->message = $this->successMessage;
+                $rr->success = true;
+
+            } else {
+                //TODO:доработать
+                $validatingResult = [];
+                foreach ($this->formModels as $model)
+                {
+                    $validatingResult = ArrayHelper::merge($validatingResult, ActiveForm::validate($model));
+                }
+                $rr->data = [
+                    'validation' => $validatingResult
+                ];
+                $rr->success = false;
+            }
+
+            return $rr;
+        }
+
         if ($this->fields) {
 
             return $this->render('@skeeks/cms/backend/actions/views/model-update', [
@@ -163,6 +235,10 @@ class BackendModelUpdateAction extends BackendModelAction
             ]);
             //return $this->render('@skeeks/cms/backend/actions/views/model-update');
         }
+
+
+
+
 
         return parent::run();
     }

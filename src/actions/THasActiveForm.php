@@ -8,6 +8,7 @@
 
 namespace skeeks\cms\backend\actions;
 
+use skeeks\cms\backend\widgets\ActiveFormAjaxBackend;
 use skeeks\cms\backend\widgets\ActiveFormBackend;
 use skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab;
 use yii\helpers\ArrayHelper;
@@ -26,7 +27,8 @@ trait THasActiveForm
      * @var string
      */
     //public $activeFormClassName = 'skeeks\cms\modules\admin\widgets\form\ActiveFormUseTab';
-    public $activeFormClass = ActiveFormBackend::class;
+    //public $activeFormClass = ActiveFormBackend::class;
+    public $activeFormClass = ActiveFormAjaxBackend::class;
 
     /**
      * @var array

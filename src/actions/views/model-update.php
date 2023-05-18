@@ -20,38 +20,8 @@ $action = $controller->action;
     </div>
 <? endif; ?>
 
-<?php $form = $action->beginActiveForm([
-    'enableAjaxValidation'   => false,
-    'enableClientValidation' => false,
-]); ?>
-
-
-<? if ($is_saved && @$is_create) : ?>
-    <?php $this->registerJs(<<<JS
-    sx.Window.openerWidgetTriggerEvent('model-create', {
-        'submitBtn' : '{$submitBtn}'
-    });
-JS
-    ); ?>
-
-<? elseif ($is_saved) : ?>
-    <?php $this->registerJs(<<<JS
-sx.Window.openerWidgetTriggerEvent('model-update', {
-        'submitBtn' : '{$submitBtn}'
-    });
-JS
-    ); ?>
-<? endif; ?>
-
-<? if (@$redirect) : ?>
-    <?php $this->registerJs(<<<JS
-window.location.href = '{$redirect}';
-console.log('window.location.href');
-console.log('{$redirect}');
-JS
-    ); ?>
-<? endif; ?>
-
+<?php $pjax = \skeeks\cms\widgets\Pjax::begin(); ?>
+<?php $form = $action->beginActiveForm(); ?>
 
 <?= $form->errorSummary($formModels); ?>
 
@@ -63,21 +33,12 @@ JS
     'fields'     => $action->fields,
 ])->render(); ?>
 
-
-<?php $successMessage = ''; ?>
-<?php if(@$is_create) : ?>
-
-<?php else : ?>
-<? if ($successMessageFlash = \Yii::$app->getSession()->getFlash('success')) : ?>
-    <?php $successMessage = $successMessageFlash; ?>
-<? endif; ?>
-<?php endif; ?>
-
-
-<?= $form->buttonsStandart($model, $action->buttons, $successMessage); ?>
+<?= $form->buttonsStandart($model, $action->buttons); ?>
 <?= $form->errorSummary($formModels); ?>
 
 <?php $form::end(); ?>
+
+<?php $pjax::end(); ?>
 
 
 <? if ($action->afterContent) : ?>
