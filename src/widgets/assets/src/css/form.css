@@ -161,8 +161,8 @@ form.sx-backend-form .tab-content {
 }
 
 .sx-backend-form .control-label {
-    font-size: 12px;
-    margin-bottom: 2px;
+    font-size: 1rem;
+    margin-bottom: 0;
 }
 
 
