@@ -58,6 +58,8 @@ class ActiveFormAjaxBackend extends ActiveForm implements IActiveFormHasFieldSet
      * @var bool 
      */
     public $enableClientValidation = true;
+    
+    public $clientSuccess = null;
 
     public function init()
     {
@@ -71,11 +73,22 @@ class ActiveFormAjaxBackend extends ActiveForm implements IActiveFormHasFieldSet
         $this->_initDynamicReload();
         
         if (!$this->clientCallback) {
+            $successCallback = 'null';
+            if ($this->clientSuccess) {
+                $successCallback = $this->clientSuccess;
+            }
             $this->clientCallback = new \yii\web\JsExpression(<<<JS
                 function (ActiveFormAjaxSubmit) {
-    
                     
                     ActiveFormAjaxSubmit.on('success', function(e, response) {
+                        
+                        var clientSuccess = {$successCallback};
+                        if (clientSuccess) {
+                            if (clientSuccess(ActiveFormAjaxSubmit) === false) {
+                                return false;
+                            }
+                        }
+                        
                         $('.sx-buttons-standart .sx-success-meessage', ActiveFormAjaxSubmit.jForm).empty().append(response.message);
                         ActiveFormAjaxSubmit.jForm.removeClass("sx-form-data-changed");
 
