@@ -8,7 +8,6 @@
 
 namespace skeeks\cms\backend\widgets;
 
-use skeeks\cms\backend\forms\ActiveFieldBackend;
 use skeeks\cms\backend\forms\ActiveFormHasCustomSelectTrait;
 use skeeks\cms\backend\forms\TActiveFormHasButtons;
 use skeeks\cms\backend\forms\TActiveFormHasCustomSelect;
@@ -18,7 +17,6 @@ use skeeks\cms\forms\ActiveFormHasPjaxTrait;
 use skeeks\cms\forms\IActiveFormHasFieldSets;
 use skeeks\cms\forms\TActiveFormDynamicReload;
 use skeeks\cms\forms\TActiveFormHasFieldSets;
-use skeeks\cms\forms\TActiveFormHasPjax;
 use skeeks\cms\traits\ActiveFormAjaxSubmitTrait;
 use yii\helpers\Html;
 use yii\widgets\ActiveField;
@@ -32,17 +30,18 @@ class ActiveFormAjaxBackend extends ActiveForm implements IActiveFormHasFieldSet
     use TActiveFormHasFieldSets;
     use TActiveFormHasButtons;
     use TActiveFormHasCustomSelect;
-    
+
     use TActiveFormDynamicReload;
 
     use ActiveFormAjaxSubmitTrait;
 
-    public $enableAjaxValidation = false;
-    public $validateOnChange = false;
-    public $validateOnBlur = false;
+
+    public $validateOnChange = true;
+    public $validateOnBlur = true;
+
 
     public static $autoIdPrefix = "bf";
-    
+
     /**
      * @var string
      */
@@ -54,12 +53,9 @@ class ActiveFormAjaxBackend extends ActiveForm implements IActiveFormHasFieldSet
      */
     public $registerStandartAsset = true;
 
-    /**
-     * @var bool 
-     */
-    public $enableClientValidation = true;
-    
+
     public $clientSuccess = null;
+
 
     public function init()
     {
@@ -71,7 +67,7 @@ class ActiveFormAjaxBackend extends ActiveForm implements IActiveFormHasFieldSet
         }
 
         $this->_initDynamicReload();
-        
+
         if (!$this->clientCallback) {
             $successCallback = 'null';
             if ($this->clientSuccess) {
