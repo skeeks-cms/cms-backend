@@ -253,7 +253,14 @@ JS
         }
 
 
-        BackendGridModelActionAsset::register(\Yii::$app->view);
+        
+        /*if (YII_ENV_DEV) {
+            print_r("тут");
+            print_r(\Yii::$app->assetManager->bundles);die;
+        }*/
+        
+        
+        
 
     }
 
@@ -262,6 +269,7 @@ JS
      */
     public function renderBeforeTable(GridViewWidget $gridViewWidget)
     {
+        BackendGridModelActionAsset::register(\Yii::$app->view);
         GridViewStandartAsset::register($gridViewWidget->view);
         $multiActions = [];
         if ($this->controller) {
