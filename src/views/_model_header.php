@@ -46,7 +46,7 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
             <?php echo $controller->modelShowName; ?>
         </h1>
         <div class="sx-small-info" style="font-size: 10px; color: silver;">
-            <span title="ID записи - уникальный код записи в базе данных." data-toggle="tooltip"><i class="fas fa-key"></i> <?php echo $model->id; ?></span>
+            <span title="ID записи - уникальный код записи в базе данных." data-toggle="tooltip"><i class="fas fa-key"></i> <?php echo isset($model->id) ? $model->id : ""; ?></span>
             <? if (isset($model->created_at) && $model->created_at) : ?>
                 <span style="margin-left: 5px;" data-toggle="tooltip" title="Запись создана в базе: <?php echo \Yii::$app->formatter->asDatetime($model->created_at); ?>"><i
                             class="far fa-clock"></i> <?php echo \Yii::$app->formatter->asDate($model->created_at); ?></span>
