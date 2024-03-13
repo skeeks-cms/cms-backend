@@ -44,6 +44,11 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
     <div class="col my-auto">
         <h1 style="margin-bottom: 0px; line-height: 1.1;">
             <?php echo $controller->modelShowName; ?>
+            <? if (isset($model->sx_id) && $model->sx_id) : ?>
+                <span style="font-size: 17px; font-weight: bold;">
+                    <span data-toggle='tooltip' title='SkeekS Suppliers ID: <?php echo $model->sx_id; ?>'><i class='fas fa-link'></i></span>
+                </span>
+            <? endif; ?>
         </h1>
         <div class="sx-small-info" style="font-size: 10px; color: silver;">
             <span title="ID записи - уникальный код записи в базе данных." data-toggle="tooltip"><i class="fas fa-key"></i> <?php echo isset($model->id) ? $model->id : ""; ?></span>
