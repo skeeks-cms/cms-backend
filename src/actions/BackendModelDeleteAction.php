@@ -66,7 +66,7 @@ class BackendModelDeleteAction extends BackendModelAction
         }
 
         $model          = $this->controller->model;
-
+        
         $rr             = new RequestResponse();
 
         if ($rr->isRequestAjaxPost())
@@ -84,9 +84,12 @@ class BackendModelDeleteAction extends BackendModelAction
                 }
             } catch (\Exception $e)
             {
+                throw $e;
                 $rr->message = $e->getMessage();
                 $rr->success = false;
             }
+            
+
 
             return (array) $rr;
         }

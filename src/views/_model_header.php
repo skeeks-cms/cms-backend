@@ -45,7 +45,7 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
         <h1 style="margin-bottom: 0px; line-height: 1.1;">
             <?php echo $controller->modelShowName; ?>
             <? if (isset($model->sx_id) && $model->sx_id) : ?>
-                <span style="font-size: 17px; font-weight: bold;">
+                <span class="sx-id" style="font-size: 17px; font-weight: bold;">
                     <span data-toggle='tooltip' title='SkeekS Suppliers ID: <?php echo $model->sx_id; ?>'><i class='fas fa-link'></i></span>
                 </span>
             <? endif; ?>
