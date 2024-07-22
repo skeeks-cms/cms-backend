@@ -32,6 +32,7 @@
 
             this._window.on('model-update', function(e, data) {
                 self.isUpdateAfterClose = true;
+                console.log(data);
                 sx.Window.openerWidgetTriggerEvent('model-update');
 
                 //console.log('model-update');

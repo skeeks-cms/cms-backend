@@ -253,7 +253,8 @@ class BackendModelCreateAction extends ViewBackendAction
 
                 $rr->data = [
                     'afterSaveUrl' => $this->afterSaveUrl,
-                    'type' => 'create'
+                    'type' => 'create',
+                    'submitBtn' => \Yii::$app->request->post('submit-btn')
                 ];
 
                 $rr->message = $this->successMessage;

@@ -90,15 +90,31 @@ class ActiveFormAjaxBackend extends ActiveForm implements IActiveFormHasFieldSet
 
                         if (response.data.type == 'create') {
                             setTimeout(function() {
+                                
                                  sx.Window.openerWidgetTriggerEvent('model-create', {
                                     'submitBtn' : 'save'
                                 });
                             }, 1000);
                             
                         } else if (response.data.type == 'update') {
-                            sx.Window.openerWidgetTriggerEvent('model-update', {
-                                'submitBtn' : 'apply'
-                            });
+                            var submitBtn = response.data.submitBtn || 'apply';
+                            
+                            if (submitBtn == 'save') {
+                                setTimeout(function() {
+                                     sx.Window.openerWidgetTriggerEvent('model-update', {
+                                        'submitBtn' : submitBtn
+                                    });
+                                }, 1000);
+                            } else {
+                                setTimeout(function() {
+                                     sx.Window.openerWidgetTriggerEvent('model-update', {
+                                        'submitBtn' : submitBtn
+                                    });
+                                }, 0);
+                            }
+                            
+                            
+                            
                         }
                         
                     });

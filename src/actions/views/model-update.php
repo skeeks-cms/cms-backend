@@ -33,7 +33,8 @@ $action = $controller->action;
     'fields'     => $action->fields,
 ])->render(); ?>
 
-<?= $form->buttonsStandart($model, $action->buttons); ?>
+<?
+echo $form->buttonsStandart($model, $action->buttons); ?>
 <?= $form->errorSummary($formModels); ?>
 
 <?php $form::end(); ?>

@@ -203,7 +203,8 @@ class BackendModelUpdateAction extends BackendModelAction
 
                 $rr->data = [
                     'afterSaveUrl' => $this->afterSaveUrl,
-                    'type' => 'update'
+                    'type' => 'update',
+                    'submitBtn' => \Yii::$app->request->post('submit-btn')
                 ];
 
                 $rr->message = $this->successMessage;
