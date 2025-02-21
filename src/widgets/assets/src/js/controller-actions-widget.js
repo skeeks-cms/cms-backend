@@ -8,10 +8,39 @@
 {
     sx.createNamespace('classes.backend.widgets', sx);
 
+    sx.classes.backend.widgets.ActionInstance = sx.classes.Component.extend({
+
+        _windowReady: function() {
+            var self = this;
+
+            var hash = window.location.hash;
+
+            if (window.location.hash) {
+
+                if (hash.indexOf("#sx-open=") != -1) {
+                    var url = hash.replace("#sx-open=", "");
+
+                    sx.onReady(function() {
+                        new sx.classes.backend.widgets.Action({
+                            'url' : url,
+                            'isOpenNewWindow' : true
+                        }).go();
+                    });
+                }
+
+            }
+
+        }
+    });
+
+    sx.BackendAction = new sx.classes.backend.widgets.ActionInstance();
+
     sx.classes.backend.widgets.Action = sx.classes.Component.extend({
 
         _init: function() {
             var self = this;
+
+            var currentWindowHref = window.location.href;
 
             this._window = new sx.classes.Window(this.get('url'), this.get('newWindowName'));
             this._window.setCenterOptions().disableResize().disableLocation();
@@ -23,7 +52,20 @@
             this.isUpdateAfterClose = false;
 
 
+            this._window.on('afterOpen', function() {
+
+                /*window.history.pushState({}, '', self.get('url'));*/
+
+            });
+
             this._window.on('close', function() {
+
+                /*window.history.go(-1);*/
+                if (currentWindowHref.indexOf("#") != -1) {
+                    currentWindowHref = currentWindowHref.substring(0, currentWindowHref.indexOf("#"));
+                }
+                sx.Window.getMainWindow().history.replaceState({}, '', currentWindowHref);
+
                 if (self.isUpdateAfterClose) {
                     self.updateSuccess();
                 }
