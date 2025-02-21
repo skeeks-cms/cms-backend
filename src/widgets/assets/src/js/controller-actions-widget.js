@@ -61,6 +61,7 @@
             this._window.on('close', function() {
 
                 /*window.history.go(-1);*/
+                //TODO: доработать если много открытых окон
                 if (currentWindowHref.indexOf("#") != -1) {
                     currentWindowHref = currentWindowHref.substring(0, currentWindowHref.indexOf("#"));
                 }
