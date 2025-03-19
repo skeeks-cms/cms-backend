@@ -60,12 +60,19 @@
 
             this._window.on('close', function() {
 
-                /*window.history.go(-1);*/
-                //TODO: доработать если много открытых окон
-                if (currentWindowHref.indexOf("#") != -1) {
-                    currentWindowHref = currentWindowHref.substring(0, currentWindowHref.indexOf("#"));
+                //Если текущее окно не самое главное
+                if (sx.Window.getMainWindow() !== window) {
+                    var newUrl = window.location.pathname + window.location.search;
+                    sx.Window.getMainWindow().history.replaceState({}, "", "#sx-open=" + newUrl);
+                    
+                } else {
+                    if (currentWindowHref.indexOf("#") != -1) {
+                        currentWindowHref = currentWindowHref.substring(0, currentWindowHref.indexOf("#"));
+                    }
+                    sx.Window.getMainWindow().history.replaceState({}, '', currentWindowHref);
                 }
-                sx.Window.getMainWindow().history.replaceState({}, '', currentWindowHref);
+                    
+                
 
                 if (self.isUpdateAfterClose) {
                     self.updateSuccess();
