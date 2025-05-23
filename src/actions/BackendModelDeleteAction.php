@@ -84,7 +84,7 @@ class BackendModelDeleteAction extends BackendModelAction
                 }
             } catch (\Exception $e)
             {
-                throw $e;
+                /*throw $e;*/
                 $rr->message = $e->getMessage();
                 $rr->success = false;
             }

@@ -8,7 +8,6 @@
 namespace skeeks\cms\backend\widgets;
 
 use skeeks\cms\backend\widgets\assets\BackendFiltersWidgetAsset;
-use skeeks\cms\backend\widgets\assets\BackendSearchAndFiltersWidgetAsset;
 use skeeks\cms\backend\widgets\filters\ActiveField;
 use skeeks\cms\backend\widgets\filters\Bootstrap4InlineActiveField;
 use skeeks\cms\helpers\RequestResponse;
@@ -23,10 +22,10 @@ use yii\helpers\Json;
  * @author Semenov Alexander <semenov@skeeks.com>
  */
 //class FiltersWidget extends \skeeks\cms\widgets\FiltersWidget {
-class FiltersWidget extends QueryFiltersWidget
+class FiltersWidgetV1 extends QueryFiltersWidget
 {
 
-    public $viewFile = '@skeeks/cms/backend/widgets/views/search-and-filters';
+    public $viewFile = '@skeeks/cms/backend/widgets/views/filters';
     public $isOpened = false;
 
     public $defaultActiveForm = [
@@ -59,7 +58,7 @@ class FiltersWidget extends QueryFiltersWidget
 
         parent::init();
 
-        Html::addCssClass($this->wrapperOptions, 'sx-backend-filters-wrapper');
+        Html::addCssClass($this->wrapperOptions, 'sx-backend-filters-wrapper sx-bg-secondary');
     }
 
     public function run()
@@ -143,7 +142,7 @@ class FiltersWidget extends QueryFiltersWidget
 {   
     sx.createNamespace('classes.widgets', sx); 
     
-    sx.classes.widgets.BackendSearchAndFiltersWidget = sx.classes.Component.extend({
+    sx.classes.widgets.BackendFiltersWidget = sx.classes.Component.extend({
     
         _init: function()
         {},
@@ -154,7 +153,6 @@ class FiltersWidget extends QueryFiltersWidget
             
             this.jWrapper = $('#' + this.get('id'));
             this.jForm = $("form", this.jWrapper);
-            this.jSortable = $(".sx-filters-block-inner", this.jWrapper);
             
             this.Blocker = new sx.classes.Blocker('#' + this.get('id'));
             
@@ -265,7 +263,7 @@ class FiltersWidget extends QueryFiltersWidget
         _initSortable: function() {
             var self = this;
             //$('.form-group', this.jForm).sortable({
-            this.jSortable.sortable({
+            this.jForm.sortable({
                 cursor: "move",
                 handle: ".sx-move",
                 forceHelperSize: true,
@@ -313,7 +311,7 @@ class FiltersWidget extends QueryFiltersWidget
                         })
                     );
                     
-                    $(".form-group", self.jForm).each(function(i, element)
+                    self.jForm.children(".form-group").each(function(i, element)
                     {
                         newSort.push($(this).data("attribute"));
                         
@@ -486,12 +484,12 @@ class FiltersWidget extends QueryFiltersWidget
         }
     });
     
-    new sx.classes.widgets.BackendSearchAndFiltersWidget({$jsOptions});
+    new sx.classes.widgets.BackendFiltersWidget({$jsOptions});
 })(sx, sx.$, sx._);
 JS
         );
 
-        BackendSearchAndFiltersWidgetAsset::register(\Yii::$app->view);
+        BackendFiltersWidgetAsset::register(\Yii::$app->view);
         return parent::run();
     }
 }

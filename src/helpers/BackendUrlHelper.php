@@ -29,11 +29,11 @@ use yii\helpers\Url;
  */
 class BackendUrlHelper extends Component
 {
-    const BACKEND_PARAM_NAME = "_backend";
+    const BACKEND_PARAM_NAME = "_sxb";
 
-    const BACKEND_PARAM_NAME_EMPTY_LAYOUT = "empty-layout";
-    const BACKEND_PARAM_NAME_NO_ACTIONS = "no-actions";
-    const BACKEND_PARAM_NAME_NO_MODEL_ACTIONS = "no-model-actions";
+    const BACKEND_PARAM_NAME_EMPTY_LAYOUT = "el";
+    const BACKEND_PARAM_NAME_NO_ACTIONS = "noa";
+    const BACKEND_PARAM_NAME_NO_MODEL_ACTIONS = "noma";
     const BACKEND_PARAM_NAME_CALLBACK_EVENT_NAME = "callback-event-name";
 
     /**

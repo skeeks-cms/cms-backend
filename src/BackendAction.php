@@ -51,7 +51,7 @@ class BackendAction extends Action
     use THasPermissions;
 
     const EVENT_INIT = "init";
-    public $backendShowingParam = 'sx-backend-showing';
+    public $backendShowingParam = 'sx-bs';
     /**
      * @var bool Показывать отображения?
      */
@@ -118,10 +118,14 @@ class BackendAction extends Action
 
         if ($this->permissionNames === null && $this->permissionName) {
             $this->permissionNames = [
-                $this->permissionName => $this->name,
+                $this->permissionName => $this->controller->name . " | " . $this->name,
             ];
         }
 
+        /*if (YII_ENV_DEV) {
+            var_dump($this->permissionNames); die;
+        }*/
+        //var_dump($this->permissionNames); die;
 
         $this->_initUrl()->_initAccess();
         parent::init();

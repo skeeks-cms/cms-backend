@@ -100,7 +100,7 @@ form.sx-backend-form .form-group {
 }
 
 form.sx-backend-form .form-group:hover {
-    background: #f5f5f5;
+    /*background: #f5f5f5;*/
 }
 
 form.sx-backend-form {

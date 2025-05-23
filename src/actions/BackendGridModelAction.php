@@ -219,6 +219,7 @@ JS
         parent::init();
 
         $defaultFilters = [
+            //'class'              => \skeeks\cms\backend\widgets\SearchAndFiltersWidget::class,
             'class'              => \skeeks\cms\backend\widgets\FiltersWidget::class,
             'filtersModel'       => [
                 'formName' => 'f'.$this->id,

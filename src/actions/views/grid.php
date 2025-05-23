@@ -186,7 +186,7 @@ $backendShowings = $action->backendShowings;
             $rr = new \skeeks\cms\helpers\RequestResponse();
             $pks = [];
             foreach ($query->each(100) as $element) {
-                $pks[] = $element->id;
+                $pks[] = $element->{$controller->modelPkAttribute};
             }
             $rr->success = true;
             $rr->message = [

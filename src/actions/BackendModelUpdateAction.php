@@ -96,7 +96,6 @@ class BackendModelUpdateAction extends BackendModelAction
                     foreach ($this->formModels as $model) {
                         $model->load(\Yii::$app->request->post());
                     }
-
                     $this->trigger(self::EVENT_BEFORE_VALIDATE);
 
                     /**
@@ -157,6 +156,7 @@ class BackendModelUpdateAction extends BackendModelAction
 
         //Новые формы отправляемые через Ajax
         else if ($rr->isRequestAjaxPost()) {
+            
 
             //Загрузка данных в каждую модель
             foreach ($this->formModels as $fmodel) {

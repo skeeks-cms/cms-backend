@@ -214,11 +214,15 @@
             AjaxHandler.on("success", function (e, response) {
                 jQueryBtn.addClass('is-success');
 
-                var html = response.data.html;
-                html = new String(html);
+                if (response.data.html.length > 0) {
+                    var html = response.data.html;
+                    html = new String(html);
 
-                var jFirst = $("li", $.parseHTML(html));
-                console.log($.parseHTML(html));
+                    var jFirst = $("li", $.parseHTML(html));
+                } else {
+                    var html = "<div style='padding: 1rem;'>Нет доступных действий</div>";
+                }
+
 
 
                 jQueryBtn.attr('data-content', html);

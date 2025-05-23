@@ -23,7 +23,7 @@ use yii\helpers\Json;
  * @author Semenov Alexander <semenov@skeeks.com>
  */
 //class FiltersWidget extends \skeeks\cms\widgets\FiltersWidget {
-class FiltersWidget extends QueryFiltersWidget
+class SearchAndFiltersWidget extends QueryFiltersWidget
 {
 
     public $viewFile = '@skeeks/cms/backend/widgets/views/search-and-filters';
@@ -258,13 +258,13 @@ class FiltersWidget extends QueryFiltersWidget
                 
             });*/
             
-            
             this._initSortable();
         },
         
         _initSortable: function() {
             var self = this;
             //$('.form-group', this.jForm).sortable({
+            console.log(this.jSortable);
             this.jSortable.sortable({
                 cursor: "move",
                 handle: ".sx-move",
@@ -313,7 +313,7 @@ class FiltersWidget extends QueryFiltersWidget
                         })
                     );
                     
-                    $(".form-group", self.jForm).each(function(i, element)
+                    self.jForm.children(".form-group").each(function(i, element)
                     {
                         newSort.push($(this).data("attribute"));
                         

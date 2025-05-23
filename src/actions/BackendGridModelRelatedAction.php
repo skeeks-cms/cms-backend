@@ -114,11 +114,20 @@ class BackendGridModelRelatedAction extends BackendModelAction
                 if ($this->relation) {
 
                     $relation = $this->relation;
-                    $this->relatedIndexAction->grid['on init'] = function (Event $e) use ($relation) {
+
+                    $baseOnInit = null;
+                    if (isset($this->relatedIndexAction->grid['on init'])) {
+                        $baseOnInit = $this->relatedIndexAction->grid['on init'];
+                    }
+                    $this->relatedIndexAction->grid['on init'] = function (Event $e) use ($relation, $baseOnInit) {
                         /**
                          * @var $query ActiveQuery
                          */
                         $query = $e->sender->dataProvider->query;
+
+                        if ($baseOnInit) {
+                            $baseOnInit($e);
+                        }
 
                         $query->andWhere($this->getBindRelation($this->model));
                     };

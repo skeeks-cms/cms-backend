@@ -15,7 +15,7 @@
 
 .sx-popover-ajax-controller-actions ul li:hover {
     color: white;
-    background: #d51849;
+    background: var(--primary-color);
 }
 .sx-popover-ajax-controller-actions ul li:hover a {
     color: white;

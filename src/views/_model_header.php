@@ -38,7 +38,9 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
     <? if ($image) : ?>
         <div class="col my-auto" style="max-width: 60px">
             <img style="border: 2px solid #ededed; border-radius: 5px;" src="<?php echo \Yii::$app->imaging->getImagingUrl($image->src,
-                new \skeeks\cms\components\imaging\filters\Thumbnail()); ?>"/>
+                new \skeeks\cms\components\imaging\filters\Thumbnail([
+                    'm' => \Imagine\Image\ManipulatorInterface::THUMBNAIL_OUTBOUND
+                ])); ?>"/>
         </div>
     <? endif; ?>
     <div class="col my-auto">

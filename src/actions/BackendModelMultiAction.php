@@ -84,7 +84,7 @@ class BackendModelMultiAction extends BackendAction
                 }
                 
                 if ($this->eachExecute($model)) {
-                    $result[$model->id] = [
+                    $result[$model->{$this->controller->modelPkAttribute}] = [
                         'success' => true,
                     ];
                     $data['success'] = ArrayHelper::getValue($data, 'success', 0) + 1;
@@ -93,7 +93,7 @@ class BackendModelMultiAction extends BackendAction
                 }
             } catch (\Exception $e) {
                 
-                $result[$model->id] = [
+                $result[$model->{$this->controller->modelPkAttribute}] = [
                     'success' => false,
                     'error' => $e->getMessage(),
                 ];

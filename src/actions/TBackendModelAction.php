@@ -66,13 +66,13 @@ trait TBackendModelAction
             //&& $this->generateAccess === true
         ) {
             $this->permissionNames = [
-                $this->permissionName => $this->name,
+                $this->permissionName => $this->controller->name . " | " . $this->name,
             ];
 
             $className = $this->modelClassName;
             $model = new $className();
             if (method_exists($model, 'hasAttribute') && $model->hasAttribute('created_by')) {
-                $this->permissionNames = ArrayHelper::merge($this->permissionNames, [$this->ownPermissionName => $this->name." (".\Yii::t('skeeks/backend', 'Only your').")"]);
+                $this->permissionNames = ArrayHelper::merge($this->permissionNames, [$this->ownPermissionName =>  $this->controller->name . " | " . $this->name." (".\Yii::t('skeeks/backend', 'Only your').")"]);
             }
         }
 
@@ -148,7 +148,7 @@ trait TBackendModelAction
         if ($permissionName) {
             if (!$permission = \Yii::$app->authManager->getPermission($permissionName)) {
                 $permission = \Yii::$app->authManager->createPermission($permissionName);
-                $permission->description = $this->name;
+                $permission->description = $this->controller->name . " | " . $this->name;
                 \Yii::$app->authManager->add($permission);
 
                 //После первого создания назначение администратору
@@ -173,7 +173,7 @@ trait TBackendModelAction
                 $permissionOwnName = $this->ownPermissionName;
                 if (!$permissionOwn = \Yii::$app->authManager->getPermission($permissionOwnName)) {
                     $permissionOwn = \Yii::$app->authManager->createPermission($permissionOwnName);
-                    $permissionOwn->description = $this->name.' ('.\Yii::t('skeeks/backend', 'Only your').')';
+                    $permissionOwn->description = $this->controller->name . " | " . $this->name.' ('.\Yii::t('skeeks/backend', 'Only your').')';
                     $permissionOwn->ruleName = (new \skeeks\cms\rbac\AuthorRule())->name;
                     \Yii::$app->authManager->add($permissionOwn);
 

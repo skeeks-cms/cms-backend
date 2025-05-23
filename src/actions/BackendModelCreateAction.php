@@ -225,7 +225,6 @@ class BackendModelCreateAction extends ViewBackendAction
                 }
             }
 
-
             if ($isValid) {
 
                 //Если данные корректны и загружены в модели, очередное событеие что готовы сохранять эти данные.
