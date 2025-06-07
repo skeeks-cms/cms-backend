@@ -444,6 +444,7 @@ trait TBackendModelController
     }
 
 
+    public $isOpenNewWindowForModel = true;
 
     /**
      * @return RequestResponse
@@ -458,7 +459,7 @@ trait TBackendModelController
         $rr->data['html'] = ControllerActionsWidget::widget([
             'actions' => $this->modelActions,
             'minViewCount' => 1,
-            'isOpenNewWindow' => true,
+            'isOpenNewWindow' => $this->isOpenNewWindowForModel,
             'options' => [
                 'class' => 'nav flex-column nav-pills'
             ],
