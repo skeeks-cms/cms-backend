@@ -264,6 +264,8 @@
     /*background: var(--bg-block-color);*/
     background: #bcedfc;
     margin-right: 0.5rem;
+    justify-content: center;
+    align-items: center;
 }
 .sx-backend-filters-form .sx-fast-filter-btn:hover .sx-close-fast-filter {
     opacity: 1;
