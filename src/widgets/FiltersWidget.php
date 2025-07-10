@@ -13,6 +13,7 @@ use skeeks\cms\backend\widgets\filters\ActiveField;
 use skeeks\cms\backend\widgets\filters\Bootstrap4InlineActiveField;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\queryfilters\QueryFiltersWidget;
+use skeeks\cms\rbac\CmsManager;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\BootstrapPluginAsset;
 use yii\helpers\ArrayHelper;
@@ -68,26 +69,16 @@ class FiltersWidget extends QueryFiltersWidget
             if (\Yii::$app->request->post('act') && \Yii::$app->request->post('widgetid') == $this->id) {
                 ob_get_clean();
                 $rr = new RequestResponse();
-                if (\Yii::$app->request->post('act') == 'remove-item') {
-
-                    $visibles = $this->visibleFilters;
-                    ArrayHelper::removeValue($visibles, \Yii::$app->request->post('attribute'));
-
-                    $this->configModel->visibleFilters = $visibles;
-
-                    if (!$this->configBehavior->saveConfig()) {
-                        $rr->success = false;
-                        $rr->message = "Настройки не сохранены";
-                    } else {
-                        $rr->success = true;
-                        //$rr->message = 'Настройки сохранены';
-                    }
-
-                } elseif (\Yii::$app->request->post('act') == 'save-values') {
-                    try {
-                        $this->filtersModel->load(\Yii::$app->request->post());
-                        $this->configModel->filterValues = $this->filtersModel->toArray();
-
+                
+                if (\Yii::$app->user->can(CmsManager::PERMISSION_ROLE_ADMIN_ACCESS)) {
+                    
+                    if (\Yii::$app->request->post('act') == 'remove-item') {
+    
+                        $visibles = $this->visibleFilters;
+                        ArrayHelper::removeValue($visibles, \Yii::$app->request->post('attribute'));
+    
+                        $this->configModel->visibleFilters = $visibles;
+    
                         if (!$this->configBehavior->saveConfig()) {
                             $rr->success = false;
                             $rr->message = "Настройки не сохранены";
@@ -95,35 +86,49 @@ class FiltersWidget extends QueryFiltersWidget
                             $rr->success = true;
                             //$rr->message = 'Настройки сохранены';
                         }
-                    } catch (\Exception $e) {
-
-                    }
-                } elseif (\Yii::$app->request->post('act') == 'sort') {
-                    try {
-                        $this->configModel->visibleFilters = \Yii::$app->request->post('sort');
-
-                        if (!$this->configBehavior->saveConfig()) {
-                            $rr->success = false;
-                            $rr->message = "Настройки не сохранены";
-                        } else {
-                            $rr->success = true;
-                            //$rr->message = 'Настройки сохранены';
+    
+                    } elseif (\Yii::$app->request->post('act') == 'save-values') {
+                        try {
+                            $this->filtersModel->load(\Yii::$app->request->post());
+                            $this->configModel->filterValues = $this->filtersModel->toArray();
+    
+                            if (!$this->configBehavior->saveConfig()) {
+                                $rr->success = false;
+                                $rr->message = "Настройки не сохранены";
+                            } else {
+                                $rr->success = true;
+                                //$rr->message = 'Настройки сохранены';
+                            }
+                        } catch (\Exception $e) {
+    
                         }
-
-                    } catch (\Exception $e) {
-
+                    } elseif (\Yii::$app->request->post('act') == 'sort') {
+                        try {
+                            $this->configModel->visibleFilters = \Yii::$app->request->post('sort');
+    
+                            if (!$this->configBehavior->saveConfig()) {
+                                $rr->success = false;
+                                $rr->message = "Настройки не сохранены";
+                            } else {
+                                $rr->success = true;
+                                //$rr->message = 'Настройки сохранены';
+                            }
+    
+                        } catch (\Exception $e) {
+    
+                        }
+                    } elseif (\Yii::$app->request->post('act') == 'available-filters') {
+                        /*try {
+                            $query = \Yii::$app->request->post("search-available");
+                            $rr->success = true;
+                            $rr->data = [
+                                'attributes' => $this->getAvailableColumns($query)
+                            ];
+    
+                        } catch (\Exception $e) {
+    
+                        }*/
                     }
-                } elseif (\Yii::$app->request->post('act') == 'available-filters') {
-                    /*try {
-                        $query = \Yii::$app->request->post("search-available");
-                        $rr->success = true;
-                        $rr->data = [
-                            'attributes' => $this->getAvailableColumns($query)
-                        ];
-
-                    } catch (\Exception $e) {
-
-                    }*/
                 }
 
                 \Yii::$app->response->data = $rr;

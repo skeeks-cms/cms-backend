@@ -159,10 +159,10 @@ $this->registerJs(<<<JS
                 
                 setTimeout(function () {
                     var delta = Date.now() - self.lasTime;
-                    if (delta > 500) {
+                    if (delta > 1000) {
                         jApplyBtn.click();
                     }
-                }, 500);
+                }, 1000);
             });
             
             jSearchInput.on("click", function() {
@@ -410,6 +410,9 @@ $form = $activeFormClassName::begin((array)$widget->activeForm);
                     <!--<a href="#" onclick="return false;" style="text-decoration: none; border-bottom: 1px dashed;" class="sx-filters-toggle">
                         Фильтры
                     </a>-->
+                    
+                    <? if (\Yii::$app->user->can(\skeeks\cms\rbac\CmsManager::PERMISSION_ROLE_ADMIN_ACCESS)) : ?>
+
                     <span class="sx-controlls">
                     <?= \yii\helpers\Html::a('<i class="hs-admin-settings g-absolute-centered"></i>',
                         '#', [
@@ -419,19 +422,24 @@ $form = $activeFormClassName::begin((array)$widget->activeForm);
 JS
                             ),
                         ]); ?>
+                        
                 </span>
+                    <? endif; ?>
                 </div>
             </div>
         </div>
 
+        
         <div class="sx-filters-applied-save">
             <div class="sx-applied-filters"></div>
             <div class="sx-save-filters-wrapper">
+                <? if (\Yii::$app->user->can(\skeeks\cms\rbac\CmsManager::PERMISSION_ROLE_ADMIN_ACCESS)) : ?>
                 <div>
                     <a class="btn btn-default btn-sm sx-save-values" title="Сохранить примененные значения" data-toggle="tooltip">
                         Сохранить примененное
                     </a>
                 </div>
+                <? endif; ?>
             </div>
         </div>
 

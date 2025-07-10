@@ -126,6 +126,7 @@ $activeFormClassName = \yii\helpers\ArrayHelper::getValue($widget->activeForm, '
                     ]);
 
                     ?>
+                    <? if (\Yii::$app->user->can(\skeeks\cms\rbac\CmsManager::PERMISSION_ROLE_ADMIN_ACCESS)) : ?>
                     <?= \yii\helpers\Html::a('<i class="fa fa-cog"></i>',
                         '#', [
                             'class'   => 'btn btn-sm sx-edit',
@@ -134,6 +135,7 @@ $activeFormClassName = \yii\helpers\ArrayHelper::getValue($widget->activeForm, '
 JS
                             ),
                         ]).$callableDataInput; ?>
+                    <? endif; ?>
                 </span>
         </div>
 
@@ -212,6 +214,8 @@ JS
     margin: 0 15px;">
             <button class="btn btn-secondary" type="submit"><i class="glyphicon glyphicon-filter"></i> Применить</button>
         </div>
+        
+        <? if (\Yii::$app->user->can(\skeeks\cms\rbac\CmsManager::PERMISSION_ROLE_ADMIN_ACCESS)) : ?>
         <div class="" style="    /* min-height: 100%; */
     /* height: 100%; */
     padding: 0;
@@ -224,6 +228,7 @@ JS
     border-color: silver;" title="Сохранить примененные значения" data-toggle="tooltip"><i class="fa fa-check"></i>
             </button>
         </div>
+        <? endif; ?>
 
         <input type="hidden" value="1" name="<?= $widget->filtersSubmitKey; ?>">
         <?
