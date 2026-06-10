@@ -231,7 +231,8 @@ class SelectModelDialogWidget extends InputWidget
             $this->clientOptions['previewValueClientCallback'] = new \yii\web\JsExpression(<<<JS
                 function(data)
                 {
-                    return '<a href="#" target="_blank" data-pjax="0">' + data.asText + '</a>'
+                    var text = data.asText || data.name || data.title || data.id || '';
+                    return '<a href="#" target="_blank" data-pjax="0">' + text + '</a>'
                 }
 JS
             );

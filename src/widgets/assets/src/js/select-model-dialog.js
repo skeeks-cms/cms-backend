@@ -272,7 +272,9 @@
          * @returns {sx.classes.SelectModelDialog}
          */
         setVal: function (data, triggerUpdate) {
-            var triggerUpdate = triggerUpdate;
+            if (typeof triggerUpdate === 'undefined') {
+                triggerUpdate = true;
+            }
 
             var self = this;
             self.jQueryInput().empty();
