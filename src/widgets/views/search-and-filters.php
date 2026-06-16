@@ -372,7 +372,45 @@ $editComponent = [
         ->url,
 ];
 $editComponent = \yii\helpers\Json::encode($editComponent);
-$callableDataInput = \yii\helpers\Html::textarea('callableData', base64_encode(serialize($widget->editData)), [
+$editData = $widget->editData;
+$callAttributes = (array)\yii\helpers\ArrayHelper::getValue($editData, 'callAttributes', []);
+$editData['callAttributes'] = array_intersect_key($callAttributes, array_flip([
+    'visibleFilters',
+    'filterValues',
+    'autoFilters',
+    'disableAutoFilters',
+    'contextData',
+    'configBehaviorData',
+    'search_param_name',
+]));
+
+$availableFields = (array)\yii\helpers\ArrayHelper::remove($editData, 'availableColumns', []);
+if ($availableFields) {
+    $availableFieldsCacheKey = 'sx-filters-available-fields-'.md5($widget->id.microtime(true).mt_rand());
+    \Yii::$app->cache->set($availableFieldsCacheKey, $availableFields, 3600);
+
+    $selectedFieldCodes = array_unique(\yii\helpers\ArrayHelper::merge(
+        (array)\yii\helpers\ArrayHelper::getValue($editData, 'visibleFilters', []),
+        (array)\yii\helpers\ArrayHelper::getValue($editData, 'attributes.visibleFilters', []),
+        (array)\yii\helpers\ArrayHelper::getValue($editData, 'callAttributes.visibleFilters', [])
+    ));
+    $selectedFields = [];
+    foreach ($selectedFieldCodes as $fieldCode) {
+        if (array_key_exists($fieldCode, $availableFields)) {
+            $selectedFields[$fieldCode] = $availableFields[$fieldCode];
+        }
+    }
+
+    $editData['availableColumns'] = $selectedFields;
+    $editData['availableColumnsCacheKey'] = $availableFieldsCacheKey;
+    $editData['availableColumnsUrl'] = \yii\helpers\Url::to([
+        \skeeks\cms\backend\BackendComponent::getCurrent()->backendShowingControllerRoute.'/component-callable-data',
+        'key' => $availableFieldsCacheKey,
+        'componentClassName' => $widget::className(),
+    ]);
+}
+
+$callableDataInput = \yii\helpers\Html::textarea('callableData', base64_encode(serialize($editData)), [
     'id'    => $widget->id."-edit",
     'style' => 'display: none;',
 ]);

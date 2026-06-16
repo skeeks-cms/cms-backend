@@ -219,6 +219,64 @@ class AdminBackendShowingController extends BackendModelController
     }
 
     /**
+     * Lazy loading heavy callable data chunks, for example large grid columns list.
+     * @return array
+     */
+    public function actionComponentCallableData()
+    {
+        \Yii::$app->response->format = \yii\web\Response::FORMAT_JSON;
+
+        $key = (string)\Yii::$app->request->get('key');
+        $items = [];
+
+        if ($key) {
+            $items = (array)\Yii::$app->cache->get($key);
+        }
+
+        if (($className = \Yii::$app->request->get('componentClassName')) && is_subclass_of($className, \skeeks\cms\widgets\GridView::class)) {
+            $callableData = $this->getCallableData();
+            unset($callableData['availableColumnsCacheKey']);
+
+            $reflection = new \ReflectionClass($className);
+            $component = $reflection->newInstanceWithoutConstructor();
+            if (method_exists($component, 'getAvailableColumns')) {
+                $dynamicItems = (array)$component->getAvailableColumns($callableData);
+                if (method_exists($component, 'getFilteredAvailableColumns')) {
+                    $dynamicItems = (array)$component->getFilteredAvailableColumns($dynamicItems, $callableData);
+                }
+
+                $items = \yii\helpers\ArrayHelper::merge($items, $dynamicItems);
+            }
+        } elseif ($className && is_subclass_of($className, \skeeks\cms\queryfilters\QueryFiltersWidget::class)) {
+            $callableData = $this->getCallableData();
+            unset($callableData['availableColumnsCacheKey']);
+
+            $reflection = new \ReflectionClass($className);
+            $component = $reflection->newInstanceWithoutConstructor();
+            if (method_exists($component, 'getAvailableFields')) {
+                $dynamicItems = (array)$component->getAvailableFields($callableData);
+                if (method_exists($component, 'getFilteredAvailableFields')) {
+                    $dynamicItems = (array)$component->getFilteredAvailableFields($dynamicItems, $callableData);
+                }
+
+                $items = \yii\helpers\ArrayHelper::merge($items, $dynamicItems);
+            }
+        }
+
+        if (!$key && !$items) {
+            return [
+                'success' => false,
+                'items' => [],
+            ];
+        }
+
+        return [
+            'success' => true,
+            'items' => $items,
+        ];
+    }
+
+    /**
      * @param Component $component
      * @param array $data
      */

@@ -122,7 +122,50 @@ class BackendGridModelAction extends ViewBackendAction
                             ->url,
                     ];
                     $editComponent = Json::encode($editComponent);
-                    $callableDataInput = Html::textarea('callableData', base64_encode(serialize($gridViewWidget->editData)), [
+                    $editData = $gridViewWidget->editData;
+                    $callAttributes = (array)ArrayHelper::getValue($editData, 'callAttributes', []);
+                    $editData['callAttributes'] = array_intersect_key($callAttributes, array_flip([
+                        'caption',
+                        'visibleColumns',
+                        'pageParam',
+                        'pageSizeParam',
+                        'defaultPageSize',
+                        'pageSizeLimitMin',
+                        'pageSizeLimitMax',
+                        'defaultOrder',
+                        'autoColumns',
+                        'disableAutoColumns',
+                        'contextData',
+                        'configBehaviorData',
+                    ]));
+
+                    $availableColumns = (array)ArrayHelper::remove($editData, 'availableColumns', []);
+                    if ($availableColumns) {
+                        $availableColumnsCacheKey = 'sx-grid-available-columns-'.md5($gridViewWidget->id.microtime(true).mt_rand());
+                        \Yii::$app->cache->set($availableColumnsCacheKey, $availableColumns, 3600);
+
+                        $selectedColumnCodes = array_unique(ArrayHelper::merge(
+                            (array)ArrayHelper::getValue($editData, 'visibleColumns', []),
+                            (array)ArrayHelper::getValue($editData, 'attributes.visibleColumns', []),
+                            (array)ArrayHelper::getValue($editData, 'callAttributes.visibleColumns', [])
+                        ));
+                        $selectedColumns = [];
+                        foreach ($selectedColumnCodes as $columnCode) {
+                            if (array_key_exists($columnCode, $availableColumns)) {
+                                $selectedColumns[$columnCode] = $availableColumns[$columnCode];
+                            }
+                        }
+
+                        $editData['availableColumns'] = $selectedColumns;
+                        $editData['availableColumnsCacheKey'] = $availableColumnsCacheKey;
+                        $editData['availableColumnsUrl'] = Url::to([
+                            BackendComponent::getCurrent()->backendShowingControllerRoute.'/component-callable-data',
+                            'key' => $availableColumnsCacheKey,
+                            'componentClassName' => $gridViewWidget::className(),
+                        ]);
+                    }
+
+                    $callableDataInput = Html::textarea('callableData', base64_encode(serialize($editData)), [
                         'id'    => $gridViewWidget->id."-edit",
                         'style' => 'display: none;',
                     ]);
