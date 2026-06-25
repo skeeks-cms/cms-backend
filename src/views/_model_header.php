@@ -11,10 +11,12 @@
  */
 
 $image = null;
-if (isset($model->image)) {
+if (isset($model->image) && $model->image && $model->image->src) {
     $image = $model->image;
-} elseif (isset($model->cmsImage)) {
+} elseif (isset($model->cmsImage) && $model->cmsImage && $model->cmsImage->src) {
     $image = $model->cmsImage;
+} elseif (isset($model->logo) && $model->logo && $model->logo->src) {
+    $image = $model->logo;
 }
 /**
  * @var $controller \skeeks\cms\backend\controllers\BackendModelController
@@ -37,18 +39,40 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
 <div class="row no-gutters" style="margin-bottom: 5px;">
     <? if ($image) : ?>
         <div class="col my-auto" style="max-width: 60px">
-            <img style="border: 2px solid #ededed; border-radius: 5px;" src="<?php echo \Yii::$app->imaging->getImagingUrl($image->src,
-                new \skeeks\cms\components\imaging\filters\Thumbnail([
-                    'm' => \Imagine\Image\ManipulatorInterface::THUMBNAIL_OUTBOUND
-                ])); ?>"/>
+            <?php
+            $imageSrc = isset($model->cms_image_id)
+                ? $image->src
+                : \Yii::$app->imaging->getImagingUrl($image->src,
+                    new \skeeks\cms\components\imaging\filters\Thumbnail([
+                        'm' => \Imagine\Image\ManipulatorInterface::THUMBNAIL_OUTBOUND
+                    ]));
+            ?>
+            <img style="border: 2px solid #ededed; border-radius: 5px; width: 50px; height: 50px; object-fit: cover;" src="<?php echo \yii\helpers\Html::encode($imageSrc); ?>"/>
         </div>
     <? endif; ?>
     <div class="col my-auto">
         <h1 style="margin-bottom: 0px; line-height: 1.1;">
             <?php echo $controller->modelShowName; ?>
             <? if (isset($model->sx_id) && $model->sx_id) : ?>
+                <?
+                $sxInfoUpdateColor = (isset($model->is_sx_info_update) && !$model->is_sx_info_update) ? "red" : "green";
+                $sxInfoUpdateTitle = (isset($model->is_sx_info_update) && !$model->is_sx_info_update)
+                    ? "SkeekS ID: {$model->sx_id}. Обновление информации из сервиса SkeekS Товары запрещено"
+                    : "SkeekS ID: {$model->sx_id}. Информация обновляется из сервиса SkeekS Товары";
+                $sxMarketUrl = isset(\Yii::$app->skeeksSuppliersApi) ? \Yii::$app->skeeksSuppliersApi->getModelUrl($model) : null;
+                $sxIcon = "<i class='fas fa-link' style='color: {$sxInfoUpdateColor};'></i>";
+                ?>
                 <span class="sx-id" style="font-size: 17px; font-weight: bold;">
-                    <span data-toggle='tooltip' title='SkeekS Suppliers ID: <?php echo $model->sx_id; ?>'><i class='fas fa-link'></i></span>
+                    <?php if ($sxMarketUrl) : ?>
+                        <?php echo \yii\helpers\Html::a($sxIcon, $sxMarketUrl, [
+                            'target' => '_blank',
+                            'data-pjax' => '0',
+                            'data-toggle' => 'tooltip',
+                            'title' => $sxInfoUpdateTitle,
+                        ]); ?>
+                    <?php else : ?>
+                        <span data-toggle='tooltip' title='<?php echo $sxInfoUpdateTitle; ?>'><?php echo $sxIcon; ?></span>
+                    <?php endif; ?>
                 </span>
             <? endif; ?>
         </h1>
