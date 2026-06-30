@@ -54,7 +54,7 @@ class BackendMenuItem extends Component
     public $priority = 100;
 
     /**
-     * @var bool
+     * @var bool|callable
      */
     public $visible = true;
 
@@ -178,7 +178,13 @@ class BackendMenuItem extends Component
      */
     public function getIsVisible()
     {
-        if ($this->visible === true) {
+        $visible = $this->visible;
+
+        if (is_callable($visible)) {
+            $visible = (bool)call_user_func($visible, $this);
+        }
+
+        if ($visible === true) {
             if ($this->items) {
                 foreach ($this->items as $item) {
                     if ($item->isVisible) {
