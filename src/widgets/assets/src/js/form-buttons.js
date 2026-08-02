@@ -23,11 +23,11 @@
 
         _init: function () {
             var self = this;
-            
+
             this.onBeforeUnload = false;
-            
+
             this.on("changeData", function() {
-                $(".sx-success-meessage", self.getJForm()).empty(); 
+                $(".sx-success-meessage", self.getJForm()).empty();
             });
         },
 
@@ -308,7 +308,6 @@
                 .css("position", "fixed")
                 .css("bottom", "0")
                 .css("left", this.startPositionLeft)
-                .css("background-color", "white")
                 .addClass("sx-fixed-buttons")
             ;
             return this;

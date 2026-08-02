@@ -5,6 +5,9 @@
  * @copyright 2010 SkeekS (СкикС)
  * @date 02.06.2015
  */
+
+use skeeks\cms\backend\helpers\BackendIcon;
+
 /* @var $this yii\web\View */
 /* @var $action \skeeks\cms\backend\actions\BackendGridModelAction */
 /* @var $backendShowing \skeeks\cms\backend\models\BackendShowing */
@@ -13,6 +16,59 @@ $controller = $this->context;
 ?>
 <?php $pjax = \skeeks\cms\widgets\Pjax::begin(); ?>
 
+<?php $pageHeader = $action->pageHeaderConfig; ?>
+<?php if ($pageHeader !== false) : ?>
+    <?php
+    $pageHeader = (array)$pageHeader;
+    $pageHeaderOptions = (array)\yii\helpers\ArrayHelper::getValue($pageHeader, 'options', []);
+    \yii\helpers\Html::addCssClass($pageHeaderOptions, 'sx-collection-page-header sx-grid-page-header');
+    $pageHeaderActions = (array)\yii\helpers\ArrayHelper::getValue($pageHeader, 'actions', []);
+    ?>
+    <header <?= \yii\helpers\Html::renderTagAttributes($pageHeaderOptions) ?>>
+        <div class="sx-grid-page-header__copy">
+            <?php if ($pageHeaderIcon = \yii\helpers\ArrayHelper::getValue($pageHeader, 'icon')) : ?>
+                <span class="sx-grid-page-header__icon">
+                    <i class="<?= \yii\helpers\Html::encode($pageHeaderIcon) ?>" aria-hidden="true"></i>
+                </span>
+            <?php endif; ?>
+            <div>
+                <?php if ($pageHeaderTitle = \yii\helpers\ArrayHelper::getValue($pageHeader, 'title')) : ?>
+                    <h1><?= \yii\helpers\Html::encode($pageHeaderTitle) ?></h1>
+                <?php endif; ?>
+                <?php if ($pageHeaderDescription = \yii\helpers\ArrayHelper::getValue($pageHeader, 'description')) : ?>
+                    <p><?= \yii\helpers\Html::encode($pageHeaderDescription) ?></p>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php if ($pageHeaderActions) : ?>
+            <div class="sx-collection-page-header__actions">
+                <?php foreach ($pageHeaderActions as $pageHeaderAction) : ?>
+                    <?php
+                    $pageHeaderActionLabel = (string)\yii\helpers\ArrayHelper::getValue($pageHeaderAction, 'label', '');
+                    $pageHeaderActionUrl = \yii\helpers\ArrayHelper::getValue($pageHeaderAction, 'url');
+                    $pageHeaderActionOptions = (array)\yii\helpers\ArrayHelper::getValue($pageHeaderAction, 'options', []);
+                    $pageHeaderActionVariant = (string)\yii\helpers\ArrayHelper::getValue($pageHeaderAction, 'variant', 'primary');
+                    \yii\helpers\Html::addCssClass(
+                        $pageHeaderActionOptions,
+                        'sx-button sx-button--'.$pageHeaderActionVariant
+                        .' sx-collection-action sx-collection-action--'.$pageHeaderActionVariant
+                        .' sx-grid-page-header__action'
+                    );
+                    $pageHeaderActionIcon = (string)\yii\helpers\ArrayHelper::getValue($pageHeaderAction, 'icon', '');
+                    $pageHeaderActionContent = $pageHeaderActionIcon
+                        ? \yii\helpers\Html::tag('i', '', ['class' => $pageHeaderActionIcon, 'aria-hidden' => 'true']).' '.\yii\helpers\Html::encode($pageHeaderActionLabel)
+                        : \yii\helpers\Html::encode($pageHeaderActionLabel);
+                    ?>
+                    <?= \yii\helpers\Html::a(
+                        $pageHeaderActionContent,
+                        $pageHeaderActionUrl,
+                        $pageHeaderActionOptions
+                    ) ?>
+                <?php endforeach; ?>
+            </div>
+        <?php endif; ?>
+    </header>
+<?php endif; ?>
 
 <?
 $backendCode = \skeeks\cms\backend\BackendComponent::getCurrent()->controllerPrefix;
@@ -25,6 +81,10 @@ $showingsControllerTmp = clone $showingsController;
  * @var \skeeks\cms\backend\controllers\BackendModelController $showingsController
  */
 $actionCreate = \yii\helpers\ArrayHelper::getValue($showingsControllerTmp->actions, 'create');
+$canCreateShowing = $action->backendShowings !== false
+    && $actionCreate
+    && \skeeks\cms\backend\BackendComponent::getCurrent()->canManageBackendShowings
+    && $actionCreate->isVisible;
 
 
 $backendShowing = new \skeeks\cms\backend\models\BackendShowing();
@@ -32,7 +92,8 @@ $backendShowing->loadDefaultValues();
 $backendShowing->key = $action->backendShowingKey;
 
 
-$createModal = \yii\bootstrap\Modal::begin([
+if ($canCreateShowing) {
+    $createModal = \yii\bootstrap\Modal::begin([
     'id'     => 'sx-modal-create',
     'header' => '<b>'.\Yii::t('skeeks/backend', 'Создание отображения').'</b>',
     'footer' => '
@@ -85,13 +146,18 @@ JS
 <? \skeeks\cms\base\widgets\ActiveFormAjaxSubmit::end(); ?>
 
 <? $createModal::end(); ?>
+<? } ?>
 
 
 <?
 $action->backendShowing;
 $backendShowings = $action->backendShowings;
+$isDisplayBackendShowings = $action->isDisplayBackendShowings
+    && $action->backendShowing
+    && is_iterable($backendShowings)
+    && (count((array)$backendShowings) > 1 || $canCreateShowing);
 ?>
-<? if ($backendShowings && $action->backendShowing) : ?>
+<? if ($isDisplayBackendShowings) : ?>
     <?
     echo \skeeks\cms\backend\widgets\ContextMenuWidget::widget([
         'button'              => false,
@@ -107,19 +173,22 @@ $backendShowings = $action->backendShowings;
         'rightClickSelectors' => ['.sx-no-active-tab'],
     ]);
     ?>
-    <ul class="nav nav-tabs sx-backend-showing-tabs">
+    <ul class="sx-backend-showing-tabs" role="list">
         <? foreach ($backendShowings as $backendShowing) : ?>
-            <li class="sx-tab nav-item <?= $backendShowing->id == $action->backendShowing->id ? "active sx-active-tab" : "sx-no-active-tab"; ?>" id="sx-tab-<?= $backendShowing->id; ?>">
-                <a href="<?= $action->getShowingUrl($backendShowing); ?>" class="nav-link <?= $backendShowing->id == $action->backendShowing->id ? "active" : ""; ?>">
+            <li class="sx-tab <?= $backendShowing->id == $action->backendShowing->id ? "active sx-active-tab" : "sx-no-active-tab"; ?>" id="sx-tab-<?= $backendShowing->id; ?>">
+                <a href="<?= $action->getShowingUrl($backendShowing); ?>" class="sx-showing-tab <?= $backendShowing->id == $action->backendShowing->id ? "active" : ""; ?>">
                     <? if ($backendShowing->cms_user_id == \Yii::$app->user->id) : ?>
                         <img src="<?= \Yii::$app->user->identity->image ? \Yii::$app->user->identity->avatarSrc : \skeeks\cms\helpers\Image::getCapSrc(); ?>"
-                             class="g-width-20 g-width-20 g-height-20 g-height-20 rounded-circle g-mr-5--sm sx-avatar"
+                             class="sx-avatar sx-avatar--sm"
                              title="Это представление видите только вы"
                         />
                     <? endif; ?>
                     <?= $backendShowing->displayName; ?>
 
-                    <? if ($backendShowing->id == $action->backendShowing->id) : ?>
+                    <? if (
+                        $backendShowing->id == $action->backendShowing->id
+                        && \skeeks\cms\backend\BackendComponent::getCurrent()->canManageBackendShowings
+                    ) : ?>
 
                         <?
                         $showingsController = \Yii::$app->createController($controllerRoute)[0];
@@ -131,10 +200,12 @@ $backendShowings = $action->backendShowings;
                                 'isOpenNewWindow'     => true,
                                 'rightClickSelectors' => ['#sx-tab-'.$backendShowing->id],
                                 'button'              => [
-                                    'class' => 'fa fa-cog',
-                                    'style' => 'font-size: 11px; cursor: pointer;',
-                                    'tag'   => 'i',
-                                    'label' => '',
+                                    'class' => 'sx-showing-settings',
+                                    'style' => 'cursor: pointer;',
+                                    'tag'   => 'span',
+                                    'label' => BackendIcon::render('settings', ['size' => 14]),
+                                    'title' => \Yii::t('skeeks/backend', 'Настроить представление'),
+                                    'aria-label' => \Yii::t('skeeks/backend', 'Настроить представление'),
                                 ],
                             ]);
                         }
@@ -146,17 +217,17 @@ $backendShowings = $action->backendShowings;
             </li>
         <? endforeach; ?>
 
-        <? if ($actionCreate) : ?>
-            <li class="nav-item">
-                <a href="#sx-modal-create" class="sx-btn-filter-create nav-link" data-toggle="modal" data-target="#sx-modal-create">
-                    <i class="fa fa-plus"></i>
+        <? if ($canCreateShowing) : ?>
+            <li class="sx-tab">
+                <a href="#sx-modal-create" class="sx-showing-tab sx-btn-filter-create" data-toggle="modal" data-target="#sx-modal-create">
+                    <?= BackendIcon::render('plus', ['size' => 18]); ?>
                 </a>
             </li>
         <? endif; ?>
     </ul>
 <? endif; ?>
 
-    <div class="<?= ($backendShowings && $action->backendShowing) ? "tab-content" : ""; ?>">
+    <div class="<?= $isDisplayBackendShowings ? "tab-content" : ""; ?>">
         <?
         $widgetClassName = $action->gridClassName;
         $widgetFiltersClassName = $action->filtersClassName;
@@ -166,7 +237,7 @@ $backendShowings = $action->backendShowings;
         $action->gridObject = $grid;
         ?>
         <?
-        if ($widgetFiltersClassName) {
+        if ($widgetFiltersClassName && $action->shouldDisplayFilters($grid)) {
             $filtersConfig = (array)$action->filtersConfig;
             $filtersConfig['dataProvider'] = $grid->dataProvider;
 

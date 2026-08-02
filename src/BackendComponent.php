@@ -19,6 +19,7 @@ use yii\helpers\Inflector;
 
 /**
  * @property BackendMenu $menu
+ * @property bool $canManageBackendShowings
  *
  * Class BackendComponent
  * @package skeeks\cms\backend
@@ -74,6 +75,11 @@ class BackendComponent extends Component
      */
     protected $_menu = null;
     /**
+     * @var bool|null
+     */
+    protected $_canManageBackendShowings = null;
+
+    /**
      * @var bool
      */
     protected $_isRunning = false;
@@ -84,6 +90,26 @@ class BackendComponent extends Component
     {
         return static::$_runningBakcend;
     }
+
+    /**
+     * Whether the current user can manage saved grid showings.
+     *
+     * The configured controller owns the permission, so custom backends can
+     * replace the controller route without duplicating RBAC checks in views.
+     *
+     * @return bool
+     */
+    public function getCanManageBackendShowings()
+    {
+        if ($this->_canManageBackendShowings === null) {
+            $controllerData = \Yii::$app->createController($this->backendShowingControllerRoute);
+            $controller = $controllerData ? $controllerData[0] : null;
+            $this->_canManageBackendShowings = $controller ? (bool)$controller->isAllow : false;
+        }
+
+        return $this->_canManageBackendShowings;
+    }
+
     /**
      * @throws InvalidConfigException
      */

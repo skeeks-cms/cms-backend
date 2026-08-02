@@ -9,6 +9,7 @@
 namespace skeeks\cms\backend\widgets\assets;
 
 use skeeks\cms\base\AssetBundle;
+use skeeks\cms\backend\assets\BackendUiAsset;
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
  */
@@ -33,6 +34,6 @@ class BackendFormAsset extends AssetBundle
     public $depends = [
         //'skeeks\cms\admin\assets\AdminAsset',
         'skeeks\sx\assets\Core',
+        BackendUiAsset::class,
     ];
 }
-

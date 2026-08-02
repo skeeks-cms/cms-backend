@@ -27,18 +27,14 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
 ?>
 <?php if (!$isEmpty) : ?>
     <div class="sx-back">
-        <a href="<?php echo \yii\helpers\Url::to([$controller->defaultAction]); ?>" style="    font-style: normal;
-    font-weight: 400;
-    font-size: 12px;
-    line-height: 26px;
-    color: #656464;">
+        <a class="sx-model-header__back-link" href="<?php echo \yii\helpers\Url::to([$controller->defaultAction]); ?>">
             ←&nbsp;Вернуться назад
         </a>
     </div>
 <?php endif; ?>
-<div class="row no-gutters" style="margin-bottom: 5px;">
+<div class="row no-gutters sx-model-header">
     <? if ($image) : ?>
-        <div class="col my-auto" style="max-width: 60px">
+        <div class="col my-auto sx-model-header__media">
             <?php
             $imageSrc = isset($model->cms_image_id)
                 ? $image->src
@@ -47,22 +43,24 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
                         'm' => \Imagine\Image\ManipulatorInterface::THUMBNAIL_OUTBOUND
                     ]));
             ?>
-            <img style="border: 2px solid #ededed; border-radius: 5px; width: 50px; height: 50px; object-fit: cover;" src="<?php echo \yii\helpers\Html::encode($imageSrc); ?>"/>
+            <img class="sx-model-header__image" src="<?php echo \yii\helpers\Html::encode($imageSrc); ?>"/>
         </div>
     <? endif; ?>
     <div class="col my-auto">
-        <h1 style="margin-bottom: 0px; line-height: 1.1;">
+        <h1 class="sx-model-header__title">
             <?php echo $controller->modelShowName; ?>
             <? if (isset($model->sx_id) && $model->sx_id) : ?>
                 <?
-                $sxInfoUpdateColor = (isset($model->is_sx_info_update) && !$model->is_sx_info_update) ? "red" : "green";
+                $sxInfoUpdateClass = (isset($model->is_sx_info_update) && !$model->is_sx_info_update)
+                    ? "sx-text--danger"
+                    : "sx-text--success";
                 $sxInfoUpdateTitle = (isset($model->is_sx_info_update) && !$model->is_sx_info_update)
                     ? "SkeekS ID: {$model->sx_id}. Обновление информации из сервиса SkeekS Товары запрещено"
                     : "SkeekS ID: {$model->sx_id}. Информация обновляется из сервиса SkeekS Товары";
                 $sxMarketUrl = isset(\Yii::$app->skeeksSuppliersApi) ? \Yii::$app->skeeksSuppliersApi->getModelUrl($model) : null;
-                $sxIcon = "<i class='fas fa-link' style='color: {$sxInfoUpdateColor};'></i>";
+                $sxIcon = "<i class='fas fa-link {$sxInfoUpdateClass}'></i>";
                 ?>
-                <span class="sx-id" style="font-size: 17px; font-weight: bold;">
+                <span class="sx-id sx-model-header__external-id">
                     <?php if ($sxMarketUrl) : ?>
                         <?php echo \yii\helpers\Html::a($sxIcon, $sxMarketUrl, [
                             'target' => '_blank',
@@ -76,14 +74,14 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
                 </span>
             <? endif; ?>
         </h1>
-        <div class="sx-small-info" style="font-size: 10px; color: silver;">
+        <div class="sx-small-info sx-model-header__meta">
             <span title="ID записи - уникальный код записи в базе данных." data-toggle="tooltip"><i class="fas fa-key"></i> <?php echo isset($model->id) ? $model->id : ""; ?></span>
             <? if (isset($model->created_at) && $model->created_at) : ?>
-                <span style="margin-left: 5px;" data-toggle="tooltip" title="Запись создана в базе: <?php echo \Yii::$app->formatter->asDatetime($model->created_at); ?>"><i
+                <span data-toggle="tooltip" title="Запись создана в базе: <?php echo \Yii::$app->formatter->asDatetime($model->created_at); ?>"><i
                             class="far fa-clock"></i> <?php echo \Yii::$app->formatter->asDate($model->created_at); ?></span>
             <? endif; ?>
             <? if (isset($model->created_by) && $model->created_by) : ?>
-                <span style="margin-left: 5px;" data-toggle="tooltip" title="Запись создана пользователем с ID: <?php echo $model->createdBy->id; ?>"><i
+                <span data-toggle="tooltip" title="Запись создана пользователем с ID: <?php echo $model->createdBy->id; ?>"><i
                             class="far fa-user"></i> <?php echo $model->createdBy->shortDisplayName; ?></span>
             <? endif; ?>
         </div>
@@ -116,14 +114,8 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
                 'title' => "Удалить"
             ]);
         ?>
-        <div class="col my-auto" style="text-align: right; max-width: 70px;">
+        <div class="col my-auto sx-model-header__actions">
             <?php echo $href; ?>
         </div>
     <?php endif; ?>
-
-
-
-    <!--<div class="col my-auto" style="max-width: 70px; text-align: right;">
-            <a href="<?php /*echo $model->url; */ ?>" data-toggle="tooltip" class="btn btn-default" target="_blank" title="<?php /*echo \Yii::t('skeeks/cms', 'Watch to site (opens new window)'); */ ?>"><i class="fas fa-external-link-alt"></i></a>
-        </div>-->
 </div>

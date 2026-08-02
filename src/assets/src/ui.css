@@ -1,0 +1,1144 @@
+/*
+ * Universal semantic UI adapters.
+ *
+ * This stylesheet is loaded by BackendUiAsset on every backend/cabinet page.
+ * Keep widget-specific layout in backend.css and expose visual customization
+ * through tokens declared in theme.css.
+ */
+
+/*
+ * Universal visibility utility.
+ */
+.sx-now-hide {
+    display: none !important;
+}
+
+/*
+ * Universal interactive surface.
+ *
+ * Use this opt-in primitive for a link, compact card or navigation row with a
+ * real primary action. Collection renderers consume the same token family
+ * through their `sx-collection-item--interactive` adapter in backend.css.
+ */
+html[data-sx-theme] .sx-interactive-surface {
+    color: var(--sx-interactive-surface-color);
+    background: var(--sx-interactive-surface-background);
+    text-decoration: none;
+    transition:
+        color var(--sx-interactive-surface-transition-duration) ease-out,
+        background-color var(--sx-interactive-surface-transition-duration) ease-out,
+        border-color var(--sx-interactive-surface-transition-duration) ease-out,
+        box-shadow var(--sx-interactive-surface-transition-duration) ease-out;
+}
+
+html[data-sx-theme] .sx-interactive-surface:hover:not(.sx-interactive-surface--disabled):not(.disabled):not([aria-disabled="true"]) {
+    color: var(--sx-interactive-surface-hover-color);
+    background: var(--sx-interactive-surface-hover-background);
+    text-decoration: none;
+}
+
+html[data-sx-theme] .sx-interactive-surface:active:not(.sx-interactive-surface--disabled):not(.disabled):not([aria-disabled="true"]) {
+    color: var(--sx-interactive-surface-active-color);
+    background: var(--sx-interactive-surface-active-background);
+}
+
+html[data-sx-theme] .sx-interactive-surface:focus {
+    text-decoration: none;
+}
+
+html[data-sx-theme] .sx-interactive-surface:focus-visible {
+    outline: 0;
+    box-shadow: var(--sx-interactive-surface-focus-ring);
+}
+
+html[data-sx-theme] .sx-interactive-surface--selected,
+html[data-sx-theme] .sx-interactive-surface[aria-selected="true"],
+html[data-sx-theme] .sx-interactive-surface[aria-current="page"] {
+    color: var(--sx-interactive-surface-selected-color);
+    background: var(--sx-interactive-surface-selected-background);
+}
+
+html[data-sx-theme] .sx-interactive-surface--disabled,
+html[data-sx-theme] .sx-interactive-surface.disabled,
+html[data-sx-theme] .sx-interactive-surface[aria-disabled="true"] {
+    color: var(--sx-interactive-surface-disabled-color);
+    background: var(--sx-interactive-surface-disabled-background);
+    opacity: var(--sx-interactive-surface-disabled-opacity);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/*
+ * Universal empty state.
+ *
+ * EmptyStateWidget emits the generic classes plus historical collection/grid
+ * aliases. This primitive is intentionally available on ordinary
+ * BackendController pages without registering Grid/List assets.
+ */
+.sx-empty-state {
+    display: flex;
+    min-height: var(--sx-empty-state-min-height);
+    box-sizing: border-box;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    padding:
+        var(--sx-empty-state-padding-block)
+        var(--sx-empty-state-padding-inline);
+    color: var(--sx-empty-state-color);
+    border: 1px solid var(--sx-empty-state-border-color);
+    border-radius: var(--sx-empty-state-radius);
+    background: var(--sx-empty-state-background);
+    text-align: center;
+}
+
+.sx-empty-state__icon {
+    display: inline-flex;
+    width: var(--sx-empty-state-icon-size);
+    height: var(--sx-empty-state-icon-size);
+    flex: 0 0 var(--sx-empty-state-icon-size);
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 18px;
+    color: var(--sx-empty-state-icon-color);
+    border-radius: var(--sx-empty-state-icon-radius);
+    background: var(--sx-empty-state-icon-background);
+    font-size: 20px;
+}
+
+.sx-empty-state__title {
+    margin: 0 0 8px;
+    color: var(--sx-empty-state-color);
+    font-size: var(--sx-empty-state-title-size);
+    font-weight: var(--sx-empty-state-title-weight);
+    line-height: 1.3;
+    text-wrap: balance;
+}
+
+.sx-empty-state__description {
+    max-width: var(--sx-empty-state-description-max-width);
+    margin: 0 0 20px;
+    color: var(--sx-empty-state-description-color);
+    font-size: 14px;
+    line-height: 1.6;
+    text-wrap: pretty;
+}
+
+.sx-empty-state__description:last-child {
+    margin-bottom: 0;
+}
+
+@media (max-width: 575.98px) {
+    .sx-empty-state {
+        min-height: 280px;
+        padding: 42px 18px;
+    }
+
+    .sx-empty-state__action {
+        width: 100%;
+    }
+}
+
+/*
+ * Semantic key/value presentation.
+ * `table.detail-view` keeps existing Yii DetailView instances theme-aware;
+ * new package views may use `sx-detail-view` or `sx-key-value-view`.
+ */
+html[data-sx-theme] table.detail-view,
+html[data-sx-theme] table.sx-detail-view,
+html[data-sx-theme] table.sx-key-value-view {
+    width: 100%;
+    margin: 0 0 16px;
+    overflow: hidden;
+    color: var(--sx-detail-view-color);
+    border: 1px solid var(--sx-detail-view-border-color) !important;
+    border-collapse: separate !important;
+    border-spacing: 0;
+    border-radius: var(--sx-detail-view-radius);
+    background: var(--sx-detail-view-background);
+    font-size: var(--sx-detail-view-font-size);
+    table-layout: fixed;
+}
+
+html[data-sx-theme] table.detail-view > tbody > tr,
+html[data-sx-theme] table.sx-detail-view > tbody > tr,
+html[data-sx-theme] table.sx-key-value-view > tbody > tr {
+    color: var(--sx-detail-view-color);
+    background: transparent;
+}
+
+html[data-sx-theme] table.detail-view > tbody > tr > th,
+html[data-sx-theme] table.detail-view > tbody > tr > td,
+html[data-sx-theme] table.sx-detail-view > tbody > tr > th,
+html[data-sx-theme] table.sx-detail-view > tbody > tr > td,
+html[data-sx-theme] table.sx-key-value-view > tbody > tr > th,
+html[data-sx-theme] table.sx-key-value-view > tbody > tr > td {
+    padding: var(--sx-detail-view-padding-block) var(--sx-detail-view-padding-inline);
+    color: var(--sx-detail-view-color);
+    border: 0 !important;
+    border-bottom: 1px solid var(--sx-detail-view-border-color) !important;
+    background: var(--sx-detail-view-value-background);
+    line-height: var(--sx-detail-view-line-height);
+    overflow-wrap: anywhere;
+    vertical-align: top;
+    word-break: break-word;
+}
+
+html[data-sx-theme] table.detail-view > tbody > tr > th,
+html[data-sx-theme] table.sx-detail-view > tbody > tr > th,
+html[data-sx-theme] table.sx-key-value-view > tbody > tr > th {
+    width: var(--sx-detail-view-label-width);
+    color: var(--sx-detail-view-color);
+    background: var(--sx-detail-view-label-background);
+    font-weight: var(--sx-detail-view-label-weight);
+}
+
+html[data-sx-theme] table.detail-view > tbody > tr:last-child > th,
+html[data-sx-theme] table.detail-view > tbody > tr:last-child > td,
+html[data-sx-theme] table.sx-detail-view > tbody > tr:last-child > th,
+html[data-sx-theme] table.sx-detail-view > tbody > tr:last-child > td,
+html[data-sx-theme] table.sx-key-value-view > tbody > tr:last-child > th,
+html[data-sx-theme] table.sx-key-value-view > tbody > tr:last-child > td {
+    border-bottom: 0 !important;
+}
+
+html[data-sx-theme] table.detail-view a,
+html[data-sx-theme] table.sx-detail-view a,
+html[data-sx-theme] table.sx-key-value-view a {
+    color: var(--sx-detail-view-link-color);
+}
+
+html[data-sx-theme] table.detail-view a:hover,
+html[data-sx-theme] table.detail-view a:focus,
+html[data-sx-theme] table.sx-detail-view a:hover,
+html[data-sx-theme] table.sx-detail-view a:focus,
+html[data-sx-theme] table.sx-key-value-view a:hover,
+html[data-sx-theme] table.sx-key-value-view a:focus {
+    color: var(--sx-detail-view-link-hover-color);
+}
+
+/*
+ * Semantic data matrix for compact model-card facts such as prices,
+ * stock balances and supplier totals. Unlike `sx-detail-view`, its columns
+ * are peers and the header is horizontal.
+ */
+html[data-sx-theme] .sx-data-table-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    color: var(--sx-detail-view-color);
+    border: 1px solid var(--sx-detail-view-border-color);
+    border-radius: var(--sx-detail-view-radius);
+    background: var(--sx-detail-view-background);
+}
+
+html[data-sx-theme] table.sx-data-table {
+    width: 100%;
+    margin: 0;
+    color: var(--sx-detail-view-color);
+    border: 0;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: var(--sx-detail-view-background);
+    font-size: 13px;
+}
+
+html[data-sx-theme] table.sx-data-table > tbody > tr > th,
+html[data-sx-theme] table.sx-data-table > tbody > tr > td,
+html[data-sx-theme] table.sx-data-table > thead > tr > th,
+html[data-sx-theme] table.sx-data-table > thead > tr > td {
+    padding: 7px 10px;
+    color: var(--sx-detail-view-color);
+    border: 0;
+    border-bottom: 1px solid var(--sx-detail-view-border-color);
+    background: var(--sx-detail-view-value-background);
+    text-align: center;
+    vertical-align: middle;
+}
+
+html[data-sx-theme] table.sx-data-table > tbody > tr > th,
+html[data-sx-theme] table.sx-data-table > thead > tr > th {
+    background: var(--sx-detail-view-label-background);
+    font-weight: var(--sx-detail-view-label-weight);
+}
+
+html[data-sx-theme] table.sx-data-table > tbody > tr:last-child > th,
+html[data-sx-theme] table.sx-data-table > tbody > tr:last-child > td {
+    border-bottom: 0;
+}
+
+html[data-sx-theme] table.sx-data-table a {
+    color: var(--sx-detail-view-link-color);
+}
+
+html[data-sx-theme] table.sx-data-table a:hover,
+html[data-sx-theme] table.sx-data-table a:focus {
+    color: var(--sx-detail-view-link-hover-color);
+}
+
+html[data-sx-theme] .sx-data-table__empty {
+    color: var(--sx-detail-view-muted-color);
+}
+
+html[data-sx-theme] .sx-detail-section {
+    padding: 10px;
+    margin-top: 10px;
+    color: var(--sx-color-text);
+    background: var(--sx-color-surface-muted);
+}
+
+html[data-sx-theme] .sx-detail-section__title {
+    margin-bottom: 5px;
+    color: var(--sx-color-text);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+html[data-sx-theme] .sx-detail-section--success {
+    color: var(--sx-alert-success-color);
+    border: 1px solid var(--sx-alert-success-border-color);
+    background: var(--sx-alert-success-background);
+}
+
+html[data-sx-theme] .sx-detail-section--success .sx-detail-section__title {
+    color: inherit;
+}
+
+/*
+ * Generic code surface. Legacy backend pages frequently render diagnostics
+ * in a bare `pre`, so its palette must not be supplied by a project theme.
+ */
+html[data-sx-theme] pre {
+    display: block;
+    max-width: 100%;
+    padding: var(--sx-code-padding);
+    margin: var(--sx-code-margin);
+    font-size: var(--sx-code-font-size);
+    line-height: var(--sx-code-line-height);
+    color: var(--sx-code-color);
+    border: 1px solid var(--sx-code-border-color);
+    border-radius: var(--sx-code-radius);
+    background: var(--sx-code-background);
+    overflow-x: auto;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
+html[data-sx-theme] pre code {
+    color: inherit;
+    border: 0;
+    background: transparent;
+}
+
+/*
+ * Neutral compatibility helpers are still emitted by shared package views.
+ * Their color contract belongs to Backend UI even when a shell is not Unify.
+ */
+html[data-sx-theme] .sx-bg-primary,
+html[data-sx-theme] .sx-bg-secondary,
+html[data-sx-theme] .sx-bg-gray-light {
+    background-color: var(--sx-color-surface-muted);
+}
+
+html[data-sx-theme] table.detail-view pre,
+html[data-sx-theme] table.sx-detail-view pre,
+html[data-sx-theme] table.sx-key-value-view pre {
+    max-width: 100%;
+    margin: 0;
+    overflow: auto;
+    color: var(--sx-detail-view-color);
+    border-color: var(--sx-detail-view-border-color);
+    background: var(--sx-detail-view-code-background);
+    white-space: pre-wrap;
+}
+
+/*
+ * Semantic tabs.
+ *
+ * Bootstrap's historical `.nav-tabs` markup remains supported. New package
+ * widgets should additionally expose `sx-tabs`, `sx-tabs__nav` and
+ * `sx-tabs__content` so responsive behavior does not depend on a layout theme.
+ */
+html[data-sx-theme] .nav-tabs,
+html[data-sx-theme] .sx-tabs__nav {
+    border-bottom: 1px solid var(--sx-tabs-border-color);
+    background: var(--sx-tabs-background);
+}
+
+html[data-sx-theme] .nav-tabs > li > a,
+html[data-sx-theme] .nav-tabs > .nav-item > .nav-link,
+html[data-sx-theme] .sx-tabs__nav > li > a,
+html[data-sx-theme] .sx-tabs__nav > .nav-item > .nav-link {
+    padding:
+        var(--sx-tabs-link-padding-block)
+        var(--sx-tabs-link-padding-inline);
+    color: var(--sx-tabs-color);
+    border: 1px solid transparent;
+    border-radius:
+        var(--sx-tabs-radius)
+        var(--sx-tabs-radius)
+        0
+        0;
+    background: transparent;
+    font-size: var(--sx-tabs-font-size);
+    font-weight: var(--sx-tabs-font-weight);
+    line-height: 1.35;
+}
+
+html[data-sx-theme] .nav-tabs > li > a:hover,
+html[data-sx-theme] .nav-tabs > li > a:focus,
+html[data-sx-theme] .nav-tabs > .nav-item > .nav-link:hover,
+html[data-sx-theme] .nav-tabs > .nav-item > .nav-link:focus,
+html[data-sx-theme] .sx-tabs__nav > li > a:hover,
+html[data-sx-theme] .sx-tabs__nav > li > a:focus,
+html[data-sx-theme] .sx-tabs__nav > .nav-item > .nav-link:hover,
+html[data-sx-theme] .sx-tabs__nav > .nav-item > .nav-link:focus {
+    color: var(--sx-tabs-hover-color);
+    border-color: transparent;
+    background: var(--sx-tabs-hover-background);
+    outline: 0;
+}
+
+html[data-sx-theme] .nav-tabs > li > a:focus-visible,
+html[data-sx-theme] .nav-tabs > .nav-item > .nav-link:focus-visible,
+html[data-sx-theme] .sx-tabs__nav > li > a:focus-visible,
+html[data-sx-theme] .sx-tabs__nav > .nav-item > .nav-link:focus-visible {
+    box-shadow: 0 0 0 3px var(--sx-tabs-focus-ring);
+}
+
+html[data-sx-theme] .nav-tabs > li.active > a,
+html[data-sx-theme] .nav-tabs > li.active > a:hover,
+html[data-sx-theme] .nav-tabs > li.active > a:focus,
+html[data-sx-theme] .nav-tabs > .nav-item > .nav-link.active,
+html[data-sx-theme] .sx-tabs__nav > li.active > a,
+html[data-sx-theme] .sx-tabs__nav > li.active > a:hover,
+html[data-sx-theme] .sx-tabs__nav > li.active > a:focus,
+html[data-sx-theme] .sx-tabs__nav > .nav-item > .nav-link.active {
+    color: var(--sx-tabs-active-color);
+    border-color:
+        var(--sx-tabs-border-color)
+        var(--sx-tabs-border-color)
+        var(--sx-tabs-active-background);
+    background: var(--sx-tabs-active-background);
+    font-weight: var(--sx-tabs-active-font-weight);
+}
+
+html[data-sx-theme] .nav-tabs > li.disabled > a,
+html[data-sx-theme] .nav-tabs > .nav-item > .nav-link.disabled,
+html[data-sx-theme] .sx-tabs__nav > li.disabled > a,
+html[data-sx-theme] .sx-tabs__nav > .nav-item > .nav-link.disabled {
+    color: var(--sx-color-text-subtle);
+    background: transparent;
+    cursor: not-allowed;
+    opacity: .62;
+}
+
+html[data-sx-theme] form.sx-form-admin .tab-content,
+html[data-sx-theme] form.sx-backend-form .tab-content,
+html[data-sx-theme] .sx-tabs__content {
+    color: var(--sx-color-text);
+    background: var(--sx-tabs-content-background);
+}
+
+/*
+ * Form shell and legacy controls.
+ *
+ * BackendFormAsset and AdminFormAsset still own widget-specific integration.
+ * These adapters deliberately outrank Bootstrap/Unify rules registered later
+ * and also cover standalone controls used by filters and older views.
+ */
+html[data-sx-theme] form.sx-form-admin,
+html[data-sx-theme] form.sx-backend-form {
+    max-width: var(--sx-form-max-width);
+    box-sizing: border-box;
+    padding: var(--sx-form-padding);
+    color: var(--sx-color-text);
+    border: 1px solid var(--sx-form-border-color);
+    border-radius: var(--sx-form-border-radius);
+    background: var(--sx-form-background);
+}
+
+html[data-sx-theme] .form-control {
+    height: auto;
+    min-height: var(--sx-form-control-height);
+    padding:
+        var(--sx-form-control-padding-y)
+        var(--sx-form-control-padding-x);
+    color: var(--sx-form-control-color);
+    border-color: var(--sx-form-control-border-color);
+    border-radius: var(--sx-form-control-radius);
+    background-color: var(--sx-form-control-background);
+    box-shadow: none;
+    transition:
+        color var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing),
+        background-color var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing),
+        border-color var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing),
+        box-shadow var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing);
+}
+
+html[data-sx-theme] textarea.form-control {
+    min-height: var(--sx-form-control-textarea-min-height);
+}
+
+html[data-sx-theme] .form-control::placeholder,
+html[data-sx-theme] .chosen-container .chosen-default > span,
+html[data-sx-theme] .chosen-default > span {
+    color: var(--sx-form-control-placeholder-color);
+    opacity: 1;
+}
+
+html[data-sx-theme] .form-control:hover:not(:disabled):not([readonly]) {
+    border-color: var(--sx-form-control-hover-border-color);
+}
+
+html[data-sx-theme] .form-control:focus {
+    color: var(--sx-form-control-color);
+    border-color: var(--sx-form-control-focus-border-color);
+    background-color: var(--sx-form-control-background);
+    box-shadow: var(--sx-form-control-focus-shadow);
+    outline: 0;
+}
+
+html[data-sx-theme] .form-control:disabled,
+html[data-sx-theme] .form-control[readonly] {
+    color: var(--sx-form-control-disabled-color);
+    border-color: var(--sx-form-control-border-color);
+    background-color: var(--sx-form-control-disabled-background);
+    opacity: 1;
+}
+
+/*
+ * Shared fieldset card. Collapsing and icon behavior remain in FieldSetAsset
+ * and BackendFormAsset; this layer only owns theme-safe visual semantics.
+ */
+html[data-sx-theme] .sx-form-fieldset {
+    margin-bottom: var(--sx-form-section-margin-bottom);
+    overflow: hidden;
+    color: var(--sx-form-section-color);
+    border: 1px solid var(--sx-form-section-border-color);
+    border-radius: var(--sx-form-section-radius);
+    background: var(--sx-form-section-background);
+    box-shadow: var(--sx-form-section-shadow);
+}
+
+html[data-sx-theme] .sx-form-fieldset-title {
+    margin: 0;
+    padding: var(--sx-form-section-title-padding) !important;
+    color: var(--sx-form-section-color);
+    border: 0;
+    border-bottom: 1px solid var(--sx-form-section-border-color);
+    border-radius:
+        var(--sx-form-section-radius)
+        var(--sx-form-section-radius)
+        0
+        0;
+    background: var(--sx-form-section-header-background);
+    font-size: var(--sx-form-section-title-font-size);
+    font-weight: var(--sx-form-label-font-weight);
+    text-shadow: none;
+}
+
+html[data-sx-theme] .sx-form-fieldset-title a {
+    color: inherit;
+    text-decoration: none;
+}
+
+html[data-sx-theme] .sx-form-fieldset-title a:hover,
+html[data-sx-theme] .sx-form-fieldset-title a:focus {
+    color: var(--sx-color-accent);
+    text-decoration: none;
+}
+
+html[data-sx-theme] .sx-form-fieldset-content {
+    padding: var(--sx-form-section-content-padding);
+    color: var(--sx-form-section-color);
+    border: 0;
+    background: var(--sx-form-section-background);
+}
+
+html[data-sx-theme] .sx-form-fieldset.sx-field-set-hidden .sx-form-fieldset-title,
+html[data-sx-theme] form .sx-field-set-hidden .sx-form-fieldset-title {
+    border-bottom: 0;
+    border-radius: var(--sx-form-section-radius);
+}
+
+/*
+ * Shared model header used by update/view actions.
+ */
+html[data-sx-theme] .sx-model-header {
+    margin-bottom: 5px;
+    color: var(--sx-color-text);
+}
+
+html[data-sx-theme] .sx-model-header--split {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 18px;
+    margin-bottom: 8px;
+}
+
+html[data-sx-theme] .sx-model-header__main {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+html[data-sx-theme] .sx-model-header__identity {
+    display: flex;
+    min-width: 0;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+html[data-sx-theme] .sx-model-header__content {
+    min-width: 0;
+    flex: 1 1 auto;
+}
+
+html[data-sx-theme] .sx-model-header__side,
+html[data-sx-theme] .sx-model-header__toolbar {
+    display: flex;
+    align-items: flex-start;
+    flex: 0 0 auto;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+html[data-sx-theme] .sx-model-header__status-stack {
+    display: flex;
+    align-items: flex-end;
+    flex-direction: column;
+    gap: 4px;
+    padding-top: 4px;
+}
+
+html[data-sx-theme] .sx-model-header__status-note {
+    color: var(--sx-color-warning);
+    font-size: .8rem;
+    font-weight: 650;
+    white-space: nowrap;
+}
+
+html[data-sx-theme] .sx-model-header__status-note--success {
+    color: var(--sx-color-success);
+}
+
+html[data-sx-theme] .sx-model-header__status-note > i {
+    margin-right: 4px;
+}
+
+html[data-sx-theme] .sx-model-header__back-link {
+    color: var(--sx-color-text-muted);
+    font-size: 12px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 26px;
+    text-decoration: none;
+}
+
+html[data-sx-theme] .sx-model-header__back-link:hover,
+html[data-sx-theme] .sx-model-header__back-link:focus {
+    color: var(--sx-color-accent);
+    text-decoration: none;
+}
+
+html[data-sx-theme] .sx-model-header__media {
+    max-width: 60px;
+}
+
+html[data-sx-theme] .sx-model-header__image {
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
+    border: 2px solid var(--sx-color-border);
+    border-radius: var(--sx-form-field-radius);
+    background: var(--sx-color-surface-muted);
+}
+
+html[data-sx-theme] .sx-model-header__image--round {
+    border-radius: 50%;
+}
+
+html[data-sx-theme] .sx-model-header__title {
+    margin-bottom: 0;
+    color: var(--sx-color-text);
+    line-height: 1.1;
+}
+
+html[data-sx-theme] .sx-model-header__title .sx-controlls {
+    opacity: 0;
+    transition: opacity 150ms ease-out;
+}
+
+html[data-sx-theme] .sx-model-header__title:hover .sx-controlls,
+html[data-sx-theme] .sx-model-header__title:focus-within .sx-controlls {
+    opacity: 1;
+}
+
+html[data-sx-theme] .sx-model-header__state {
+    margin-left: 8px;
+    vertical-align: .2em;
+}
+
+html[data-sx-theme] .sx-model-header__external-id {
+    font-size: 17px;
+    font-weight: 700;
+}
+
+html[data-sx-theme] .sx-model-header__meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px 10px;
+    margin-top: 5px;
+    color: var(--sx-color-text-subtle);
+    font-size: 10px;
+}
+
+html[data-sx-theme] .sx-model-header__meta > span + span {
+    margin-left: 0;
+}
+
+html[data-sx-theme] .sx-model-header__actions {
+    max-width: 70px;
+    text-align: right;
+}
+
+/*
+ * Shared responsive master/detail layout for model view pages.
+ */
+html[data-sx-theme] .sx-detail-layout {
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) minmax(0, 2fr);
+    align-items: start;
+    gap: 10px;
+}
+
+html[data-sx-theme] .sx-detail-layout__aside,
+html[data-sx-theme] .sx-detail-layout__main {
+    min-width: 0;
+}
+
+/*
+ * Semantic content inside legacy-compatible .sx-block surfaces.
+ */
+html[data-sx-theme] .sx-block .sx-block-title {
+    margin-bottom: 5px;
+    color: var(--sx-color-text-muted);
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+html[data-sx-theme] .sx-block .sx-label {
+    color: var(--sx-color-text-subtle);
+    font-size: 11px;
+}
+
+html[data-sx-theme] .sx-block .sx-value-row {
+    margin-bottom: 10px;
+    line-height: 1.3;
+}
+
+html[data-sx-theme] .sx-block .sx-value {
+    color: var(--sx-color-text);
+}
+
+html[data-sx-theme] .sx-block .sx-edit-btn {
+    margin-right: 5px;
+    color: var(--sx-color-text-subtle);
+    cursor: pointer;
+    opacity: 0;
+    transition: color 150ms ease-out, opacity 150ms ease-out;
+}
+
+html[data-sx-theme] .sx-block .sx-value-row:hover .sx-edit-btn,
+html[data-sx-theme] .sx-block .sx-edit-btn:focus-visible {
+    opacity: 1;
+}
+
+@media (max-width: 900px) {
+    html[data-sx-theme] .sx-model-header--split {
+        flex-direction: column;
+    }
+
+    html[data-sx-theme] .sx-model-header--split > .sx-model-header__side {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    html[data-sx-theme] .sx-model-header__status-stack {
+        align-items: flex-start;
+    }
+}
+
+@media (max-width: 767.98px) {
+    html[data-sx-theme] .sx-detail-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+@media (hover: none) {
+    html[data-sx-theme] .sx-block .sx-edit-btn {
+        opacity: 1;
+    }
+}
+
+html[data-sx-theme] .sx-hint-icon {
+    margin-left: 5px;
+    color: var(--sx-color-text-subtle);
+}
+
+html[data-sx-theme] .sx-quick-access-favorite-btn {
+    all: unset;
+    display: inline-flex;
+    width: auto;
+    height: auto;
+    min-width: 0;
+    min-height: 0;
+    align-items: center;
+    justify-content: center;
+    margin-left: 8px;
+    padding: 0;
+    color: var(--sx-color-text-subtle);
+    font-size: 17px;
+    line-height: 1;
+    vertical-align: 4px;
+    cursor: pointer;
+    transition: color 150ms ease-out;
+}
+
+html[data-sx-theme] .sx-quick-access-favorite-btn:hover,
+html[data-sx-theme] .sx-quick-access-favorite-btn:focus,
+html[data-sx-theme] .sx-quick-access-favorite-btn.is-active {
+    color: var(--sx-color-warning);
+}
+
+html[data-sx-theme] .sx-quick-access-favorite-btn:focus-visible {
+    border-radius: var(--sx-radius-control);
+    outline: var(--sx-button-focus-outline);
+    outline-offset: var(--sx-button-focus-outline-offset);
+    box-shadow: var(--sx-button-focus-shadow);
+}
+
+html[data-sx-theme] .sx-text--success {
+    color: var(--sx-color-success) !important;
+}
+
+html[data-sx-theme] .sx-text--danger {
+    color: var(--sx-color-danger) !important;
+}
+
+html[data-sx-theme] .sx-text--warning {
+    color: var(--sx-color-warning) !important;
+}
+
+html[data-sx-theme] .sx-text--info {
+    color: var(--sx-color-info) !important;
+}
+
+html[data-sx-theme] .sx-text--accent {
+    color: var(--sx-color-accent) !important;
+}
+
+html[data-sx-theme] .sx-text--muted {
+    color: var(--sx-color-text-muted) !important;
+}
+
+html[data-sx-theme] .sx-text--subtle {
+    color: var(--sx-color-text-subtle) !important;
+}
+
+/*
+ * Historical semantic helpers still emitted by CMS/CRM models and views.
+ */
+html[data-sx-theme] .u-btn-green {
+    color: var(--sx-color-success-contrast);
+    border-color: var(--sx-color-success);
+    background: var(--sx-color-success);
+}
+
+html[data-sx-theme] .u-btn-green:hover,
+html[data-sx-theme] .u-btn-green:focus {
+    color: var(--sx-color-success-contrast);
+    border-color: var(--sx-color-success-hover);
+    background: var(--sx-color-success-hover);
+}
+
+html[data-sx-theme] .sx-fa-play {
+    color: var(--sx-color-success);
+}
+
+html[data-sx-theme] .sx-fa-stop {
+    color: var(--sx-color-danger);
+}
+
+html[data-sx-theme] .sx-fa-pause {
+    color: var(--sx-color-warning);
+}
+
+html[data-sx-theme] form .error-summary {
+    margin-block: var(--sx-form-error-summary-margin-block);
+    padding: var(--sx-form-error-summary-padding);
+    color: var(--sx-form-error-color);
+    border: 1px solid var(--sx-form-error-border-color);
+    border-radius: var(--sx-form-error-summary-radius);
+    background: var(--sx-form-error-background);
+}
+
+html[data-sx-theme] form .error-summary p,
+html[data-sx-theme] form .has-error .help-block {
+    color: var(--sx-form-error-color);
+}
+
+html[data-sx-theme] form .sx-from-required {
+    color: var(--sx-form-required-color);
+}
+
+html[data-sx-theme] .comment .avatar img,
+html[data-sx-theme] .comment-form .avatar img,
+html[data-sx-theme] .sub-comments .avatar img,
+html[data-sx-theme] .sub-comments .comment-form .avatar img {
+    border: 0;
+    border-radius: 50%;
+    background: var(--sx-color-surface-muted);
+}
+
+html[data-sx-theme] .comment .comment-text,
+html[data-sx-theme] .comment-form-reply {
+    padding: 15px;
+    color: var(--sx-color-text);
+    border: 1px solid var(--sx-color-border);
+    border-radius: var(--sx-radius-panel);
+    background: var(--sx-color-surface);
+}
+
+html[data-sx-theme] .sx-shadow--hover {
+    transition:
+        border-color var(--sx-form-control-transition-duration) ease-out,
+        box-shadow var(--sx-form-control-transition-duration) ease-out;
+}
+
+html[data-sx-theme] .sx-shadow--hover:hover {
+    box-shadow: var(--sx-shadow-panel);
+}
+
+/*
+ * jQuery Scrollbar adapter. The plugin stylesheet is third-party code and
+ * remains untouched; these selectors only map its visual variants to the
+ * shared palette.
+ */
+html[data-sx-theme] {
+    scrollbar-color: var(--sx-scrollbar-thumb) var(--sx-scrollbar-track);
+}
+
+html[data-sx-theme] .scroll-textarea {
+    border-color: var(--sx-form-control-border-color);
+    background: var(--sx-form-control-background);
+}
+
+html[data-sx-theme] .scrollbar-outer > .scroll-element,
+html[data-sx-theme] .scrollbar-light > .scroll-element {
+    background-color: var(--sx-scrollbar-surface);
+}
+
+html[data-sx-theme] .scrollbar-inner > .scroll-element .scroll-element_track,
+html[data-sx-theme] .scrollbar-outer > .scroll-element .scroll-element_track,
+html[data-sx-theme] .scrollbar-light > .scroll-element .scroll-element_size,
+html[data-sx-theme] .scrollbar-rail > .scroll-element .scroll-element_size,
+html[data-sx-theme] .scrollbar-dynamic > .scroll-element .scroll-element_size {
+    background-color: var(--sx-scrollbar-track);
+}
+
+html[data-sx-theme] .scrollbar-inner > .scroll-element .scroll-bar,
+html[data-sx-theme] .scrollbar-outer > .scroll-element .scroll-bar,
+html[data-sx-theme] .scrollbar-macosx > .scroll-element .scroll-bar,
+html[data-sx-theme] .scrollbar-light > .scroll-element .scroll-bar,
+html[data-sx-theme] .scrollbar-rail > .scroll-element .scroll-bar,
+html[data-sx-theme] .scrollbar-dynamic > .scroll-element .scroll-bar {
+    background-color: var(--sx-scrollbar-thumb);
+}
+
+html[data-sx-theme] .scrollbar-inner > .scroll-element:hover .scroll-bar,
+html[data-sx-theme] .scrollbar-inner > .scroll-element.scroll-draggable .scroll-bar,
+html[data-sx-theme] .scrollbar-outer > .scroll-element .scroll-bar:hover,
+html[data-sx-theme] .scrollbar-outer > .scroll-element.scroll-draggable .scroll-bar,
+html[data-sx-theme] .scrollbar-macosx:hover > .scroll-element .scroll-bar,
+html[data-sx-theme] .scrollbar-macosx > .scroll-element.scroll-draggable .scroll-bar,
+html[data-sx-theme] .scrollbar-light > .scroll-element .scroll-bar:hover,
+html[data-sx-theme] .scrollbar-light > .scroll-element.scroll-draggable .scroll-bar,
+html[data-sx-theme] .scrollbar-rail > .scroll-element .scroll-element_outer:hover .scroll-bar,
+html[data-sx-theme] .scrollbar-dynamic > .scroll-element:hover .scroll-element_outer .scroll-bar,
+html[data-sx-theme] .scrollbar-dynamic > .scroll-element.scroll-draggable .scroll-element_outer .scroll-bar {
+    background-color: var(--sx-scrollbar-thumb-hover);
+}
+
+/*
+ * Selection controls.
+ *
+ * New views may use native inputs or `.sx-selection-control`. Historical
+ * Bootstrap custom controls remain supported without requiring project CSS.
+ */
+html[data-sx-theme] form.sx-form-admin input[type="checkbox"]:not(.custom-control-input),
+html[data-sx-theme] form.sx-form-admin input[type="radio"]:not(.custom-control-input),
+html[data-sx-theme] form.sx-backend-form input[type="checkbox"]:not(.custom-control-input),
+html[data-sx-theme] form.sx-backend-form input[type="radio"]:not(.custom-control-input),
+html[data-sx-theme] input.sx-selection-control {
+    width: var(--sx-selection-control-size);
+    height: var(--sx-selection-control-size);
+    margin: 0;
+    accent-color: var(--sx-selection-control-accent);
+    vertical-align: middle;
+    cursor: pointer;
+}
+
+html[data-sx-theme] form.sx-form-admin input[type="checkbox"]:not(.custom-control-input):focus-visible,
+html[data-sx-theme] form.sx-form-admin input[type="radio"]:not(.custom-control-input):focus-visible,
+html[data-sx-theme] form.sx-backend-form input[type="checkbox"]:not(.custom-control-input):focus-visible,
+html[data-sx-theme] form.sx-backend-form input[type="radio"]:not(.custom-control-input):focus-visible,
+html[data-sx-theme] input.sx-selection-control:focus-visible {
+    outline: 0;
+    box-shadow: var(--sx-selection-control-focus-ring);
+}
+
+html[data-sx-theme] form.sx-form-admin input[type="checkbox"]:not(.custom-control-input):disabled,
+html[data-sx-theme] form.sx-form-admin input[type="radio"]:not(.custom-control-input):disabled,
+html[data-sx-theme] form.sx-backend-form input[type="checkbox"]:not(.custom-control-input):disabled,
+html[data-sx-theme] form.sx-backend-form input[type="radio"]:not(.custom-control-input):disabled,
+html[data-sx-theme] input.sx-selection-control:disabled {
+    cursor: not-allowed;
+    opacity: var(--sx-selection-control-disabled-opacity);
+}
+
+html[data-sx-theme] .custom-control-label {
+    color: var(--sx-selection-control-label-color);
+    cursor: pointer;
+}
+
+html[data-sx-theme] .custom-control-label::before {
+    border-color: var(--sx-selection-control-border-color);
+    background: var(--sx-selection-control-background);
+}
+
+html[data-sx-theme] .custom-control-input:checked ~ .custom-control-label::before {
+    border-color: var(--sx-selection-control-checked-border-color);
+    background: var(--sx-selection-control-checked-background);
+}
+
+html[data-sx-theme] .custom-control-input:focus:not(:checked) ~ .custom-control-label::before {
+    border-color: var(--sx-selection-control-accent);
+}
+
+html[data-sx-theme] .custom-control-input:focus-visible ~ .custom-control-label::before,
+html[data-sx-theme] .custom-control-input:focus ~ .custom-control-label::before {
+    box-shadow: var(--sx-selection-control-focus-ring);
+}
+
+html[data-sx-theme] .custom-control-input:disabled ~ .custom-control-label {
+    color: var(--sx-selection-control-disabled-label-color);
+    cursor: not-allowed;
+}
+
+html[data-sx-theme] .custom-control-input:disabled ~ .custom-control-label::before {
+    opacity: var(--sx-selection-control-disabled-opacity);
+}
+
+html[data-sx-theme] .sx-tabs > .sx-tabs__nav[role="tablist"],
+html[data-sx-theme] .sx-form-tab-panel > .sx-tabs__nav[role="tablist"] {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: var(--sx-tabs-gap);
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: thin;
+}
+
+html[data-sx-theme] .sx-tabs > .sx-tabs__nav[role="tablist"] > li,
+html[data-sx-theme] .sx-form-tab-panel > .sx-tabs__nav[role="tablist"] > li {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 767.98px) {
+    html[data-sx-theme] table.detail-view,
+    html[data-sx-theme] table.sx-detail-view,
+    html[data-sx-theme] table.sx-key-value-view,
+    html[data-sx-theme] table.detail-view > tbody,
+    html[data-sx-theme] table.sx-detail-view > tbody,
+    html[data-sx-theme] table.sx-key-value-view > tbody {
+        display: block;
+        width: 100%;
+    }
+
+    html[data-sx-theme] table.detail-view,
+    html[data-sx-theme] table.sx-detail-view,
+    html[data-sx-theme] table.sx-key-value-view {
+        overflow: visible;
+        border: 0 !important;
+        border-radius: 0;
+        background: transparent;
+    }
+
+    html[data-sx-theme] table.detail-view > tbody > tr,
+    html[data-sx-theme] table.sx-detail-view > tbody > tr,
+    html[data-sx-theme] table.sx-key-value-view > tbody > tr {
+        display: block;
+        margin-bottom: var(--sx-detail-view-row-gap);
+        overflow: hidden;
+        border: 1px solid var(--sx-detail-view-border-color);
+        border-radius: var(--sx-detail-view-radius);
+        background: var(--sx-detail-view-background);
+    }
+
+    html[data-sx-theme] table.detail-view > tbody > tr > th,
+    html[data-sx-theme] table.detail-view > tbody > tr > td,
+    html[data-sx-theme] table.sx-detail-view > tbody > tr > th,
+    html[data-sx-theme] table.sx-detail-view > tbody > tr > td,
+    html[data-sx-theme] table.sx-key-value-view > tbody > tr > th,
+    html[data-sx-theme] table.sx-key-value-view > tbody > tr > td {
+        display: block;
+        width: 100% !important;
+    }
+
+    html[data-sx-theme] table.detail-view > tbody > tr > td,
+    html[data-sx-theme] table.sx-detail-view > tbody > tr > td,
+    html[data-sx-theme] table.sx-key-value-view > tbody > tr > td {
+        border-bottom: 0 !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html[data-sx-theme] .sx-interactive-surface,
+    html[data-sx-theme] .form-control,
+    html[data-sx-theme] .sx-shadow--hover {
+        transition: none;
+    }
+}
+.sx-icon {
+    display: inline-block;
+    flex: 0 0 auto;
+    vertical-align: middle;
+}
+
+.sx-icon-centered {
+    position: absolute !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%);
+    backface-visibility: hidden;
+    pointer-events: none;
+}
+
+.sx-avatar {
+    display: inline-block;
+    max-width: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+    object-position: center;
+    vertical-align: middle;
+}
+
+.sx-avatar--sm {
+    width: 20px;
+    height: 20px;
+    margin-inline-end: .35rem;
+}

@@ -9,6 +9,7 @@
 namespace skeeks\cms\backend\widgets;
 
 use skeeks\cms\backend\BackendAction;
+use skeeks\cms\backend\helpers\BackendIcon;
 use skeeks\cms\backend\helpers\BackendUrlHelper;
 use skeeks\cms\backend\IHasInfoActions;
 use skeeks\cms\backend\widgets\assets\ControllerActionsWidgetAsset;
@@ -105,14 +106,34 @@ class ControllerActionsWidget extends Widget
     static public function currentWidget($config = [])
     {
         $activeId = null;
+        $actions = \Yii::$app->controller->actions;
 
         if (\Yii::$app->controller && \Yii::$app->controller->action)
         {
-            $activeId = \Yii::$app->controller->action->id;
+            $currentAction = \Yii::$app->controller->action;
+            $activeId = $currentAction->id;
+
+            if (method_exists($currentAction, 'getResolvedNavigationActionIds')) {
+                $navigationActionIds = $currentAction->getResolvedNavigationActionIds();
+                if ($navigationActionIds === false) {
+                    return '';
+                }
+
+                if (is_array($navigationActionIds)) {
+                    $actions = array_intersect_key(
+                        $actions,
+                        array_flip($navigationActionIds)
+                    );
+                }
+            } elseif (property_exists($currentAction, 'navigationActionIds')) {
+                if ($currentAction->navigationActionIds === false) {
+                    return '';
+                }
+            }
         }
 
         return static::widget(ArrayHelper::merge($config, [
-            'actions'    => \Yii::$app->controller->actions,
+            'actions'       => $actions,
             'activeId'      => $activeId,
         ]));
     }
@@ -219,7 +240,14 @@ class ControllerActionsWidget extends Widget
         $icon = '';
         if ($action->icon)
         {
-            $icon = Html::tag('span', '', ['class' => $action->icon . " sx-action-icon"]);
+            if (strpos($action->icon, 'svg:') === 0) {
+                $icon = BackendIcon::render(substr($action->icon, 4), [
+                    'size'  => 18,
+                    'class' => 'sx-action-icon',
+                ]);
+            } else {
+                $icon = Html::tag('span', '', ['class' => $action->icon . " sx-action-icon"]);
+            }
         }
 
         if ($this->activeId == $action->id)

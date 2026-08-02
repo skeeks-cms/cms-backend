@@ -1,0 +1,24 @@
+:root {
+    --sx-blocker-z-index: 30;
+    --sx-blocker-page-z-index: var(--sx-z-blocker);
+    --sx-blocker-padding: 16px;
+    --sx-blocker-background: rgba(246, 248, 251, .78);
+    --sx-blocker-shimmer-color: rgba(255, 255, 255, .66);
+    --sx-blocker-shimmer-duration: 1.35s;
+    --sx-blocker-color: var(--sx-color-text);
+    --sx-blocker-font-family: var(--sx-font-family-base);
+    --sx-blocker-font-size: 14px;
+    --sx-blocker-indicator-padding: 10px 12px;
+    --sx-blocker-indicator-radius: var(--sx-radius-control);
+    --sx-blocker-indicator-color: var(--sx-color-text);
+    --sx-blocker-indicator-background: var(--sx-color-surface-raised);
+    --sx-blocker-indicator-shadow: var(--sx-shadow-panel);
+    --sx-blocker-spinner-size: 22px;
+    --sx-blocker-spinner-track: var(--sx-color-border-strong);
+    --sx-blocker-spinner-color: var(--sx-color-accent);
+}
+
+html[data-sx-theme="dark"] {
+    --sx-blocker-background: rgba(12, 17, 24, .76);
+    --sx-blocker-shimmer-color: rgba(255, 255, 255, .055);
+}

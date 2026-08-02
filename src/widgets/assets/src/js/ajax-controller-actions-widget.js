@@ -111,11 +111,9 @@
                     return this;
                 }
 
-                if (l[0].className.indexOf("popover") == -1) {
-                    $(".popover").each(function () {
-                        $(this).popover("hide");
-                    });
-                }
+                $(".popover").each(function () {
+                    $(this).popover("hide");
+                });
             });
         },
 

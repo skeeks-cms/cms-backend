@@ -23,6 +23,7 @@ class BackendSearchAndFiltersWidgetAsset extends AssetBundle
      * @var array
      */
     public $css = [
+        'css/backend-filter-theme.css',
         'css/backend-search-and-filters.css',
     ];
 
@@ -31,8 +32,7 @@ class BackendSearchAndFiltersWidgetAsset extends AssetBundle
     ];
 
     public $depends = [
-        //'skeeks\cms\admin\assets\AdminAsset',
+        BackendFormAsset::class,
         'skeeks\sx\assets\Core',
     ];
 }
-

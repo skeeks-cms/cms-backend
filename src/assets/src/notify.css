@@ -1,0 +1,37 @@
+:root {
+    --sx-notify-container-width: 420px;
+    --sx-notify-stack-gap: 10px;
+    --sx-notify-offset-top: calc(var(--sx-shell-top-offset, 65px) + 16px);
+    --sx-notify-offset-bottom: 16px;
+    --sx-notify-offset-inline: 16px;
+    --sx-notify-offset-top-mobile: calc(var(--sx-shell-top-offset, 65px) + 12px);
+    --sx-notify-offset-bottom-mobile: 12px;
+    --sx-notify-padding: 13px 14px;
+    --sx-notify-radius: 12px;
+    --sx-notify-font-family: var(--sx-font-family-base);
+    --sx-notify-font-size: 14px;
+    --sx-notify-background: var(--sx-color-surface-raised);
+    --sx-notify-color: var(--sx-color-text);
+    --sx-notify-title-color: var(--sx-color-text);
+    --sx-notify-muted-color: var(--sx-color-text-muted);
+    --sx-notify-border-color: var(--sx-color-border-strong);
+    --sx-notify-hover-background: var(--sx-color-surface-hover);
+    --sx-notify-focus-color: var(--sx-color-accent);
+    --sx-notify-shadow: 0 4px 8px rgba(17, 24, 39, .16);
+    --sx-notify-info-color: var(--sx-color-info);
+    --sx-notify-info-soft: var(--sx-color-info-soft);
+    --sx-notify-info-contrast: var(--sx-color-accent-contrast);
+    --sx-notify-success-color: var(--sx-color-success);
+    --sx-notify-success-soft: var(--sx-color-success-soft);
+    --sx-notify-success-contrast: var(--sx-color-success-contrast);
+    --sx-notify-warning-color: var(--sx-color-warning);
+    --sx-notify-warning-soft: var(--sx-color-warning-soft);
+    --sx-notify-warning-contrast: var(--sx-color-warning-contrast);
+    --sx-notify-error-color: var(--sx-color-danger);
+    --sx-notify-error-soft: var(--sx-color-danger-soft);
+    --sx-notify-error-contrast: var(--sx-color-danger-contrast);
+}
+
+html[data-sx-theme="dark"] {
+    --sx-notify-shadow: 0 4px 8px rgba(0, 0, 0, .32);
+}

@@ -5,6 +5,9 @@
  * @copyright (c) 2010 SkeekS
  * @date 18.03.2018
  */
+
+use skeeks\cms\backend\helpers\BackendIcon;
+
 /* @var $this yii\web\View */
 /* @var $widget \skeeks\cms\backend\widgets\FiltersWidget */
 $widget = $this->context;
@@ -165,7 +168,7 @@ $activeFormClassName = \yii\helpers\ArrayHelper::getValue($widget->activeForm, '
 
                     ?>
                     <? if (\Yii::$app->user->can(\skeeks\cms\rbac\CmsManager::PERMISSION_ROLE_ADMIN_ACCESS)) : ?>
-                    <?= \yii\helpers\Html::a('<i class="fa fa-cog"></i>',
+                    <?= \yii\helpers\Html::a(BackendIcon::render('settings', ['size' => 18]),
                         '#', [
                             'class'   => 'btn btn-sm sx-edit',
                             'onclick' => new \yii\web\JsExpression(<<<JS
@@ -211,8 +214,7 @@ JS
     right: 0px;
     bottom: 0;">
 
-            <a class="btn btn-secondary btn-sm float-right" data-toggle="dropdown" style="    background: silver;
-    border-color: silver;"
+            <a class="btn btn-secondary btn-sm float-right" data-toggle="dropdown"
                href="#"
                title="Добавить новый фильтр"
             >
@@ -262,8 +264,7 @@ JS
     position: absolute;
     right: 14px;
     bottom: 0;">
-            <button class="btn btn-secondary btn-sm sx-save-values" style="    background: silver;
-    border-color: silver;" title="Сохранить примененные значения" data-toggle="tooltip"><i class="fa fa-check"></i>
+            <button class="btn btn-secondary btn-sm sx-save-values" title="Сохранить примененные значения" data-toggle="tooltip"><i class="fa fa-check"></i>
             </button>
         </div>
         <? endif; ?>

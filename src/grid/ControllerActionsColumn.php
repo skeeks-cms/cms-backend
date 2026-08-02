@@ -108,6 +108,10 @@ class ControllerActionsColumn extends DataColumn
         return AjaxControllerActionsWidget::widget([
             'controllerId' => $this->controller->uniqueId,
             'modelId'      => $model->{$this->controller->modelPkAttribute},
+            'options'      => [
+                'class' => 'sx-collection-item__action sx-collection-item__action--icon',
+                'aria-label' => \Yii::t('skeeks/cms', 'Действия'),
+            ],
         ]);
 
     }
@@ -155,26 +159,59 @@ JS
                 $this->grid->view->registerJs(<<<JS
 
                 $("#{$this->grid->id}").on("contextmenu", 'tr', function(event) {
-                
+
                 event.preventDefault();
-                
-                var key = $(this).data("key");
-                //$(".sx-btn-ajax-actions", $(this)).click();
-                var jNewElement = $(".sx-btn-ajax-actions:first", $(this)).clone();
-                
+
+                var jRow = $(this);
+                var jMainBtn = jRow.children('.sx-controller-actions-td')
+                    .find('.sx-btn-ajax-actions:first');
+
+                if (!jMainBtn.length) {
+                    return false;
+                }
+
+                $('.sx-grid-context-actions-anchor').each(function() {
+                    var jAnchor = $(this);
+                    if (jAnchor.data('bs.popover')) {
+                        try {
+                            jAnchor.popover('dispose');
+                        } catch (e) {
+                            jAnchor.popover('destroy');
+                        }
+                    }
+                    jAnchor.remove();
+                });
+
+                var jNewElement = jMainBtn.clone();
+
+                jNewElement
+                    .empty()
+                    .removeClass('sx-collection-item__action sx-collection-item__action--icon')
+                    .addClass('sx-grid-context-actions-anchor')
+                    .attr('aria-hidden', 'true');
+
                 $("body").append(jNewElement);
-                
-                jNewElement.css("top", event.clientY);
-                jNewElement.css("left", event.clientX);
-                jNewElement.css("position", "fixed");
-                jNewElement.css("height", "0");
-                jNewElement.css("width", "0");
-                jNewElement.css("overflow", "hidden");
+
+                jNewElement.css({
+                    top: event.clientY,
+                    left: event.clientX,
+                    position: 'fixed'
+                });
                 jNewElement.removeClass("is-rendered");
-                
+
+                jNewElement.one('hidden.bs.popover', function() {
+                    var jAnchor = $(this);
+                    try {
+                        jAnchor.popover('dispose');
+                    } catch (e) {
+                        jAnchor.popover('destroy');
+                    }
+                    jAnchor.remove();
+                });
+
                 jNewElement.click();
 
-                /*return false;*/
+                return false;
             });
 JS
                 );

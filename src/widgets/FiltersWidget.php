@@ -13,7 +13,6 @@ use skeeks\cms\backend\widgets\filters\ActiveField;
 use skeeks\cms\backend\widgets\filters\Bootstrap4InlineActiveField;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\queryfilters\QueryFiltersWidget;
-use skeeks\cms\rbac\CmsManager;
 use yii\bootstrap\ActiveForm;
 use yii\bootstrap\BootstrapPluginAsset;
 use yii\helpers\ArrayHelper;
@@ -29,6 +28,11 @@ class FiltersWidget extends QueryFiltersWidget
 
     public $viewFile = '@skeeks/cms/backend/widgets/views/search-and-filters';
     public $isOpened = false;
+    /**
+     * @var bool|null
+     */
+    protected $_canManageBackendShowings = null;
+
 
     public $defaultActiveForm = [
 
@@ -57,10 +61,26 @@ class FiltersWidget extends QueryFiltersWidget
     public function init()
     {
         $this->activeForm = ArrayHelper::merge($this->defaultActiveForm, $this->activeForm);
+        if ($this->canManageBackendShowings) {
+            Html::addCssClass($this->activeForm['options'], 'sx-can-manage-backend-showings');
+        }
 
         parent::init();
 
         Html::addCssClass($this->wrapperOptions, 'sx-backend-filters-wrapper');
+    }
+
+    /**
+     * @return bool
+     */
+    public function getCanManageBackendShowings()
+    {
+        if ($this->_canManageBackendShowings === null) {
+            $backend = \skeeks\cms\backend\BackendComponent::getCurrent();
+            $this->_canManageBackendShowings = $backend ? $backend->canManageBackendShowings : false;
+        }
+
+        return $this->_canManageBackendShowings;
     }
 
     public function run()
@@ -70,7 +90,7 @@ class FiltersWidget extends QueryFiltersWidget
                 ob_get_clean();
                 $rr = new RequestResponse();
                 
-                if (\Yii::$app->user->can(CmsManager::PERMISSION_ROLE_ADMIN_ACCESS)) {
+                if ($this->canManageBackendShowings) {
                     
                     if (\Yii::$app->request->post('act') == 'remove-item') {
     

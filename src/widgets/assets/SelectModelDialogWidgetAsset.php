@@ -6,6 +6,8 @@
  * @date 21.08.2017
  */
 namespace skeeks\cms\backend\widgets\assets;
+
+use skeeks\cms\backend\assets\BackendUiAsset;
 use yii\web\AssetBundle;
 /**
  * Class SelectModelDialogWidgetAsset
@@ -25,5 +27,6 @@ class SelectModelDialogWidgetAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'skeeks\sx\assets\Custom',
+        BackendUiAsset::class,
     ];
 }

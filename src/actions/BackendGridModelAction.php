@@ -11,8 +11,12 @@ namespace skeeks\cms\backend\actions;
 use skeeks\cms\backend\actions\assets\BackendGridModelActionAsset;
 use skeeks\cms\backend\BackendComponent;
 use skeeks\cms\backend\grid\ControllerActionsColumn;
+use skeeks\cms\backend\helpers\BackendIcon;
 use skeeks\cms\backend\ViewBackendAction;
+use skeeks\cms\backend\widgets\assets\ControllerActionsWidgetAsset;
+use skeeks\cms\backend\widgets\ControllerActionsWidget;
 use skeeks\cms\backend\widgets\GridViewWidget;
+use skeeks\cms\backend\widgets\ListViewWidget;
 use skeeks\cms\cmsWidgets\gridView\GridViewCmsWidget;
 use skeeks\cms\modules\admin\widgets\gridViewStandart\GridViewStandartAsset;
 use skeeks\cms\rbac\CmsManager;
@@ -25,6 +29,7 @@ use yii\helpers\Html;
 use yii\helpers\Json;
 use yii\helpers\Url;
 use yii\web\JsExpression;
+use yii\widgets\BaseListView;
 /**
  * @property string $gridClassName
  * @property string $configKey
@@ -37,6 +42,81 @@ use yii\web\JsExpression;
  */
 class BackendGridModelAction extends ViewBackendAction
 {
+    /**
+     * Optional page heading rendered above the list.
+     *
+     * Supported keys: title, description, icon, options, action and actions.
+     * An action may reference a standard controller action through
+     * `backendAction`.
+     *
+     * Null lets presentationMode decide, false explicitly disables the header.
+     *
+     * @var array|false|null
+     */
+    public $pageHeader = null;
+
+    const PRESENTATION_LEGACY = 'legacy';
+    const PRESENTATION_AUTO = 'auto';
+    const PRESENTATION_PAGE = 'page';
+    const PRESENTATION_TABS = 'tabs';
+
+    /**
+     * - legacy: preserve the historical controller actions bar;
+     * - page: render a page header and move create into it by default;
+     * - tabs: preserve controller actions as section navigation;
+     * - auto: choose page for index/create-only controllers, tabs otherwise.
+     *
+     * @var string
+     */
+    public $presentationMode = self::PRESENTATION_LEGACY;
+
+    /**
+     * Controller actions displayed in the navigation above the page.
+     *
+     * - null: preserve all visible controller actions;
+     * - false: hide the navigation;
+     * - array: display only the listed action IDs.
+     *
+     * @var array|false|null
+     */
+    public $navigationActionIds = null;
+
+    /**
+     * Empty collection presentation passed to GridViewWidget.
+     *
+     * Supported keys: title, description, icon, options and action
+     * (label, url, icon, options).
+     *
+     * @var array|false
+     */
+    public $emptyState = [];
+
+    /**
+     * Empty search result presentation.
+     *
+     * @var array|false
+     */
+    public $noResultsState = [];
+
+    /**
+     * Hide filters from regular users while the whole list stays small.
+     *
+     * @var bool
+     */
+    public $hideFiltersOnSmallLists = true;
+
+    /**
+     * @var int
+     */
+    public $smallListLimit = 5;
+
+    /**
+     * Users who can manage backend showings keep the complete list toolset.
+     *
+     * @var bool
+     */
+    public $alwaysShowFiltersForManagers = true;
+
     /**
      * @var GridViewWidget
      */
@@ -88,10 +168,29 @@ class BackendGridModelAction extends ViewBackendAction
             $this->name = \Yii::t('skeeks/backend', "List");
         }
 
+        if ($this->emptyState !== false) {
+            $this->emptyState = ArrayHelper::merge([
+                'title' => \Yii::t('skeeks/backend', 'Записей пока нет'),
+                'description' => \Yii::t('skeeks/backend', 'Здесь появятся записи, когда они будут добавлены.'),
+                'icon' => 'fa fa-inbox',
+            ], (array)$this->emptyState);
+        }
+
+        if ($this->noResultsState !== false) {
+            $this->noResultsState = ArrayHelper::merge([
+                'title' => \Yii::t('skeeks/backend', 'Ничего не найдено'),
+                'description' => \Yii::t('skeeks/backend', 'Попробуйте изменить запрос или сбросить выбранные фильтры.'),
+                'icon' => 'fa fa-search',
+            ], (array)$this->noResultsState);
+        }
+
 
         $r = new \ReflectionClass($this->backendShowing);
         $backendShowingId = $this->backendShowing->id;
         $backendShowingClassName = $r->getName();
+
+        $configuredViewClass = (string)ArrayHelper::getValue($this->grid, 'class', GridViewWidget::class);
+        $isItemsView = is_a($configuredViewClass, ListViewWidget::class, true);
 
         $defaultGrid = [
             'class'              => GridViewWidget::class,
@@ -170,9 +269,11 @@ class BackendGridModelAction extends ViewBackendAction
                         'style' => 'display: none;',
                     ]);
 
-                    $editIcon = Html::a('<i class="fa fa-cog"></i>',
+                    $editIcon = Html::a(BackendIcon::render('settings', ['size' => 18]),
                         '#', [
                             'class'   => 'btn btn-sm',
+                            'title'   => 'Настроить таблицу',
+                            'aria-label' => 'Настроить таблицу',
                             'onclick' => new JsExpression(<<<JS
             new sx.classes.backend.EditComponent({$editComponent}); return false;
 JS
@@ -189,17 +290,20 @@ JS
 
                 return '<div class="sx-grid-settings">'.
 
-                    Html::a('<i class="fa fa-download"></i>', $url, [
+                    Html::a(BackendIcon::render('download', ['size' => 18]), $url, [
                         'target'    => '_blank',
                         'data-pjax' => '0',
                         'title'     => 'Экспорт в CSV',
+                        'aria-label' => 'Экспортировать таблицу в CSV',
                         'class'     => 'btn btn-sm',
                     ])
                     .  $editIcon
                     .$callableDataInput.
 
-                    Html::a('<i class="fa fa-expand"></i>', '#', [
+                    Html::a(BackendIcon::render('expand', ['size' => 18]), '#', [
                         'class'   => 'btn btn-sm',
+                        'title'   => 'Развернуть таблицу',
+                        'aria-label' => 'Развернуть таблицу',
                         'onclick' => new JsExpression(<<<JS
                         if (!jQuery(this).closest('.sx-grid-view').hasClass('sx-grid-view-full')) {
                             jQuery(this).closest('.sx-grid-view').addClass('sx-grid-view-full'); return false;
@@ -248,9 +352,17 @@ JS
             ],
         ];
 
-        if ($this->isStandartAjaxPager) {
+        if ($isItemsView) {
+            $defaultGrid = [
+                'class'          => $configuredViewClass,
+                'modelClassName' => $this->modelClassName,
+                'options'        => [
+                    'class' => 'sx-backend-list',
+                ],
+            ];
+        } elseif ($this->isStandartAjaxPager) {
             $defaultGrid['pager'] = [
-                'class'              => \skeeks\cms\themes\unify\widgets\ScrollAndSpPager::class,
+                'class'              => \skeeks\cms\backend\widgets\BackendScrollAndSpPager::class,
                 'container'          => '.grid-view tbody',
                 'item'               => 'tr',
                 //'triggerOffset'               => '2',
@@ -260,6 +372,14 @@ JS
         }
 
         parent::init();
+        /*
+         * A standard collection may hide ControllerActionsColumn and render
+         * its client-facing primary link manually. Keep the standard backend
+         * action contract available for both GridViewWidget and
+         * ListViewWidget instead of forcing every controller/cell renderer to
+         * register the JavaScript bundle itself.
+         */
+        ControllerActionsWidgetAsset::register(\Yii::$app->view);
 
         $defaultFilters = [
             //'class'              => \skeeks\cms\backend\widgets\SearchAndFiltersWidget::class,
@@ -290,6 +410,11 @@ JS
         die;*/
 
         $this->grid = (array)ArrayHelper::merge($defaultGrid, (array)$this->grid);
+        $this->grid['options'] = (array)ArrayHelper::getValue($this->grid, 'options', []);
+        Html::addCssClass(
+            $this->grid['options'],
+            $isItemsView ? 'sx-backend-list' : 'sx-backend-grid'
+        );
         if ($this->filters === false) {
             $this->filters = false;
         } else {
@@ -426,7 +551,208 @@ CSS
     {
         $grid = $this->grid;
         ArrayHelper::remove($grid, 'class');
+        if (!array_key_exists('emptyState', $grid)) {
+            if ($this->hasActiveFilters()) {
+                $grid['emptyState'] = $this->noResultsState;
+            } else {
+                $emptyState = $this->emptyState;
+                if ($emptyState !== false) {
+                    $configuredAction = (array)ArrayHelper::getValue($emptyState, 'action', []);
+                    $backendActionId = ArrayHelper::remove($configuredAction, 'backendAction');
+
+                    if ($backendActionId) {
+                        $defaultAction = $this->getBackendActionPresentation($backendActionId);
+                        if ($defaultAction) {
+                            $emptyState['action'] = ArrayHelper::merge($defaultAction, $configuredAction);
+                        }
+                    } elseif (!$configuredAction) {
+                        $defaultAction = $this->getBackendActionPresentation();
+                        if ($defaultAction) {
+                            $emptyState['action'] = $defaultAction;
+                        }
+                    }
+                }
+                $grid['emptyState'] = $emptyState;
+            }
+        }
         return (array)$grid;
+    }
+
+    /**
+     * Build a conventional empty-state action from the controller's create
+     * action. Explicit emptyState.action configuration always takes priority.
+     *
+     * Set emptyState.action.backendAction to reuse another controller action
+     * while overriding its label, icon or link options.
+     *
+     * @param string $actionId
+     * @return array
+     */
+    public function getBackendActionPresentation($actionId = 'create', array $config = [])
+    {
+        $backendAction = $this->controller->createAction($actionId);
+        if (!$backendAction || !$backendAction->isVisible || !$backendAction->url) {
+            return [];
+        }
+
+        $actionsWidget = new ControllerActionsWidget();
+        $actionData = $actionsWidget->getActionData($backendAction);
+        ControllerActionsWidgetAsset::register(\Yii::$app->view);
+
+        return ArrayHelper::merge([
+            'label' => $backendAction->name ?: \Yii::t('skeeks/backend', 'Добавить'),
+            'url' => ArrayHelper::getValue($actionData, 'url', $backendAction->url),
+            'icon' => $backendAction->icon ?: 'fa fa-plus',
+            'variant' => 'primary',
+            'options' => [
+                'data-pjax' => '0',
+                'onclick' => new JsExpression(
+                    'new sx.classes.backend.widgets.Action('.Json::encode($actionData).').go(); return false;'
+                ),
+            ],
+        ], $config);
+    }
+
+    /**
+     * @return array|false
+     */
+    public function getPageHeaderConfig()
+    {
+        if ($this->pageHeader === false) {
+            return false;
+        }
+
+        $resolvedMode = $this->getResolvedPresentationMode();
+        if ($this->pageHeader === null && $resolvedMode !== self::PRESENTATION_PAGE) {
+            return false;
+        }
+
+        $pageHeader = (array)$this->pageHeader;
+        if (!ArrayHelper::getValue($pageHeader, 'title')) {
+            $pageHeader['title'] = $this->controller->name ?: $this->name;
+        }
+
+        $hasConfiguredActions = array_key_exists('actions', $pageHeader)
+            || array_key_exists('action', $pageHeader);
+        $actions = ArrayHelper::getValue($pageHeader, 'actions', []);
+        $legacyAction = ArrayHelper::getValue($pageHeader, 'action');
+        if (!$actions && $legacyAction) {
+            $actions = [$legacyAction];
+        } elseif (!$hasConfiguredActions && $resolvedMode === self::PRESENTATION_PAGE) {
+            $actions = ['create'];
+        }
+
+        $resolvedActions = [];
+        foreach ((array)$actions as $key => $actionConfig) {
+            if (is_string($actionConfig)) {
+                $actionConfig = ['backendAction' => $actionConfig];
+            } elseif (!is_array($actionConfig)) {
+                continue;
+            }
+
+            if (is_string($key) && !ArrayHelper::getValue($actionConfig, 'backendAction')) {
+                $actionConfig['backendAction'] = $key;
+            }
+
+            $backendActionId = ArrayHelper::remove($actionConfig, 'backendAction');
+            if ($backendActionId) {
+                $actionConfig = $this->getBackendActionPresentation($backendActionId, $actionConfig);
+            }
+
+            if (
+                ArrayHelper::getValue($actionConfig, 'label')
+                && ArrayHelper::getValue($actionConfig, 'url')
+            ) {
+                $resolvedActions[] = $actionConfig;
+            }
+        }
+
+        $pageHeader['actions'] = $resolvedActions;
+        ArrayHelper::remove($pageHeader, 'action');
+
+        return $pageHeader;
+    }
+
+    /**
+     * @return string
+     */
+    public function getResolvedPresentationMode()
+    {
+        if ($this->presentationMode !== self::PRESENTATION_AUTO) {
+            return $this->presentationMode;
+        }
+
+        $visibleActionIds = [];
+        foreach ((array)$this->controller->actions as $id => $backendAction) {
+            if (isset($backendAction->isVisible) && $backendAction->isVisible) {
+                $visibleActionIds[] = (string)$id;
+            }
+        }
+
+        $sectionActionIds = array_diff($visibleActionIds, ['index', 'create']);
+        return $sectionActionIds
+            ? self::PRESENTATION_TABS
+            : self::PRESENTATION_PAGE;
+    }
+
+    /**
+     * @return array|false|null
+     */
+    public function getResolvedNavigationActionIds()
+    {
+        if ($this->navigationActionIds !== null) {
+            return $this->navigationActionIds;
+        }
+
+        return $this->getResolvedPresentationMode() === self::PRESENTATION_PAGE
+            ? false
+            : null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasActiveFilters()
+    {
+        if (!$this->filters) {
+            return false;
+        }
+
+        $formName = (string)ArrayHelper::getValue(
+            $this->filters,
+            'filtersModel.formName',
+            'f'.$this->id
+        );
+
+        return $formName !== '' && !empty(\Yii::$app->request->get($formName));
+    }
+
+    /**
+     * @param BaseListView $listView
+     * @return bool
+     */
+    public function shouldDisplayFilters(BaseListView $listView)
+    {
+        if (!$this->filters) {
+            return false;
+        }
+
+        if (
+            $this->alwaysShowFiltersForManagers
+            && BackendComponent::getCurrent()->canManageBackendShowings
+        ) {
+            return true;
+        }
+
+        if ($this->hasActiveFilters()) {
+            return true;
+        }
+
+        if (!$this->hideFiltersOnSmallLists) {
+            return true;
+        }
+
+        return $listView->dataProvider->getTotalCount() > $this->smallListLimit;
     }
 
     public function run()

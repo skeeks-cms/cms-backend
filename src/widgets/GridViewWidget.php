@@ -8,9 +8,9 @@
 
 namespace skeeks\cms\backend\widgets;
 
+use skeeks\cms\backend\assets\BackendAsset;
 use skeeks\cms\modules\admin\assets\AdminGridAsset;
 use skeeks\cms\widgets\GridView;
-use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 
 /**
@@ -19,6 +19,19 @@ use yii\helpers\Html;
  */
 class GridViewWidget extends GridView
 {
+    use TCollectionViewPresentation;
+
+    /**
+     * Visual collection variant.
+     *
+     * The "client" variant keeps the semantics and capabilities of GridView,
+     * but gives rows a calmer, service-oriented presentation suitable for
+     * customer cabinets.
+     *
+     * @var string|null
+     */
+    public $presentation;
+
     public $tableOptions = [
         //'class' => 'table-striped'
     ];
@@ -60,22 +73,23 @@ class GridViewWidget extends GridView
      * - `{afterTable}`: the pager. See [[renderPager()]].
      */
     public $layout = "{beforeTable}\n
-                      <div class='sx-table-wrapper table-responsive'>
+                      <div class='sx-collection-body sx-table-wrapper table-responsive'>
                           {items}\n
                       </div>
                       {afterTable}
-                      <div class='sx-table-additional'>
-                          <div class='col-md-12'>
-                      \n<div class='pull-left'>{pager}</div>
-                      \n<div class='pull-left'>{perPage}</div>
+                      <div class='sx-collection-footer sx-table-additional'>
+                          <div class='sx-collection-footer__inner col-md-12'>
+                      \n<div class='sx-collection-footer__pager pull-left'>{pager}</div>
+                      \n<div class='sx-collection-footer__per-page pull-left'>{perPage}</div>
                       \n<!--<div class='pull-left'>{sorter}</div>-->
-                        <div class='pull-right'>{summary}</div></div>
+                        <div class='sx-collection-footer__summary pull-right'>{summary}</div></div>
                       </div>";
 
 
     public function init()
     {
         parent::init();
+        BackendAsset::register($this->getView());
 
         if ($this->defaultTableCssClasses) {
             foreach ((array) $this->defaultTableCssClasses as $cssClass)
@@ -84,7 +98,17 @@ class GridViewWidget extends GridView
             }
         }
 
-        Html::addCssClass($this->options, 'sx-grid-view');
+        foreach (['grid-view', 'sx-grid-view', 'sx-backend-grid'] as $cssClass) {
+            Html::addCssClass($this->options, $cssClass);
+        }
+        if ($this->presentation) {
+            Html::addCssClass($this->options, 'sx-backend-grid--'.$this->presentation);
+        }
+        $this->rowOptions = $this->normalizeCollectionItemOptions(
+            $this->rowOptions,
+            ['sx-grid-row']
+        );
+        $this->initCollectionViewPresentation();
     }
     /**
      * @param string $name
@@ -92,42 +116,56 @@ class GridViewWidget extends GridView
      */
     public function renderSection($name)
     {
+        if ($this->isRichEmptyState() && in_array($name, [
+            '{beforeTable}',
+            '{afterTable}',
+            '{pager}',
+            '{perPage}',
+            '{summary}',
+        ], true)) {
+            return '';
+        }
+
         switch ($name) {
             case "{beforeTable}":
                 return $this->renderBeforeTable();
             case "{afterTable}":
                 return $this->renderAfterTable();
             case "{perPage}":
-                return $this->renderPerPage();
+                return $this->renderCollectionPerPage();
             default:
                 return parent::renderSection($name);
         }
+    }
+
+    /**
+     * @return string
+     */
+    public function renderItems()
+    {
+        if (!$this->isRichEmptyState()) {
+            return parent::renderItems();
+        }
+
+        return $this->renderCollectionEmptyState();
     }
     /**
      * @return string
      */
     public function renderBeforeTable()
     {
-        if ($this->beforeTableLeft || $this->beforeTableRight) {
+        $left = $this->beforeTableLeft ?: $this->collectionToolbarLeft;
+        $right = $this->beforeTableRight ?: $this->collectionToolbarRight;
 
-            if ($this->beforeTableLeft instanceof \Closure) {
-                $this->beforeTableLeft = call_user_func($this->beforeTableLeft, $this);
-            }
+        $toolbar = $this->renderCollectionToolbar($left, $right, [
+            'class' => 'sx-before-table',
+        ], [
+            'class' => 'sx-before-table-left',
+        ], [
+            'class' => 'sx-before-table-right',
+        ]);
 
-            if ($this->beforeTableRight instanceof \Closure) {
-                $this->beforeTableRight = call_user_func($this->beforeTableRight, $this);
-            }
-
-            return <<<HTML
-        <div class='sx-before-table'>
-            <div class='sx-before-table-left'>{$this->beforeTableLeft}</div>
-            <div class='sx-before-table-right'>{$this->beforeTableRight}</div>
-          </div>
-HTML;
-        } else {
-            return '';
-        }
-
+        return $toolbar;
     }
     /**
      * @return string
@@ -153,86 +191,5 @@ HTML;
             return "";
         }
 
-    }
-    /**
-     * @return string
-     */
-    public function renderPerPage()
-    {
-        $pagination = $this->dataProvider->getPagination();
-
-        $min = $pagination->pageSizeLimit[0];
-        $max = $pagination->pageSizeLimit[1];
-        
-        $step = 5; 
-        if ($max - $min > 50) {
-            $step = ($max - $min) / 30;
-            $step = round($step);
-        }
-
-        $items = [];
-        $i = 0;
-        for ($i >= $min; $i <= $max; $i++) {
-            if ($i % $step == 0 && $i > 0) {
-                $items[$i] = $i;
-            }
-        }
-        
-        if ($i != $max) {
-            $items[$max] = $max;
-        }
-
-        $id = $this->id."-per-page";
-
-        $get = \Yii::$app->request->get();
-        ArrayHelper::remove($get, $pagination->pageSizeParam);
-        $get[$pagination->pageSizeParam] = "";
-
-        $url = '/'.\Yii::$app->request->pathInfo."?".http_build_query($get);
-
-
-        if (!isset($items[$pagination->pageSize])) {
-            $items[$pagination->pageSize] = $pagination->pageSize;
-        }
-
-        ksort($items);
-
-        $this->view->registerJs(<<<JS
-(function(sx, $, _)
-{
-    sx.classes.GridPerPage = sx.classes.Component.extend({
-
-        _onDomReady: function()
-        {
-            var self = this;
-            var JSelect = $("#" + this.get('id'));
-            JSelect.on("change", function()
-            {
-                $(this).val();
-
-                var JLink = $("<a>", {
-                    'href' : self.get('url') + $(this).val(),
-                    'style' : 'display: none;',
-                }).text('link');
-
-                $(this).closest('form').append(JLink);
-                JLink.click();
-            });
-        }
-    });
-
-    new sx.classes.GridPerPage({
-        'id' : '{$id}',
-        'url' : '{$url}'
-    });
-})(sx, sx.$, sx._);
-JS
-        );
-
-
-        return "<div class='sx-per-page'><form method='get' action='".$url."'> <span class='per-page-label'>".\Yii::t('skeeks/cms', 'On the page').":</span>"
-            .Html::dropDownList($pagination->pageSizeParam, [$pagination->pageSize], $items, [
-                'id' => $id,
-            ])."</form></div>";
     }
 }

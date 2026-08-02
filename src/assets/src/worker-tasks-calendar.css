@@ -1,0 +1,211 @@
+/* Shared worker task calendar presentation for CMS and CRM packages. */
+.sx-worker-tasks-calendar-widget {
+    --sx-task-calendar-surface: var(--sx-color-surface);
+    --sx-task-calendar-border-color: var(--sx-color-border);
+    --sx-task-calendar-radius: var(--sx-radius-panel);
+    --sx-task-calendar-header-background: var(--sx-color-accent-soft);
+    --sx-task-calendar-header-color: var(--sx-color-accent);
+    --sx-task-calendar-muted-header-background: var(--sx-color-surface-muted);
+    --sx-task-calendar-muted-header-color: var(--sx-color-text-muted);
+    --sx-task-calendar-expired-header-background: var(--sx-color-danger-soft);
+    --sx-task-calendar-expired-header-color: var(--sx-color-danger);
+    --sx-task-calendar-expired-row-background: var(--sx-color-danger-soft);
+    --sx-task-calendar-planned-row-background: var(--sx-color-info-soft);
+    --sx-task-calendar-unfinished-header-background: var(--sx-color-warning-soft);
+    --sx-task-calendar-unfinished-header-color: var(--sx-color-warning);
+    --sx-task-calendar-unfinished-row-background: var(--sx-color-warning-soft);
+    --sx-task-calendar-completed-row-background: var(--sx-color-success-soft);
+    --sx-task-calendar-priority-shadow: var(--sx-color-accent);
+    --sx-task-calendar-toolbar-gap: 12px;
+    --sx-task-calendar-toolbar-margin-bottom: 16px;
+
+    color: var(--sx-color-text);
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-calendar__toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sx-task-calendar-toolbar-gap);
+    margin-bottom: var(--sx-task-calendar-toolbar-margin-bottom);
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-calendar__toolbar-start,
+.sx-worker-tasks-calendar-widget .sx-task-calendar__toolbar-end {
+    display: flex;
+    align-items: center;
+    gap: var(--sx-task-calendar-toolbar-gap);
+    min-width: 0;
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-calendar__toolbar-end {
+    margin-left: auto;
+}
+
+@keyframes sx-save-priority-pulse {
+    0% {
+        box-shadow:
+            0 0 5px 0 var(--sx-task-calendar-priority-shadow),
+            0 0 5px 0 var(--sx-task-calendar-priority-shadow);
+    }
+    100% {
+        box-shadow:
+            0 0 5px 6px transparent,
+            0 0 4px 10px transparent;
+    }
+}
+
+.sx-worker-tasks-calendar-widget .sx-save-priority-btn {
+    position: fixed;
+    z-index: 99;
+    top: 50%;
+    left: 50%;
+    display: none;
+    animation: sx-save-priority-pulse 1.5s infinite linear;
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-hidden .sx-task-td {
+    position: relative;
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-hidden .sx-task-td::after {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    color: var(--sx-color-text-muted);
+    background: var(--sx-task-calendar-surface);
+    content: "Недоступна";
+}
+
+.sx-worker-tasks-calendar-widget .table.sx-calendar-day thead th {
+    color: var(--sx-task-calendar-header-color);
+    border: 0;
+    border-bottom: 0;
+    background: var(--sx-task-calendar-header-background) !important;
+    text-shadow: none;
+}
+
+.sx-worker-tasks-calendar-widget .table.sx-calendar-day thead th a {
+    color: inherit;
+    text-shadow: none;
+}
+
+.sx-worker-tasks-calendar-widget .sx-calendar-day,
+.sx-worker-tasks-calendar-widget .sx-unfinished-tasks {
+    overflow: hidden;
+    color: var(--sx-color-text);
+    border: 1px solid var(--sx-task-calendar-border-color);
+    border-radius: var(--sx-task-calendar-radius);
+    background: var(--sx-task-calendar-surface);
+}
+
+.sx-worker-tasks-calendar-widget .sx-not-work-day {
+    border-radius: var(--sx-task-calendar-radius);
+}
+
+.sx-worker-tasks-calendar-widget .table.sx-calendar-day.sx-not-work-day thead th {
+    color: var(--sx-task-calendar-muted-header-color);
+    background: var(--sx-task-calendar-muted-header-background) !important;
+}
+
+.sx-worker-tasks-calendar-widget .sx-not-today-day {
+    opacity: .9;
+}
+
+.sx-worker-tasks-calendar-widget .table.sx-calendar-day.sx-not-today-day thead th {
+    color: var(--sx-task-calendar-muted-header-color);
+    background: var(--sx-task-calendar-muted-header-background) !important;
+}
+
+.sx-worker-tasks-calendar-widget .sx-not-today-day:hover {
+    opacity: 1;
+}
+
+.sx-worker-tasks-calendar-widget .table.sx-calendar-day.sx-expired-tasks thead th {
+    color: var(--sx-task-calendar-expired-header-color);
+    background: var(--sx-task-calendar-expired-header-background) !important;
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-expired > td {
+    background: var(--sx-task-calendar-expired-row-background) !important;
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-planned > td {
+    background: var(--sx-task-calendar-planned-row-background) !important;
+}
+
+.sx-worker-tasks-calendar-widget .sx-unfinished-tasks thead th {
+    color: var(--sx-task-calendar-unfinished-header-color);
+    border: 0;
+    background: var(--sx-task-calendar-unfinished-header-background) !important;
+}
+
+.sx-worker-tasks-calendar-widget .sx-unfinished-task > td {
+    background: var(--sx-task-calendar-unfinished-row-background) !important;
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-completed > td {
+    background: var(--sx-task-calendar-completed-row-background) !important;
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-calendar__header-link {
+    color: inherit;
+    text-decoration: none;
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-calendar__header-link:hover,
+.sx-worker-tasks-calendar-widget .sx-task-calendar__header-link:focus {
+    color: inherit;
+    text-decoration: underline;
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-calendar__header-link:focus-visible {
+    border-radius: var(--sx-radius-sm);
+    outline: 0;
+    box-shadow: 0 0 0 3px var(--sx-color-focus-ring);
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-calendar__move {
+    color: var(--sx-color-text-muted) !important;
+    border-color: transparent !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    cursor: n-resize;
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-calendar__move:hover,
+.sx-worker-tasks-calendar-widget .sx-task-calendar__move:focus {
+    color: var(--sx-color-accent) !important;
+    background: var(--sx-color-surface-hover) !important;
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-calendar__move:focus-visible {
+    outline: 0;
+    box-shadow: 0 0 0 3px var(--sx-color-focus-ring) !important;
+}
+
+.sx-worker-tasks-calendar-widget .sx-task-calendar__empty {
+    color: var(--sx-color-text-muted);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sx-worker-tasks-calendar-widget .sx-save-priority-btn,
+    .sx-worker-tasks-calendar-widget .sx-not-today-day {
+        animation: none;
+        transition: none;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .sx-worker-tasks-calendar-widget .sx-task-calendar__toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .sx-worker-tasks-calendar-widget .sx-task-calendar__toolbar-end {
+        width: 100%;
+        margin-left: 0;
+    }
+}

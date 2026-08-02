@@ -5,6 +5,9 @@
  * @copyright (c) 2010 SkeekS
  * @date 18.03.2018
  */
+
+use skeeks\cms\backend\helpers\BackendIcon;
+
 /* @var $this yii\web\View */
 /* @var $widget \skeeks\cms\backend\widgets\FiltersWidget */
 $widget = $this->context;
@@ -352,12 +355,20 @@ JS
 
 $activeFormClassName = \yii\helpers\ArrayHelper::getValue($widget->activeForm, 'class', \yii\widgets\ActiveForm::class);
 \yii\helpers\ArrayHelper::remove($widget->activeForm, 'class');
+$canManageBackendShowings = $widget->canManageBackendShowings;
+$activeFormOptionsClass = \yii\helpers\ArrayHelper::getValue($widget->activeForm, 'options.class', '');
+if ($canManageBackendShowings) {
+    $activeFormOptionsClass = trim($activeFormOptionsClass.' sx-can-manage-backend-showings');
+}
+\yii\helpers\ArrayHelper::setValue($widget->activeForm, 'options.class', $activeFormOptionsClass);
 
 ?>
 
 
 <?
-$id = \Yii::$app->controller->action->backendShowing->id;
+$callableDataInput = '';
+if ($canManageBackendShowings) {
+    $id = \Yii::$app->controller->action->backendShowing->id;
 $editComponent = [
     'url' => \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams([
         \skeeks\cms\backend\BackendComponent::getCurrent()->backendShowingControllerRoute.'/component-call-edit',
@@ -411,9 +422,10 @@ if ($availableFields) {
 }
 
 $callableDataInput = \yii\helpers\Html::textarea('callableData', base64_encode(serialize($editData)), [
-    'id'    => $widget->id."-edit",
-    'style' => 'display: none;',
-]);
+        'id'    => $widget->id."-edit",
+        'style' => 'display: none;',
+    ]);
+}
 
 ?>
 
@@ -426,7 +438,7 @@ $form = $activeFormClassName::begin((array)$widget->activeForm);
 
     <div class="sx-form-wrapper">
 
-        <div class="d-flex">
+        <div class="d-flex sx-filters-search-row<?= $canManageBackendShowings ? ' sx-can-manage-backend-showings' : ''; ?>">
             <div class="sx-search-field">
                 <?php
                 $fields = $builder->getFields();
@@ -439,20 +451,19 @@ $form = $activeFormClassName::begin((array)$widget->activeForm);
                 ?>
                 <div class="sx-search-field-btn-submit">
                     <button type="submit">
-                    <i class="hs-admin-search g-absolute-centered"></i>
+                    <?= BackendIcon::render('search', ['size' => 20]); ?>
                     </button>
                 </div>
             </div>
+            <? if ($canManageBackendShowings) : ?>
             <div class="sx-backend-filters-header">
                 <div class="col-sm-12">
                     <!--<a href="#" onclick="return false;" style="text-decoration: none; border-bottom: 1px dashed;" class="sx-filters-toggle">
                         Фильтры
                     </a>-->
                     
-                    <? if (\Yii::$app->user->can(\skeeks\cms\rbac\CmsManager::PERMISSION_ROLE_ADMIN_ACCESS)) : ?>
-
                     <span class="sx-controlls">
-                    <?= \yii\helpers\Html::a('<i class="hs-admin-settings g-absolute-centered"></i>',
+                    <?= \yii\helpers\Html::a(BackendIcon::render('settings', ['size' => 18]),
                         '#', [
                             'class'   => 'btn btn-sm sx-edit',
                             'onclick' => new \yii\web\JsExpression(<<<JS
@@ -462,16 +473,16 @@ JS
                         ]); ?>
                         
                 </span>
-                    <? endif; ?>
                 </div>
             </div>
+            <? endif; ?>
         </div>
 
         
         <div class="sx-filters-applied-save">
             <div class="sx-applied-filters"></div>
             <div class="sx-save-filters-wrapper">
-                <? if (\Yii::$app->user->can(\skeeks\cms\rbac\CmsManager::PERMISSION_ROLE_ADMIN_ACCESS)) : ?>
+                <? if ($canManageBackendShowings) : ?>
                 <div>
                     <a class="btn btn-default btn-sm sx-save-values" title="Сохранить примененные значения" data-toggle="tooltip">
                         Сохранить примененное
@@ -493,8 +504,7 @@ JS
 
             <div class="sx-edit-trigger" style=" position: absolute; right: 0px; bottom: 0;">
 
-                <!--<a class="btn btn-secondary btn-sm float-right" data-toggle="dropdown" style="    background: silver;
-        border-color: silver;"
+                <!--<a class="btn btn-secondary btn-sm float-right" data-toggle="dropdown"
                    href="#"
                    title="Добавить новый фильтр"
                 >
@@ -526,19 +536,20 @@ JS
                 </div>
             </div>
 
-            <div class="col-12" style="margin-top: 0.5rem;">
+            <div class="col-12 sx-filters-actions">
                 <button class="btn btn-primary sx-filters-apply-btn" type="submit"><i class="glyphicon glyphicon-filter"></i> Применить</button>
 
-                <a class="btn btn-default btn-sm float-right sx-filters-settings-btn" data-toggle="dropdown" style="    background: silver;
-        border-color: silver;"
+                <? if ($canManageBackendShowings) : ?>
+                <a class="btn btn-default btn-sm sx-filters-settings-btn" data-toggle="dropdown"
                    href="#"
                    title="Добавить новый фильтр"
                 >
     <span data-toggle="tooltip" title="Добавить новый фильтр">
-                    <i class="fa fa-plus"></i> Добавить еще фильтр
+                    <?= BackendIcon::render('plus', ['size' => 16]); ?> Добавить еще фильтр
                 </span>
 
                 </a>
+                <? endif; ?>
 
             </div>
 

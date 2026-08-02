@@ -1,0 +1,80 @@
+/*
+ * Shared palette adapter for both legacy FiltersWidget and the current
+ * SearchAndFiltersWidget. Geometry stays in each widget's own stylesheet.
+ */
+.sx-backend-filters-form .form-control,
+.sx-backend-filters-form input[type="text"],
+.sx-backend-filters-form input[type="email"],
+.sx-backend-filters-form input[type="tel"],
+.sx-backend-filters-form input[type="url"],
+.sx-backend-filters-form input[type="number"],
+.sx-backend-filters-form input[type="search"],
+.sx-backend-filters-form textarea,
+.sx-backend-filters-form select,
+.sx-backend-filters-form .select2-container--krajee-bs3 .select2-selection,
+.sx-backend-filters-form .select2-container--krajee-bs4 .select2-selection,
+.sx-backend-filters-form .select2-container--default .select2-selection {
+    color: var(--sx-form-control-color);
+    border-color: var(--sx-form-control-border-color);
+    background-color: var(--sx-form-control-background) !important;
+    box-shadow: none;
+}
+
+.sx-backend-filters-form .form-control::placeholder,
+.sx-backend-filters-form input::placeholder,
+.sx-backend-filters-form textarea::placeholder,
+.sx-backend-filters-form .select2-container .select2-selection__placeholder {
+    color: var(--sx-form-control-placeholder-color);
+    opacity: 1;
+}
+
+.sx-backend-filters-form .form-control:hover:not(:disabled):not([readonly]),
+.sx-backend-filters-form input:hover:not(:disabled):not([readonly]),
+.sx-backend-filters-form textarea:hover:not(:disabled):not([readonly]),
+.sx-backend-filters-form select:hover:not(:disabled),
+.sx-backend-filters-form .select2-container:not(.select2-container--disabled) .select2-selection:hover {
+    border-color: var(--sx-form-control-hover-border-color);
+}
+
+.sx-backend-filters-form .form-control:focus,
+.sx-backend-filters-form input:focus,
+.sx-backend-filters-form textarea:focus,
+.sx-backend-filters-form select:focus,
+.sx-backend-filters-form .select2-container--focus .select2-selection,
+.sx-backend-filters-form .select2-container--open .select2-selection {
+    color: var(--sx-form-control-color);
+    border-color: var(--sx-form-control-focus-border-color);
+    background-color: var(--sx-form-control-background) !important;
+    box-shadow: var(--sx-form-control-focus-shadow);
+    outline: 0;
+}
+
+.sx-backend-filters-form .form-control:disabled,
+.sx-backend-filters-form .form-control[readonly],
+.sx-backend-filters-form input:disabled,
+.sx-backend-filters-form input[readonly],
+.sx-backend-filters-form textarea:disabled,
+.sx-backend-filters-form textarea[readonly],
+.sx-backend-filters-form select:disabled,
+.sx-backend-filters-form .select2-container--disabled .select2-selection {
+    color: var(--sx-form-control-disabled-color);
+    border-color: var(--sx-form-control-border-color);
+    background-color: var(--sx-form-control-disabled-background) !important;
+    opacity: 1;
+}
+
+.sx-backend-filters-form .select2-container .select2-selection__rendered {
+    color: var(--sx-form-control-color);
+}
+
+.sx-backend-filters-form .select2-container--krajee-bs3 .select2-selection--single .select2-selection__arrow,
+.sx-backend-filters-form .select2-container--krajee-bs4 .select2-selection--single .select2-selection__arrow {
+    border-left-color: var(--sx-form-control-border-color);
+}
+
+.sx-backend-filters-form .input-group-text,
+.sx-backend-filters-form .input-group-addon {
+    color: var(--sx-form-control-color);
+    border-color: var(--sx-form-control-border-color);
+    background: var(--sx-form-control-disabled-background);
+}

@@ -1,33 +1,73 @@
+.sx-popover-ajax-controller-actions {
+    min-width: 220px;
+    max-width: min(320px, calc(100vw - 16px));
+    margin: 0;
+    color: var(--sx-menu-color, var(--sx-color-text, #202332));
+    border: 1px solid var(--sx-menu-border-color, var(--sx-color-border, #e4e7ec));
+    border-radius: var(--sx-radius-control, 8px);
+    background: var(--sx-menu-background, var(--sx-color-surface-raised, #fff));
+    box-shadow: var(--sx-menu-shadow, 0 8px 24px rgba(29, 35, 48, .16));
+}
+
+.sx-popover-ajax-controller-actions .arrow {
+    display: none;
+}
+
+.sx-popover-ajax-controller-actions ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
 .sx-popover-ajax-controller-actions ul li {
     display: block;
-    padding: 4px 15px;
-    font-size: 15px;
+    margin: 0;
+    padding: 0;
+    border-radius: 6px;
+    font-size: 14px;
     cursor: pointer;
 }
 .sx-popover-ajax-controller-actions ul li a {
+    display: flex;
+    min-height: 36px;
+    box-sizing: border-box;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
     text-decoration: none;
-    color: #2f2f2f;
+    color: var(--sx-menu-color, var(--sx-color-text, #202332));
+    border-radius: inherit;
+    line-height: 20px;
 }
 
 .sx-popover-ajax-controller-actions ul li a:hover {
     text-decoration: none;
 }
 
+.sx-popover-ajax-controller-actions ul li a:focus-visible {
+    outline: 2px solid var(--sx-color-focus-ring, rgba(237, 112, 68, .28));
+    outline-offset: -2px;
+}
+
 .sx-popover-ajax-controller-actions ul li:hover {
-    color: white;
-    background: var(--primary-color);
+    color: var(--sx-menu-active-color, var(--sx-color-accent, #f36f42));
+    background: var(--sx-menu-hover-background, var(--sx-color-surface-hover, #f2f4f7));
 }
 .sx-popover-ajax-controller-actions ul li:hover a {
-    color: white;
+    color: inherit;
 }
 
 .sx-popover-ajax-controller-actions .popover-body
 {
-    padding: 0;
+    padding: 4px;
+    overflow: hidden;
+    border-radius: inherit;
+    background: transparent;
 }
 
 .sx-popover-ajax-controller-actions ul li .sx-action-icon {
     width: 20px;
+    flex: 0 0 20px;
     text-align: center;
 }
 

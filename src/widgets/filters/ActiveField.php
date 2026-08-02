@@ -7,6 +7,8 @@
  */
 namespace skeeks\cms\backend\widgets\filters;
 
+use skeeks\cms\backend\helpers\BackendIcon;
+
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
  */
@@ -50,14 +52,17 @@ class ActiveField extends \yii\bootstrap\ActiveField {
 
     protected function renderControllsParts()
     {
+        $moveIcon = BackendIcon::render('move-vertical', ['size' => 16]);
+        $removeIcon = BackendIcon::render('close', ['size' => 16]);
+
         $this->parts['{controlls}'] = <<<HTML
         <div class="col-sm-2 sx-field-controll">
             <div class="sx-field-config-controll float-right">
                 <a href="#" class="btn btn-xs sx-move" title="Поменять порядок">
-                    <i class="fas fa-arrows-alt-v"></i>
+                    {$moveIcon}
                 </a>
                 <a href="#" class="btn btn-xs sx-remove" title="Удалить фильтр">
-                    <i class="fa fa-times"></i>
+                    {$removeIcon}
                 </a>
             </div>
         </div>

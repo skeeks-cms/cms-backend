@@ -8,6 +8,7 @@
 namespace skeeks\cms\backend\assets;
 
 use skeeks\cms\base\AssetBundle;
+use skeeks\cms\widgets\assets\GridViewAsset;
 use yii\bootstrap\BootstrapAsset;
 
 /**
@@ -31,5 +32,7 @@ class BackendAsset extends AssetBundle
         'yii\web\YiiAsset',
         'skeeks\sx\assets\Custom',
         'skeeks\sx\assets\ComponentAjaxLoader',
+        GridViewAsset::class,
+        BackendUiAsset::class,
     ];
 }

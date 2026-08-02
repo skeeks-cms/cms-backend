@@ -1,0 +1,176 @@
+.sx-backend-window-is-open {
+    overflow: hidden !important;
+}
+
+.sx-backend-window {
+    position: fixed;
+    z-index: var(--sx-backend-window-z-index, 100000);
+    inset: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+.sx-backend-window.is-open,
+.sx-backend-window.is-closing {
+    visibility: visible;
+    pointer-events: auto;
+}
+
+.sx-backend-window__backdrop {
+    position: absolute;
+    border: 0;
+    opacity: 0;
+    background: var(--sx-overlay-color, #0b1016);
+    cursor: default;
+    transition: opacity var(--sx-backend-window-duration, 240ms) ease;
+    inset: 0;
+}
+
+.sx-backend-window__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: min(
+        calc(
+            var(--sx-backend-window-width, 1300px)
+            - var(--sx-backend-window-stack-offset, 0px)
+        ),
+        calc(
+            100vw
+            - var(--sx-backend-window-gutter, 48px)
+            - var(--sx-backend-window-stack-offset, 0px)
+        )
+    );
+    height: 100%;
+    overflow: visible;
+    border-left: 1px solid var(--sx-color-border, #dedede);
+    background: var(--sx-color-canvas, #eef2f4);
+    box-shadow: var(--sx-backend-window-shadow, -12px 0 28px rgba(0, 0, 0, .24));
+    transform: translate3d(100%, 0, 0);
+    transition: transform var(--sx-backend-window-duration, 240ms) ease;
+}
+
+.sx-backend-window--small .sx-backend-window__panel {
+    --sx-backend-window-width: 560px;
+}
+
+.sx-backend-window--medium .sx-backend-window__panel {
+    --sx-backend-window-width: 900px;
+}
+
+.sx-backend-window--large .sx-backend-window__panel {
+    --sx-backend-window-width: 1500px;
+}
+
+.sx-backend-window.is-open .sx-backend-window__backdrop {
+    opacity: var(--sx-overlay-opacity, .58);
+}
+
+.sx-backend-window.is-open .sx-backend-window__panel {
+    transform: translate3d(0, 0, 0);
+}
+
+.sx-backend-window.is-closing .sx-backend-window__backdrop {
+    opacity: 0;
+}
+
+.sx-backend-window.is-closing .sx-backend-window__panel {
+    transform: translate3d(100%, 0, 0);
+}
+
+.sx-backend-window__frame {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: var(--sx-color-canvas, #eef2f4);
+}
+
+.sx-backend-window__close {
+    position: absolute;
+    z-index: 2;
+    top: 14px;
+    right: auto;
+    left: 0;
+    display: inline-flex;
+    width: 42px;
+    height: 42px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: var(--sx-color-text, #202332);
+    border: 1px solid var(--sx-color-border, #dedede);
+    border-right: 0;
+    border-radius: 50% 0 0 50%;
+    outline: 0;
+    background: var(--sx-color-surface-raised, #fff);
+    box-shadow: var(--sx-shadow-panel, 0 3px 8px rgba(0, 0, 0, .16));
+    cursor: pointer;
+    transform: translateX(-100%);
+    transition:
+        color .16s ease,
+        border-color .16s ease,
+        background-color .16s ease,
+        box-shadow .16s ease;
+}
+
+.sx-backend-window__close::before,
+.sx-backend-window__close::after {
+    position: absolute;
+    width: 18px;
+    height: 2px;
+    border-radius: 1px;
+    background: currentColor;
+    content: "";
+}
+
+.sx-backend-window__close::before {
+    transform: rotate(45deg);
+}
+
+.sx-backend-window__close::after {
+    transform: rotate(-45deg);
+}
+
+.sx-backend-window__close:hover {
+    color: var(--sx-color-accent, #ed7044);
+    border-color: var(--sx-color-accent, #ed7044);
+    background: var(--sx-color-surface-hover, #f4f6f8);
+}
+
+.sx-backend-window__close:focus,
+.sx-backend-window__close:active {
+    outline: 0 !important;
+}
+
+.sx-backend-window__close:focus:not(:focus-visible) {
+    box-shadow: var(--sx-shadow-panel, 0 3px 8px rgba(0, 0, 0, .16));
+}
+
+.sx-backend-window__close:focus-visible {
+    color: var(--sx-color-accent, #ed7044);
+    border-color: var(--sx-color-accent, #ed7044);
+    box-shadow: var(--sx-shadow-panel, 0 3px 8px rgba(0, 0, 0, .16));
+}
+
+@media (max-width: 767.98px) {
+    .sx-backend-window__panel {
+        --sx-backend-window-stack-offset: 0 !important;
+
+        right: 0;
+        width: 100%;
+        border-left: 0;
+    }
+
+    .sx-backend-window__close {
+        left: 14px;
+        transform: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .sx-backend-window__backdrop,
+    .sx-backend-window__panel {
+        transition-duration: 1ms;
+    }
+}

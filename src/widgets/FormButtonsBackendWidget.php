@@ -244,13 +244,13 @@ JS
         if ($this->isPrevNext) {
 
             $submit = '<span class="sx-next-prev-btns" style="display: none;">'.Html::button("<i class=\"fas fa-arrow-left\"></i> ", [
-                    'class' => 'btn u-btn-blue sx-btn-prev',
+                    'class' => 'btn btn-secondary sx-btn-prev',
                     'title' => \Yii::t('skeeks/backend', 'Go to previous post')." (ctrl+←)",
                     'style' => 'display: none;',
                 ]);
 
             $submit .= ' '.Html::button("<i class=\"fas fa-arrow-right\"></i> ", [
-                    'class' => 'btn u-btn-blue sx-btn-next',
+                    'class' => 'btn btn-secondary sx-btn-next',
                     'title' => \Yii::t('skeeks/backend', 'Go to next post')." (ctrl+→)",
                     'style' => 'display: none;',
                 ])."</span>";

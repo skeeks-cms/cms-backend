@@ -8,6 +8,8 @@
 
 namespace skeeks\cms\backend\widgets\filters;
 
+use skeeks\cms\backend\helpers\BackendIcon;
+
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
  */
@@ -60,14 +62,17 @@ class Bootstrap4InlineActiveField extends \yii\bootstrap4\ActiveField
 
     protected function renderControllsParts()
     {
+        $moveIcon = BackendIcon::render('move-vertical', ['size' => 16]);
+        $removeIcon = BackendIcon::render('close', ['size' => 16]);
+
         $this->parts['{controlls}'] = <<<HTML
         <div class="sx-field-controll">
             <div class="sx-field-config-controll float-right">
                 <a href="#" class="sx-move" data-toggle="tooltip" title="Поменять порядок">
-                    <i class="hs-admin-arrows-vertical g-absolute-centered"></i>
+                    {$moveIcon}
                 </a>
                 <a href="#" class="sx-remove" data-toggle="tooltip" title="Удалить фильтр">
-                    <i class="hs-admin-close g-absolute-centered"></i>
+                    {$removeIcon}
                 </a>
             </div>
         </div>

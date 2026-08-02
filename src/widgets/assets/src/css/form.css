@@ -2,21 +2,19 @@
 
 form.sx-backend-form
 {
-    border: 1px solid rgba(32, 168, 216, 0.23);
+    border: 1px solid var(--sx-color-border);
     padding: 10px;
 }
 
     form.sx-backend-form .error-summary
     {
-        background: #fee5e5;
-        border-color: #f86c6b;
-        color: #c10a09;
-        padding: 15px;
-        margin-bottom: 10px;
-        margin-top: 10px;
-        border: 1px solid transparent;
-        border-radius: 2px;
-        border-color: transparent;
+        background: var(--sx-form-error-background);
+        border-color: var(--sx-form-error-border-color);
+        color: var(--sx-form-error-color);
+        padding: var(--sx-form-error-summary-padding);
+        margin-block: var(--sx-form-error-summary-margin-block);
+        border: 1px solid var(--sx-form-error-border-color);
+        border-radius: var(--sx-form-error-summary-radius);
     }
 
         form.sx-backend-form .error-summary p
@@ -25,27 +23,35 @@ form.sx-backend-form
         }
 
     form.sx-backend-form .hint-block:hover {
-        opacity: 1;
+        opacity: var(--sx-form-hint-hover-opacity);
     }
 
     form.sx-backend-form .hint-block
     {
         font-size: 11px;
-        opacity: 0.6;
+        color: var(--sx-form-help-color);
+        opacity: var(--sx-form-hint-opacity);
     }
 
     form.sx-backend-form .sx-from-required
     {
-        color: red;
+        color: var(--sx-form-required-color);
     }
 
         form.sx-backend-form .tab-content
         {
-            background: #ffffff;
+            background: var(--sx-tabs-content-background);
         }
 
     form.sx-backend-form .sx-buttons-standart-wrapper {
         margin-top: 15px;
+    }
+
+    form.sx-backend-form .sx-buttons-standart-wrapper.sx-fixed-buttons {
+        z-index: 20;
+        border-top: 1px solid var(--sx-form-actions-border-color);
+        background: var(--sx-form-actions-background);
+        box-shadow: var(--sx-form-actions-shadow);
     }
 
     form.sx-backend-form .sx-buttons-standart-wrapper .sx-btns-group {
@@ -54,13 +60,12 @@ form.sx-backend-form
 
     form.sx-backend-form .sx-buttons-standart-wrapper .sx-success-meessage {
         margin-left: 30px;
-        color: green;
+        color: var(--sx-color-success);
         font-weight: bold;
     }
 
     form.sx-backend-form .sx-buttons-standart
     {
-        /*border-top: 1px solid #ddd;*/
         padding-top: 10px;
         margin-bottom: 0px;
         /*margin-top: 15px;*/
@@ -73,20 +78,20 @@ form.sx-backend-form
 
     form.sx-backend-form .nav-tabs>li>a
     {
-        font-size: 14px;
+        font-size: var(--sx-tabs-font-size);
     }
 
 
 
 .sx-backend-form .error-summary
 {
-    padding: 15px;
-    margin-bottom: 20px;
+    padding: var(--sx-form-error-summary-padding);
+    margin-block: var(--sx-form-error-summary-margin-block);
     border: 1px solid transparent;
-    background: #fee5e5;
-    color: #c10a09;
-    border-radius: 2px;
-    border-color: transparent!important;
+    background: var(--sx-form-error-background);
+    color: var(--sx-form-error-color);
+    border-radius: var(--sx-form-error-summary-radius);
+    border-color: var(--sx-form-error-border-color) !important;
 }
     .sx-backend-form .error-summary p
     {
@@ -95,23 +100,26 @@ form.sx-backend-form
 
 
 form.sx-backend-form .form-group {
-    padding: 4px 15px;
+    padding: var(--sx-form-field-padding);
     margin-bottom: 0px;
+    border-radius: var(--sx-form-field-radius);
 }
 
 form.sx-backend-form .form-group:hover {
-    /*background: #f5f5f5;*/
+    background: var(--sx-form-field-hover-background);
 }
 
 form.sx-backend-form {
-    border: 0px;
-    padding: 0px;
-    background: #f9f9f9;
-    padding-bottom: 10px;
+    max-width: var(--sx-form-max-width);
+    border: 1px solid var(--sx-form-border-color);
+    border-radius: var(--sx-form-border-radius);
+    padding: var(--sx-form-padding);
+    color: var(--sx-color-text);
+    background: var(--sx-form-background);
 }
 
 form.sx-backend-form .tab-content {
-    background: #f5f9f9;
+    background: var(--sx-tabs-content-background);
     padding: 0px;
     border: 0px;
 }
@@ -121,16 +129,20 @@ form.sx-backend-form .tab-content {
 }
 
 .sx-form-fieldset.sx-field-set-hidden .sx-form-fieldset-title:after {
-    content: "\e90d";
-    font-size: 10px;
+    transform: rotate(45deg);
 }
 
 .sx-form-fieldset .sx-form-fieldset-title:after {
-    content: "\e910";
-    font-family: 'hs-admin-icons' !important;
+    content: "";
+    display: inline-block;
+    width: 7px;
+    height: 7px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
     margin-left: 13px;
     opacity: 0.4;
-    font-size: 10px;
+    transform: rotate(225deg);
+    transition: transform 0.18s ease, opacity 0.18s ease;
 }
 
 .sx-form-fieldset .sx-form-fieldset-content .form-group:last-child {
@@ -140,29 +152,15 @@ form.sx-backend-form .tab-content {
     padding-top: 15px;
 }
 
-.sx-form-fieldset-title {
-    background: #ececec;
-    padding: 8px 15px 10px!important;
-    font-weight: bold;
-    color: #4b6267;
-    text-shadow: 0 1px #fff;
-    font-size: 14px;
-}
-
-.sx-form-fieldset-content {
-    border-left: 1px solid #ddd;
-    border-right: 1px solid #ddd;
-    border-bottom: 1px solid #ddd;
-    padding: 0;
-}
-
 .sx-backend-form .sx-inline-row label {
     margin-bottom: 0px;
 }
 
 .sx-backend-form .control-label {
     font-size: 1rem;
+    font-weight: var(--sx-form-label-font-weight);
     margin-bottom: 0;
+    color: var(--sx-form-label-color);
 }
 
 
@@ -174,10 +172,406 @@ form.sx-backend-form .tab-content {
 .sx-backend-form .select2-container--krajee-bs4:not(.select2-container--disabled) .select2-selection:focus,
 .select2-container--krajee-bs4:not(.select2-container--disabled) .select2-dropdown
 {
-    border-color: #ced4da !important;
+    border-color: var(--sx-form-control-border-color) !important;
     box-shadow: none !important;
 }
 
 .sx-backend-form .select2-container--krajee-bs4 .select2-selection--single .select2-selection__arrow {
-    border-left: 1px solid #dbdbdb;
+    border-left: 1px solid var(--sx-form-control-border-color);
+}
+
+/*
+ * Semantic controls. The form-qualified selectors intentionally outrank the
+ * Bootstrap and Krajee theme assets which can be registered after this file.
+ */
+form.sx-backend-form .form-control,
+form.sx-backend-form input[type="text"],
+form.sx-backend-form input[type="email"],
+form.sx-backend-form input[type="tel"],
+form.sx-backend-form input[type="url"],
+form.sx-backend-form input[type="number"],
+form.sx-backend-form input[type="password"],
+form.sx-backend-form input[type="search"],
+form.sx-backend-form textarea,
+form.sx-backend-form select {
+    min-height: var(--sx-form-control-height);
+    color: var(--sx-form-control-color);
+    border-color: var(--sx-form-control-border-color);
+    border-radius: var(--sx-form-control-radius);
+    background-color: var(--sx-form-control-background);
+    padding:
+        var(--sx-form-control-padding-y)
+        var(--sx-form-control-padding-x);
+    box-shadow: none;
+    transition:
+        color var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing),
+        background-color var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing),
+        border-color var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing),
+        box-shadow var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing);
+}
+
+form.sx-backend-form textarea.form-control,
+form.sx-backend-form textarea {
+    min-height: var(--sx-form-control-textarea-min-height);
+}
+
+form.sx-backend-form .form-control::placeholder,
+form.sx-backend-form input::placeholder,
+form.sx-backend-form textarea::placeholder {
+    color: var(--sx-form-control-placeholder-color);
+    opacity: 1;
+}
+
+form.sx-backend-form .form-control:hover:not(:disabled):not([readonly]),
+form.sx-backend-form input:hover:not(:disabled):not([readonly]),
+form.sx-backend-form textarea:hover:not(:disabled):not([readonly]),
+form.sx-backend-form select:hover:not(:disabled) {
+    border-color: var(--sx-form-control-hover-border-color);
+}
+
+form.sx-backend-form .form-control:focus,
+form.sx-backend-form input:focus,
+form.sx-backend-form textarea:focus,
+form.sx-backend-form select:focus {
+    color: var(--sx-form-control-color);
+    border-color: var(--sx-form-control-focus-border-color);
+    background-color: var(--sx-form-control-background);
+    box-shadow: var(--sx-form-control-focus-shadow);
+    outline: 0;
+}
+
+form.sx-backend-form .form-control:disabled,
+form.sx-backend-form .form-control[readonly],
+form.sx-backend-form input:disabled,
+form.sx-backend-form input[readonly],
+form.sx-backend-form textarea:disabled,
+form.sx-backend-form textarea[readonly],
+form.sx-backend-form select:disabled {
+    color: var(--sx-form-control-disabled-color);
+    border-color: var(--sx-form-control-border-color);
+    background-color: var(--sx-form-control-disabled-background);
+    opacity: 1;
+}
+
+form.sx-backend-form .has-error .form-control,
+form.sx-backend-form .has-error .select2-selection {
+    border-color: var(--sx-form-error-border-color);
+}
+
+form.sx-backend-form .has-error .form-control:focus,
+form.sx-backend-form .has-error .select2-selection:focus {
+    box-shadow: 0 0 0 3px var(--sx-form-error-focus-ring);
+}
+
+form.sx-backend-form .has-error .help-block,
+form.sx-backend-form .has-error .control-label {
+    color: var(--sx-form-error-color);
+}
+
+form.sx-backend-form .help-block {
+    font-size: var(--sx-form-help-font-size);
+    color: var(--sx-form-help-color);
+}
+
+form.sx-backend-form .invalid-feedback {
+    font-size: var(--sx-form-help-font-size);
+}
+
+html[data-sx-theme] .select2-container--krajee-bs3 .select2-selection,
+html[data-sx-theme] .select2-container--krajee-bs4 .select2-selection,
+html[data-sx-theme] .select2-container--default .select2-selection {
+    min-height: var(--sx-form-control-height);
+    color: var(--sx-form-control-color);
+    border-color: var(--sx-form-control-border-color);
+    border-radius: var(--sx-form-control-radius);
+    background-color: var(--sx-form-control-background);
+    box-shadow: none;
+    transition:
+        color var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing),
+        background-color var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing),
+        border-color var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing),
+        box-shadow var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing);
+}
+
+html[data-sx-theme] .select2-selection--multiple .select2-search--inline .select2-search__field,
+html[data-sx-theme] form.sx-backend-form .select2-selection--multiple .select2-search--inline .select2-search__field {
+    height: calc(var(--sx-form-control-height) - 2px);
+    min-height: calc(var(--sx-form-control-height) - 2px);
+    padding: 0 var(--sx-form-control-padding-x);
+    color: var(--sx-form-control-color);
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    resize: none;
+}
+
+html[data-sx-theme] .chosen-container {
+    color: var(--sx-form-control-color);
+    font-family: inherit;
+}
+
+html[data-sx-theme] .chosen-container-single .chosen-single,
+html[data-sx-theme] .chosen-container-multi .chosen-choices {
+    min-height: var(--sx-form-control-height);
+    color: var(--sx-form-control-color);
+    border-color: var(--sx-form-control-border-color);
+    border-radius: var(--sx-form-control-radius);
+    background: var(--sx-form-control-background);
+    box-shadow: none;
+    transition:
+        color var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing),
+        background-color var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing),
+        border-color var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing),
+        box-shadow var(--sx-form-control-transition-duration) var(--sx-form-control-transition-easing);
+}
+
+html[data-sx-theme] .chosen-container-single .chosen-single {
+    height: var(--sx-form-control-height);
+    padding:
+        var(--sx-form-control-padding-y)
+        var(--sx-form-control-arrow-width)
+        var(--sx-form-control-padding-y)
+        var(--sx-form-control-padding-x);
+    line-height: 20px;
+}
+
+html[data-sx-theme] .chosen-container-single .chosen-single div {
+    width: var(--sx-form-control-arrow-width);
+    border-left: 1px solid var(--sx-form-control-border-color);
+}
+
+html[data-sx-theme] .chosen-container-single .chosen-single div b {
+    position: relative;
+    color: var(--sx-form-control-color);
+    background: none;
+}
+
+html[data-sx-theme] .chosen-container-single .chosen-single div b::after {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: .45rem;
+    height: .45rem;
+    content: "";
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translate(-50%, -70%) rotate(45deg);
+}
+
+html[data-sx-theme] .chosen-container-single.chosen-with-drop .chosen-single div b::after {
+    transform: translate(-50%, -30%) rotate(225deg);
+}
+
+html[data-sx-theme] .chosen-container-multi .chosen-choices .search-field input {
+    height: calc(var(--sx-form-control-height) - 2px);
+    min-height: calc(var(--sx-form-control-height) - 2px);
+    padding: 0 var(--sx-form-control-padding-x);
+    color: var(--sx-form-control-color) !important;
+    background: transparent !important;
+}
+
+html[data-sx-theme] .chosen-container-multi .chosen-choices .search-field .default {
+    color: var(--sx-form-control-placeholder-color) !important;
+}
+
+html[data-sx-theme] .chosen-container-multi .chosen-choices .search-choice {
+    color: var(--sx-color-text);
+    border-color: var(--sx-color-border);
+    background: var(--sx-color-surface-muted);
+    box-shadow: none;
+}
+
+html[data-sx-theme] .chosen-container .chosen-drop {
+    color: var(--sx-form-control-color);
+    border-color: var(--sx-form-control-border-color);
+    background: var(--sx-form-control-background);
+    box-shadow: var(--sx-shadow-popup);
+}
+
+html[data-sx-theme] .chosen-container .chosen-results {
+    color: var(--sx-form-control-color);
+}
+
+html[data-sx-theme] .chosen-container .chosen-results li em {
+    color: var(--sx-color-accent);
+    background: var(--sx-color-accent-soft);
+}
+
+html[data-sx-theme] .chosen-container .chosen-results li.group-result,
+html[data-sx-theme] .chosen-container .chosen-results li.disabled-result {
+    color: var(--sx-form-control-disabled-color);
+}
+
+html[data-sx-theme] .chosen-container .chosen-results li.highlighted {
+    color: var(--sx-color-accent-contrast);
+    background: var(--sx-color-accent);
+}
+
+html[data-sx-theme] .chosen-container .chosen-results .no-results,
+html[data-sx-theme] .chosen-container .chosen-results-scroll {
+    color: var(--sx-form-control-color);
+    background: var(--sx-color-surface-muted);
+}
+
+html[data-sx-theme] .chosen-container-active .chosen-single,
+html[data-sx-theme] .chosen-container-active .chosen-choices {
+    border-color: var(--sx-form-control-focus-border-color);
+    box-shadow: var(--sx-form-control-focus-shadow);
+}
+
+html[data-sx-theme] .chosen-container-active.chosen-with-drop .chosen-single {
+    border-color: var(--sx-form-control-focus-border-color);
+    border-bottom-color: transparent;
+}
+
+html[data-sx-theme] .chosen-disabled {
+    opacity: 1 !important;
+}
+
+html[data-sx-theme] .chosen-disabled .chosen-single,
+html[data-sx-theme] .chosen-disabled .chosen-choices {
+    color: var(--sx-form-control-disabled-color);
+    border-color: var(--sx-form-control-border-color);
+    background: var(--sx-form-control-disabled-background);
+}
+
+html[data-sx-theme] .select2-container .select2-selection--single {
+    height: var(--sx-form-control-height);
+    padding:
+        var(--sx-form-control-padding-y)
+        calc(var(--sx-form-control-arrow-width) + 18px)
+        var(--sx-form-control-padding-y)
+        var(--sx-form-control-padding-x);
+    line-height: 20px;
+}
+
+html[data-sx-theme] .select2-container .select2-selection--single .select2-selection__rendered {
+    line-height: 20px;
+}
+
+html[data-sx-theme] .select2-container .select2-selection--single .select2-selection__arrow {
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: var(--sx-form-control-arrow-width);
+    height: auto;
+    border-left: 1px solid var(--sx-form-control-border-color);
+    border-radius:
+        0
+        var(--sx-form-control-radius)
+        var(--sx-form-control-radius)
+        0;
+}
+
+html[data-sx-theme] .select2-container .select2-selection--single .select2-selection__clear {
+    top: 50%;
+    right: calc(var(--sx-form-control-arrow-width) + 5px);
+    line-height: 1;
+    transform: translateY(-50%);
+}
+
+html[data-sx-theme] .select2-container--krajee-bs3:not(.select2-container--disabled) .select2-selection:hover,
+html[data-sx-theme] .select2-container--krajee-bs4:not(.select2-container--disabled) .select2-selection:hover,
+html[data-sx-theme] .select2-container--default:not(.select2-container--disabled) .select2-selection:hover {
+    border-color: var(--sx-form-control-hover-border-color);
+}
+
+html[data-sx-theme] .select2-container--krajee-bs3.select2-container--focus .select2-selection,
+html[data-sx-theme] .select2-container--krajee-bs3.select2-container--open .select2-selection,
+html[data-sx-theme] .select2-container--krajee-bs4.select2-container--focus .select2-selection,
+html[data-sx-theme] .select2-container--krajee-bs4.select2-container--open .select2-selection,
+html[data-sx-theme] .select2-container--default.select2-container--focus .select2-selection,
+html[data-sx-theme] .select2-container--default.select2-container--open .select2-selection {
+    border-color: var(--sx-form-control-focus-border-color);
+    box-shadow: var(--sx-form-control-focus-shadow);
+}
+
+html[data-sx-theme] .select2-container--krajee-bs3 .select2-selection__rendered,
+html[data-sx-theme] .select2-container--krajee-bs4 .select2-selection__rendered,
+html[data-sx-theme] .select2-container--default .select2-selection__rendered {
+    color: var(--sx-form-control-color);
+}
+
+html[data-sx-theme] .select2-container .select2-selection__placeholder {
+    color: var(--sx-form-control-placeholder-color);
+}
+
+html[data-sx-theme] .select2-container--krajee-bs3 .select2-selection--single .select2-selection__arrow,
+html[data-sx-theme] .select2-container--krajee-bs4 .select2-selection--single .select2-selection__arrow {
+    border-left-color: var(--sx-form-control-border-color);
+}
+
+html[data-sx-theme] .select2-container--disabled .select2-selection {
+    color: var(--sx-form-control-disabled-color);
+    border-color: var(--sx-form-control-border-color);
+    background-color: var(--sx-form-control-disabled-background);
+    opacity: 1;
+}
+
+html[data-sx-theme] .select2-container--krajee-bs3 .select2-selection--multiple .select2-selection__choice,
+html[data-sx-theme] .select2-container--krajee-bs4 .select2-selection--multiple .select2-selection__choice,
+html[data-sx-theme] .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    color: var(--sx-color-text);
+    border-color: var(--sx-color-border);
+    background: var(--sx-color-surface-muted);
+}
+
+html[data-sx-theme] .select2-container--krajee-bs3 .select2-dropdown,
+html[data-sx-theme] .select2-container--krajee-bs4 .select2-dropdown,
+html[data-sx-theme] .select2-container--default .select2-dropdown {
+    color: var(--sx-form-control-color);
+    border-color: var(--sx-form-control-border-color);
+    background: var(--sx-form-control-background);
+    box-shadow: var(--sx-shadow-panel);
+}
+
+html[data-sx-theme] .select2-container .select2-search--dropdown .select2-search__field {
+    color: var(--sx-form-control-color);
+    border-color: var(--sx-form-control-border-color);
+    background: var(--sx-form-control-background);
+}
+
+html[data-sx-theme] .select2-container .select2-results__option {
+    color: var(--sx-form-control-color);
+    background: var(--sx-form-control-background);
+}
+
+html[data-sx-theme] .select2-container .select2-results__option[aria-selected="true"],
+html[data-sx-theme] .select2-container .select2-results__option--selected {
+    color: var(--sx-color-text);
+    background: var(--sx-color-surface-muted);
+}
+
+html[data-sx-theme] .select2-container .select2-results__option--highlighted[aria-selected] {
+    color: var(--sx-color-accent-contrast);
+    background: var(--sx-color-accent);
+}
+
+/*
+ * Form container contract. Projects can change geometry with variables while
+ * all standard ActiveFormBackend screens keep the same semantic structure.
+ */
+form.sx-backend-form {
+    width: 100%;
+    max-width: var(--sx-form-max-width);
+    padding: var(--sx-form-padding);
+    border: 1px solid var(--sx-form-border-color);
+    border-radius: var(--sx-form-border-radius);
+}
+
+body.sx-empty form.sx-backend-form {
+    max-width: var(--sx-form-action-window-max-width);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    form.sx-backend-form .form-control,
+    form.sx-backend-form input,
+    form.sx-backend-form textarea,
+    form.sx-backend-form select,
+    html[data-sx-theme] .select2-selection,
+    html[data-sx-theme] .chosen-single,
+    html[data-sx-theme] .chosen-choices {
+        transition: none;
+    }
 }

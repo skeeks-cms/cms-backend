@@ -130,6 +130,7 @@ class SelectModelDialogWidget extends InputWidget
         if (!isset($this->wrapperOptions['id'])) {
             $this->wrapperOptions['id'] = $this->id."-wrapper";
         }
+        Html::addCssClass($this->wrapperOptions, 'sx-select-model-dialog');
         $this->clientOptions['id'] = $this->wrapperOptions['id'];
         $this->clientOptions['modelpk'] = $this->modelPk;
 
