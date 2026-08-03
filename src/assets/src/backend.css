@@ -22,7 +22,6 @@
     --sx-backend-grid-hover: var(--sx-backend-theme-hover, #fbfbfd);
     --sx-backend-grid-radius: var(--sx-backend-theme-radius, 8px);
     --sx-collection-accent: var(--sx-collection-theme-accent, var(--sx-backend-grid-accent));
-    --sx-collection-accent-contrast: var(--sx-collection-theme-accent-contrast, var(--sx-backend-grid-accent-contrast));
     --sx-collection-accent-soft: var(--sx-collection-theme-accent-soft, var(--sx-backend-grid-accent-soft));
     --sx-collection-border-color: var(--sx-collection-theme-border-color, var(--sx-backend-grid-border-color));
     --sx-collection-text: var(--sx-collection-theme-text, var(--sx-backend-grid-text));

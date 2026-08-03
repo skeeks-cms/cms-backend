@@ -3,6 +3,10 @@
 
     --sx-font-family-base: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 
+    /*
+     * Public theme palette. Projects and future user theme editors should
+     * override this small semantic facade instead of component-level tokens.
+     */
     --sx-color-accent: #ed7044;
     --sx-color-accent-hover: #d95a32;
     --sx-color-accent-active: #d95a32;
@@ -100,6 +104,8 @@
     --sx-shadow-popup: 0 12px 30px rgba(23, 25, 35, .13);
     --sx-shadow-drawer: 12px 0 30px rgba(23, 25, 35, .14);
     --sx-overlay-background: rgba(23, 25, 35, .45);
+
+    /* Reserved shared layer scale. Keep overlays ordered across packages. */
     --sx-z-dropdown: 1000;
     --sx-z-sticky: 1020;
     --sx-z-blocker: 1030;
@@ -480,6 +486,10 @@
     --color-red: var(--sx-color-danger);
     --color-red-pale: var(--sx-color-danger-soft);
 
+    /*
+     * Internal compatibility adapters for backend grids and collections.
+     * They are not part of the user-configurable palette.
+     */
     --sx-backend-theme-accent: var(--sx-color-accent);
     --sx-backend-theme-accent-contrast: var(--sx-color-accent-contrast);
     --sx-backend-theme-accent-soft: var(--sx-color-accent-soft);
@@ -493,7 +503,6 @@
     --sx-backend-theme-radius: var(--sx-radius-panel);
 
     --sx-collection-theme-accent: var(--sx-color-accent);
-    --sx-collection-theme-accent-contrast: var(--sx-color-accent-contrast);
     --sx-collection-theme-accent-soft: var(--sx-color-accent-soft);
     --sx-collection-theme-border-color: var(--sx-color-border);
     --sx-collection-theme-text: var(--sx-color-text);
@@ -560,10 +569,6 @@
     --sx-selection-control-disabled-opacity: .55;
     --sx-selection-control-label-color: var(--sx-color-text);
     --sx-selection-control-disabled-label-color: var(--sx-color-text-muted);
-    --sx-selection-control-gap: 8px;
-    --sx-switch-width: 36px;
-    --sx-switch-height: 20px;
-    --sx-switch-thumb-size: 14px;
     --sx-collection-checkbox-size: var(--sx-selection-control-size);
     --sx-collection-checkbox-accent: var(--sx-selection-control-accent);
     --sx-collection-checkbox-focus-ring: var(--sx-selection-control-focus-ring);
@@ -1417,7 +1422,7 @@ html[data-sx-theme] .sx-block {
     box-shadow: var(--sx-block-shadow);
 }
 
-html[data-sx-theme] .sx-block > p:last-child {
+html[data-sx-theme] .sx-block p:last-child {
     margin-bottom: 0;
 }
 

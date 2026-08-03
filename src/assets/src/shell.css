@@ -1641,26 +1641,6 @@ pre {
 }
 
 
-.sx-block {
-    padding: 1rem;
-}
-
-.sx-block p:last-child {
-    margin-bottom: 0;
-}
-
-
-/**
- * Последние правки
- */
-.sx-block {
-    /*box-shadow: 0px 3px 8px rgb(196 196 196 / 64%);*/
-    box-shadow: none;
-    border-radius: var(--border-radius);
-    margin-bottom: 1rem;
-    background: var(--bg-block-color);
-}
-
 .sx-backend-filters-wrapper {
     border-radius: var(--border-radius);
 }
