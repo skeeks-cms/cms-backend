@@ -487,33 +487,49 @@
     --color-red-pale: var(--sx-color-danger-soft);
 
     /*
-     * Internal compatibility adapters for backend grids and collections.
-     * They are not part of the user-configurable palette.
+     * Canonical collection contract. Grid and list presentations derive from
+     * this layer in parallel instead of forwarding palette values through one
+     * another. Projects should override the public palette or genuine product
+     * geometry, not these internal color aliases.
      */
-    --sx-backend-theme-accent: var(--sx-color-accent);
-    --sx-backend-theme-accent-contrast: var(--sx-color-accent-contrast);
-    --sx-backend-theme-accent-soft: var(--sx-color-accent-soft);
-    --sx-backend-theme-border-color: var(--sx-color-border);
-    --sx-backend-theme-row-border-color: var(--sx-color-border);
-    --sx-backend-theme-header-color: var(--sx-color-text-subtle);
-    --sx-backend-theme-text: var(--sx-color-text);
-    --sx-backend-theme-muted: var(--sx-color-text-muted);
-    --sx-backend-theme-surface: var(--sx-color-surface);
-    --sx-backend-theme-hover: var(--sx-color-surface-hover);
-    --sx-backend-theme-radius: var(--sx-radius-panel);
-
-    --sx-collection-theme-accent: var(--sx-color-accent);
-    --sx-collection-theme-accent-soft: var(--sx-color-accent-soft);
-    --sx-collection-theme-border-color: var(--sx-color-border);
-    --sx-collection-theme-text: var(--sx-color-text);
-    --sx-collection-theme-muted: var(--sx-color-text-muted);
-    --sx-collection-theme-surface: var(--sx-color-surface);
-    --sx-collection-theme-radius: var(--sx-radius-panel);
-    --sx-collection-theme-action-background: var(--sx-button-primary-background);
-    --sx-collection-theme-action-color: var(--sx-button-primary-color);
-    --sx-collection-theme-action-secondary-background: var(--sx-button-secondary-background);
-    --sx-collection-theme-action-radius: var(--sx-radius-control);
-    --sx-collection-theme-action-shadow: var(--sx-button-primary-shadow);
+    --sx-collection-accent: var(--sx-color-accent);
+    --sx-collection-accent-soft: var(--sx-color-accent-soft);
+    --sx-collection-border-color: var(--sx-color-border);
+    --sx-collection-text: var(--sx-color-text);
+    --sx-collection-muted: var(--sx-color-text-muted);
+    --sx-collection-surface: var(--sx-color-surface);
+    --sx-collection-radius: var(--sx-radius-panel);
+    --sx-collection-toolbar-min-height: 48px;
+    --sx-collection-toolbar-padding: 4px 8px;
+    --sx-collection-toolbar-gap: 12px;
+    --sx-collection-footer-min-height: 56px;
+    --sx-collection-footer-padding: 10px 16px;
+    --sx-collection-footer-gap: 12px;
+    --sx-collection-pagination-size: 32px;
+    --sx-collection-pagination-gap: 4px;
+    --sx-collection-page-size-height: 34px;
+    --sx-collection-action-background: var(--sx-button-primary-background);
+    --sx-collection-action-hover-background: var(--sx-button-primary-hover-background);
+    --sx-collection-action-active-background: var(--sx-button-primary-active-background);
+    --sx-collection-action-color: var(--sx-button-primary-color);
+    --sx-collection-action-border-color: var(--sx-button-primary-border-color);
+    --sx-collection-action-hover-border-color: var(--sx-button-primary-hover-border-color);
+    --sx-collection-action-active-border-color: var(--sx-button-primary-active-border-color);
+    --sx-collection-action-secondary-background: var(--sx-button-secondary-background);
+    --sx-collection-action-secondary-hover-background: var(--sx-button-secondary-hover-background);
+    --sx-collection-action-secondary-active-background: var(--sx-button-secondary-active-background);
+    --sx-collection-action-secondary-color: var(--sx-button-secondary-color);
+    --sx-collection-action-secondary-hover-color: var(--sx-button-secondary-hover-color);
+    --sx-collection-action-secondary-active-color: var(--sx-button-secondary-active-color);
+    --sx-collection-action-secondary-border-color: var(--sx-button-secondary-border-color);
+    --sx-collection-action-secondary-hover-border-color: var(--sx-button-secondary-hover-border-color);
+    --sx-collection-action-secondary-active-border-color: var(--sx-button-secondary-active-border-color);
+    --sx-collection-action-radius: var(--sx-button-radius);
+    --sx-collection-action-shadow: var(--sx-button-primary-shadow);
+    --sx-collection-action-hover-shadow: var(--sx-button-primary-hover-shadow);
+    --sx-collection-action-active-shadow: var(--sx-button-primary-active-shadow);
+    --sx-collection-action-hover-filter: var(--sx-button-primary-hover-filter);
+    --sx-collection-action-active-filter: var(--sx-button-primary-active-filter);
 
     --sx-collection-item-color: var(--sx-interactive-surface-color);
     --sx-collection-item-muted-color: var(--sx-color-text-muted);
@@ -535,6 +551,22 @@
     --sx-collection-item-action-color: var(--sx-color-text-muted);
     --sx-collection-item-action-hover-color: var(--sx-color-accent);
     --sx-collection-item-action-hover-background: var(--sx-color-accent-soft);
+
+    --sx-collection-row-color: var(--sx-collection-item-color);
+    --sx-collection-row-muted-color: var(--sx-collection-item-muted-color);
+    --sx-collection-row-surface: var(--sx-collection-item-background);
+    --sx-collection-row-hover: var(--sx-collection-item-hover-background);
+    --sx-collection-row-border: var(--sx-collection-item-border-color);
+    --sx-collection-row-selected-color: var(--sx-collection-item-selected-color);
+    --sx-collection-row-selected-background: var(--sx-collection-item-selected-background);
+    --sx-collection-row-disabled-color: var(--sx-collection-item-disabled-color);
+    --sx-collection-row-disabled-background: var(--sx-collection-item-disabled-background);
+    --sx-collection-row-active-color: var(--sx-interactive-surface-active-color);
+    --sx-collection-row-active-background: var(--sx-interactive-surface-active-background);
+    --sx-collection-row-transition-duration: var(--sx-collection-item-transition-duration);
+
+    /* Grid-specific typography; its palette and surfaces use collection tokens. */
+    --sx-backend-grid-header-color: var(--sx-color-text-subtle);
 
     --sx-collection-cell-color: var(--sx-color-text);
     --sx-collection-cell-link-color: var(--sx-color-text);
@@ -610,11 +642,7 @@
     --sx-detail-view-label-weight: 600;
     --sx-detail-view-code-background: var(--sx-code-background);
 
-    --sx-list-background: var(--sx-collection-theme-surface);
-    --sx-list-color: var(--sx-collection-theme-text);
-    --sx-list-border-color: var(--sx-collection-theme-border-color);
-    --sx-list-radius: var(--sx-collection-theme-radius);
-    --sx-list-shadow: none;
+    --sx-list-box-shadow: none;
     --sx-list-item-background: var(--sx-collection-item-background);
     --sx-list-item-hover-background: var(--sx-collection-item-hover-background);
     --sx-list-item-border-color: var(--sx-collection-item-border-color);
@@ -632,6 +660,55 @@
     --sx-list-item-title-hover-color: var(--sx-color-accent);
     --sx-list-item-meta-color: var(--sx-color-text-muted);
     --sx-list-item-focus-ring: var(--sx-collection-item-focus-ring);
+
+    /* Historical component aliases for old consumers; shared CSS does not chain through them. */
+    --sx-backend-grid-accent: var(--sx-collection-accent);
+    --sx-backend-grid-accent-contrast: var(--sx-color-accent-contrast);
+    --sx-backend-grid-accent-soft: var(--sx-collection-accent-soft);
+    --sx-backend-grid-border-color: var(--sx-collection-border-color);
+    --sx-backend-grid-row-border-color: var(--sx-collection-row-border);
+    --sx-backend-grid-text: var(--sx-collection-text);
+    --sx-backend-grid-muted: var(--sx-collection-muted);
+    --sx-backend-grid-surface: var(--sx-collection-surface);
+    --sx-backend-grid-hover: var(--sx-collection-row-hover);
+    --sx-backend-grid-radius: var(--sx-collection-radius);
+    --sx-backend-theme-accent: var(--sx-collection-accent);
+    --sx-backend-theme-accent-contrast: var(--sx-color-accent-contrast);
+    --sx-backend-theme-accent-soft: var(--sx-collection-accent-soft);
+    --sx-backend-theme-border-color: var(--sx-collection-border-color);
+    --sx-backend-theme-row-border-color: var(--sx-collection-row-border);
+    --sx-backend-theme-header-color: var(--sx-backend-grid-header-color);
+    --sx-backend-theme-text: var(--sx-collection-text);
+    --sx-backend-theme-muted: var(--sx-collection-muted);
+    --sx-backend-theme-surface: var(--sx-collection-surface);
+    --sx-backend-theme-hover: var(--sx-collection-row-hover);
+    --sx-backend-theme-radius: var(--sx-collection-radius);
+    --sx-collection-theme-accent: var(--sx-collection-accent);
+    --sx-collection-theme-accent-soft: var(--sx-collection-accent-soft);
+    --sx-collection-theme-border-color: var(--sx-collection-border-color);
+    --sx-collection-theme-text: var(--sx-collection-text);
+    --sx-collection-theme-muted: var(--sx-collection-muted);
+    --sx-collection-theme-surface: var(--sx-collection-surface);
+    --sx-collection-theme-radius: var(--sx-collection-radius);
+    --sx-collection-theme-action-background: var(--sx-collection-action-background);
+    --sx-collection-theme-action-color: var(--sx-collection-action-color);
+    --sx-collection-theme-action-secondary-background: var(--sx-collection-action-secondary-background);
+    --sx-collection-theme-action-radius: var(--sx-collection-action-radius);
+    --sx-collection-theme-action-shadow: var(--sx-collection-action-shadow);
+    --sx-list-surface: var(--sx-collection-surface);
+    --sx-list-text: var(--sx-collection-text);
+    --sx-list-border: var(--sx-collection-border-color);
+    --sx-list-border-radius: var(--sx-collection-radius);
+    --sx-list-row-surface: var(--sx-collection-row-surface);
+    --sx-list-row-hover: var(--sx-collection-row-hover);
+    --sx-list-row-border: var(--sx-collection-row-border);
+    --sx-list-row-padding-block: var(--sx-list-item-padding-block);
+    --sx-list-row-padding-inline: var(--sx-list-item-padding-inline);
+    --sx-list-background: var(--sx-list-surface);
+    --sx-list-color: var(--sx-list-text);
+    --sx-list-border-color: var(--sx-list-border);
+    --sx-list-radius: var(--sx-list-border-radius);
+    --sx-list-shadow: var(--sx-list-box-shadow);
 }
 
 html[data-sx-theme="light"] {
