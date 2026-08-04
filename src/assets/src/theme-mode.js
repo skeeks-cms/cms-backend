@@ -69,6 +69,116 @@
         }
     };
 
+    var customizerLoads = {};
+
+    var readCustomizerConfig = function (button) {
+        try {
+            return JSON.parse(button.getAttribute('data-sx-theme-customizer-config') || '{}');
+        } catch (error) {
+            return {};
+        }
+    };
+
+    var loadCustomizerStyles = function (url) {
+        if (!url || document.querySelector('link[data-sx-theme-customizer-css]')) {
+            return Promise.resolve();
+        }
+
+        return new Promise(function (resolve, reject) {
+            var link = document.createElement('link');
+            link.rel = 'stylesheet';
+            link.href = url;
+            link.setAttribute('data-sx-theme-customizer-css', 'true');
+            link.onload = resolve;
+            link.onerror = reject;
+            document.head.appendChild(link);
+        });
+    };
+
+    var loadCustomizerPanel = function (config) {
+        var scope = config.scope === 'upa' ? 'upa' : 'admin';
+        var existing = document.querySelector(
+            '[data-sx-theme-customizer][data-sx-theme-customizer-scope="' + scope + '"]'
+        );
+        if (existing) {
+            return Promise.resolve(existing);
+        }
+        if (!config.panelUrl) {
+            return Promise.reject(new Error('Theme customizer panel URL is not configured.'));
+        }
+
+        return window.fetch(config.panelUrl, {
+            credentials: 'same-origin',
+            headers: {'X-Requested-With': 'XMLHttpRequest'}
+        }).then(function (response) {
+            if (!response.ok) {
+                throw new Error('Theme customizer panel could not be loaded.');
+            }
+            return response.text();
+        }).then(function (html) {
+            document.body.insertAdjacentHTML('beforeend', html);
+            return document.querySelector(
+                '[data-sx-theme-customizer][data-sx-theme-customizer-scope="' + scope + '"]'
+            );
+        });
+    };
+
+    var loadCustomizerScript = function (url) {
+        if (window.sxThemeCustomizer) {
+            return Promise.resolve();
+        }
+        if (!url) {
+            return Promise.reject(new Error('Theme customizer script URL is not configured.'));
+        }
+
+        return new Promise(function (resolve, reject) {
+            var script = document.createElement('script');
+            script.src = url;
+            script.async = true;
+            script.setAttribute('data-sx-theme-customizer-js', 'true');
+            script.onload = resolve;
+            script.onerror = reject;
+            document.head.appendChild(script);
+        });
+    };
+
+    var openCustomizer = function (button) {
+        var config = readCustomizerConfig(button);
+        var scope = config.scope === 'upa' ? 'upa' : 'admin';
+
+        if (!customizerLoads[scope]) {
+            button.disabled = true;
+            button.setAttribute('aria-busy', 'true');
+            customizerLoads[scope] = Promise.all([
+                loadCustomizerStyles(config.cssUrl),
+                loadCustomizerPanel(config)
+            ]).then(function () {
+                return loadCustomizerScript(config.jsUrl);
+            }).catch(function (error) {
+                delete customizerLoads[scope];
+                throw error;
+            });
+        }
+
+        customizerLoads[scope].then(function () {
+            button.disabled = false;
+            button.removeAttribute('aria-busy');
+            if (!window.sxThemeCustomizer) {
+                throw new Error('Theme customizer did not initialize.');
+            }
+            window.sxThemeCustomizer.open(button);
+        }).catch(function (error) {
+            button.disabled = false;
+            button.removeAttribute('aria-busy');
+            if (window.sx && window.sx.notify && window.sx.notify.error) {
+                window.sx.notify.error(error.message);
+            }
+            if (window.console && window.console.error) {
+                window.console.error(error);
+            }
+        });
+    };
+
     var updateSwitchers = function () {
         var mode = getMode();
         var switchers = document.querySelectorAll('.sx-theme-switcher');
@@ -94,6 +204,15 @@
     };
 
     document.addEventListener('click', function (event) {
+        var customizerButton = event.target.closest
+            ? event.target.closest('[data-sx-theme-customizer-lazy]')
+            : null;
+        if (customizerButton) {
+            event.preventDefault();
+            openCustomizer(customizerButton);
+            return;
+        }
+
         var toggle = event.target.closest
             ? event.target.closest('[data-sx-theme-mode-toggle]')
             : null;
@@ -104,6 +223,17 @@
 
         event.preventDefault();
         apply(getMode() === 'dark' ? 'light' : 'dark', true, 'user');
+    });
+
+    document.addEventListener('contextmenu', function (event) {
+        var customizerButton = event.target.closest
+            ? event.target.closest('[data-sx-theme-customizer-lazy]')
+            : null;
+        if (customizerButton) {
+            window.setTimeout(function () {
+                customizerButton.blur();
+            }, 0);
+        }
     });
 
     document.addEventListener('sx:themechange', updateSwitchers);

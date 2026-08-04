@@ -24,6 +24,10 @@ $appAssetClass = $theme->appAssetClass
 $appAssetClass::register($this);
 \skeeks\cms\backend\assets\BackendShellHeaderAsset::register($this);
 \skeeks\cms\backend\assets\BackendShellMenuAsset::register($this);
+$paletteCss = $theme->paletteCss;
+if ($paletteCss !== '') {
+    $this->registerCss($paletteCss, ['id' => 'sx-backend-theme-palette']);
+}
 \skeeks\cms\widgets\user\UserOnlineTriggerWidget::widget();
 
 $themeMode = $theme->normalizedThemeMode;

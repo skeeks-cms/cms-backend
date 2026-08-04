@@ -30,13 +30,19 @@ use yii\helpers\Url;
  * @property string $logoSrc
  * @property string $logoHref
  * @property string $headerClasses
+ * @property array $headerAppearanceAttributes
+ * @property array $normalizedHeaderModes
  * @property string $slideNavClasses
  * @property string $normalizedThemeMode
+ * @property string $paletteCss
  */
 class BackendTheme extends Theme
 {
     const THEME_MODE_LIGHT = 'light';
     const THEME_MODE_DARK = 'dark';
+    const HEADER_MODE_THEME = 'theme';
+    const HEADER_MODE_LIGHT = 'light';
+    const HEADER_MODE_DARK = 'dark';
 
     public $pathMap = [
         '@app/views' => [
@@ -72,6 +78,33 @@ class BackendTheme extends Theme
     public $allowClientThemeMode = true;
 
     /**
+     * Small, validated light/dark palette for a project or future editor.
+     * See BackendThemePalette::INPUT_KEYS for the stable storage schema.
+     * An empty value keeps the asset defaults and registers no inline CSS.
+     *
+     * @var array
+     */
+    public $palette = [];
+
+    /**
+     * Theme customizer transport/UI configuration. An empty array keeps the
+     * compact mode switcher unchanged. Persistence is supplied by the owning
+     * application so cms-backend remains storage-agnostic.
+     *
+     * @var array
+     */
+    public $themeCustomizer = [];
+
+    /**
+     * Header appearance for each page theme. An empty configuration keeps the
+     * shared default: a dark header in both light and dark interfaces.
+     * Supported values are dark, light and theme (follow the page theme).
+     *
+     * @var array
+     */
+    public $headerModes = [];
+
+    /**
      * Legacy configuration alias retained for existing project themes.
      *
      * @deprecated Configure themeMode instead.
@@ -81,6 +114,17 @@ class BackendTheme extends Theme
 
     /** @var string */
     public $logoTitle = 'SkeekS CMS';
+
+    /**
+     * Optional logo variants for light and dark header backgrounds. The
+     * original logoSrc remains the backward-compatible fallback.
+     *
+     * @var string
+     */
+    public $logoSrcLight = '';
+
+    /** @var string */
+    public $logoSrcDark = '';
 
     /** @var string|null */
     protected $_logoSrc;
@@ -210,6 +254,46 @@ class BackendTheme extends Theme
         return 'sx-shell-header__surface--default';
     }
 
+    /** @return array */
+    public function getNormalizedHeaderModes()
+    {
+        $result = [
+            self::THEME_MODE_LIGHT => self::HEADER_MODE_DARK,
+            self::THEME_MODE_DARK  => self::HEADER_MODE_DARK,
+        ];
+
+        foreach ($result as $themeMode => $defaultHeaderMode) {
+            $headerMode = isset($this->headerModes[$themeMode])
+                ? $this->headerModes[$themeMode]
+                : $defaultHeaderMode;
+            if (!in_array($headerMode, [
+                self::HEADER_MODE_THEME,
+                self::HEADER_MODE_LIGHT,
+                self::HEADER_MODE_DARK,
+            ], true)) {
+                $headerMode = $defaultHeaderMode;
+            }
+            $result[$themeMode] = $headerMode;
+        }
+
+        return $result;
+    }
+
+    /** @return array */
+    public function getHeaderAppearanceAttributes()
+    {
+        $modes = $this->getNormalizedHeaderModes();
+
+        return [
+            'data-sx-header-light' => $modes[self::THEME_MODE_LIGHT] === self::HEADER_MODE_THEME
+                ? self::HEADER_MODE_LIGHT
+                : $modes[self::THEME_MODE_LIGHT],
+            'data-sx-header-dark' => $modes[self::THEME_MODE_DARK] === self::HEADER_MODE_THEME
+                ? self::HEADER_MODE_DARK
+                : $modes[self::THEME_MODE_DARK],
+        ];
+    }
+
     /**
      * @return string
      */
@@ -239,5 +323,15 @@ class BackendTheme extends Theme
         }
 
         return $mode;
+    }
+
+    /** @return string */
+    public function getPaletteCss()
+    {
+        if (!$this->palette) {
+            return '';
+        }
+
+        return (new BackendThemePalette($this->palette))->toCss();
     }
 }

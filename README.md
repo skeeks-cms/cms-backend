@@ -44,6 +44,31 @@ Configuration app
 ]
 ```
 
+Semantic palette
+----------------
+
+`BackendTheme::$palette` is the opt-in storage contract for project and future
+user-editable themes. It accepts partial `light` and `dark` maps with only ten
+base colors: `accent`, `canvas`, `surface`, `surfaceMuted`, `text`, `textMuted`,
+`border`, `success`, `warning`, and `danger`.
+
+```php
+'view' => [
+    'theme' => [
+        'class' => \skeeks\cms\backend\themes\BackendTheme::class,
+        'palette' => [
+            'light' => ['accent' => '#1769aa'],
+            'dark' => ['accent' => '#73b7f2'],
+        ],
+    ],
+],
+```
+
+The backend validates hex colors and expands them into the full public
+`--sx-color-*` facade, including state, soft, contrast, and focus colors.
+Component tokens remain internal. Brand gradients and product-specific layout
+geometry stay in project CSS; arbitrary CSS variables are not accepted here.
+
 Links
 -----
 * [Web site](https://cms.skeeks.com)

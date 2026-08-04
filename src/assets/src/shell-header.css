@@ -43,6 +43,49 @@
     background-color: var(--sx-shell-header-background);
 }
 
+html[data-sx-theme="light"] .sx-shell-header__surface:not([data-sx-header-preview])[data-sx-header-light="dark"],
+html[data-sx-theme="dark"] .sx-shell-header__surface:not([data-sx-header-preview])[data-sx-header-dark="dark"],
+.sx-shell-header__surface[data-sx-header-preview="dark"] {
+    --sx-shell-header-background: var(--sx-shell-header-dark-background);
+    --sx-shell-header-color: var(--sx-shell-header-dark-color);
+    --sx-shell-header-muted: var(--sx-shell-header-dark-muted);
+    --sx-shell-header-subtle: var(--sx-shell-header-dark-subtle);
+    --sx-shell-header-action-background: var(--sx-shell-header-dark-action-background);
+    --sx-shell-header-divider-color: var(--sx-shell-header-dark-divider-color);
+    --sx-shell-header-shadow: var(--sx-shell-header-dark-shadow);
+    --sx-theme-switcher-track-color: rgba(255, 255, 255, .66);
+    --sx-theme-switcher-track-border: rgba(255, 255, 255, .18);
+    --sx-theme-switcher-track-background: rgba(255, 255, 255, .08);
+    --sx-theme-switcher-track-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
+    --sx-theme-switcher-track-hover-border: rgba(255, 255, 255, .34);
+    --sx-theme-switcher-track-hover-background: rgba(255, 255, 255, .13);
+    --sx-theme-switcher-inactive-icon: rgba(255, 255, 255, .48);
+}
+
+html[data-sx-theme="light"] .sx-shell-header__surface:not([data-sx-header-preview])[data-sx-header-light="light"],
+html[data-sx-theme="dark"] .sx-shell-header__surface:not([data-sx-header-preview])[data-sx-header-dark="light"],
+.sx-shell-header__surface[data-sx-header-preview="light"] {
+    --sx-shell-header-background: var(--sx-shell-header-light-background);
+    --sx-shell-header-color: var(--sx-shell-header-light-color);
+    --sx-shell-header-muted: var(--sx-shell-header-light-muted);
+    --sx-shell-header-subtle: var(--sx-shell-header-light-subtle);
+    --sx-shell-header-action-background: var(--sx-shell-header-light-action-background);
+    --sx-shell-header-divider-color: var(--sx-shell-header-light-divider-color);
+    --sx-shell-header-shadow: var(--sx-shell-header-light-shadow);
+}
+
+.sx-shell-header__surface {
+    color: var(--sx-shell-header-color);
+    background: var(--sx-shell-header-background);
+    box-shadow: var(--sx-shell-header-shadow);
+}
+
+.sx-shell-header__surface--admin .navbar-brand,
+.sx-shell-header__surface--admin .navbar-brand:hover,
+.sx-shell-header__surface--admin .navbar-brand:focus {
+    color: var(--sx-shell-header-color) !important;
+}
+
 .sx-shell-header__brand-link {
     display: inline-flex;
     align-items: center;
@@ -63,6 +106,29 @@
     max-width: 100%;
     height: var(--sx-shell-header-logo-height, 34px);
     object-fit: contain;
+}
+
+.sx-shell-header__brand-logo--light,
+.sx-shell-header__brand-logo--dark {
+    display: none;
+}
+
+html[data-sx-theme="light"] .sx-shell-header__surface:not([data-sx-header-preview])[data-sx-header-light="light"] .sx-shell-header__brand--has-light-logo .sx-shell-header__brand-logo--fallback,
+html[data-sx-theme="dark"] .sx-shell-header__surface:not([data-sx-header-preview])[data-sx-header-dark="light"] .sx-shell-header__brand--has-light-logo .sx-shell-header__brand-logo--fallback,
+.sx-shell-header__surface[data-sx-header-preview="light"] .sx-shell-header__brand--has-light-logo .sx-shell-header__brand-logo--fallback,
+html[data-sx-theme="light"] .sx-shell-header__surface:not([data-sx-header-preview])[data-sx-header-light="dark"] .sx-shell-header__brand--has-dark-logo .sx-shell-header__brand-logo--fallback,
+html[data-sx-theme="dark"] .sx-shell-header__surface:not([data-sx-header-preview])[data-sx-header-dark="dark"] .sx-shell-header__brand--has-dark-logo .sx-shell-header__brand-logo--fallback,
+.sx-shell-header__surface[data-sx-header-preview="dark"] .sx-shell-header__brand--has-dark-logo .sx-shell-header__brand-logo--fallback {
+    display: none;
+}
+
+html[data-sx-theme="light"] .sx-shell-header__surface:not([data-sx-header-preview])[data-sx-header-light="light"] .sx-shell-header__brand-logo--light,
+html[data-sx-theme="dark"] .sx-shell-header__surface:not([data-sx-header-preview])[data-sx-header-dark="light"] .sx-shell-header__brand-logo--light,
+.sx-shell-header__surface[data-sx-header-preview="light"] .sx-shell-header__brand-logo--light,
+html[data-sx-theme="light"] .sx-shell-header__surface:not([data-sx-header-preview])[data-sx-header-light="dark"] .sx-shell-header__brand-logo--dark,
+html[data-sx-theme="dark"] .sx-shell-header__surface:not([data-sx-header-preview])[data-sx-header-dark="dark"] .sx-shell-header__brand-logo--dark,
+.sx-shell-header__surface[data-sx-header-preview="dark"] .sx-shell-header__brand-logo--dark {
+    display: block;
 }
 
 .sx-shell-header__brand-title {

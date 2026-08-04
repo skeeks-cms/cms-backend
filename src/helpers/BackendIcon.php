@@ -38,6 +38,7 @@ final class BackendIcon
         'lock' => '<rect x="4" y="10" width="16" height="11" rx="2"></rect><path d="M8 10V7a4 4 0 0 1 8 0v3"></path>',
         'logout' => '<path d="M10 17l5-5-5-5"></path><path d="M15 12H3"></path><path d="M14 3h5a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-5"></path>',
         'moon' => '<path d="M21 12.8A9 9 0 1 1 11.2 3 7 7 0 0 0 21 12.8z"></path>',
+        'palette' => '<circle cx="13.5" cy="6.5" r=".5" fill="currentColor" stroke="none"></circle><circle cx="17.5" cy="10.5" r=".5" fill="currentColor" stroke="none"></circle><circle cx="8.5" cy="7.5" r=".5" fill="currentColor" stroke="none"></circle><circle cx="6.5" cy="12.5" r=".5" fill="currentColor" stroke="none"></circle><path d="M12 3a9 9 0 0 0 0 18h1.5a1.5 1.5 0 0 0 1.1-2.5 1.5 1.5 0 0 1 1.1-2.5H18a3 3 0 0 0 3-3 10 10 0 0 0-9-10z"></path>',
         'play' => '<path d="M8 5v14l11-7z" fill="currentColor" stroke="none"></path>',
         'refresh' => '<path d="M17.65 6.35c-1.63-1.63-3.94-2.57-6.48-2.31-3.67.37-6.69 3.35-7.1 7.02C3.52 15.91 7.27 20 12 20c3.19 0 5.93-1.87 7.21-4.56.32-.67-.16-1.44-.9-1.44-.37 0-.72.2-.88.53-1.13 2.43-3.84 3.97-6.8 3.31-2.22-.49-4.01-2.3-4.48-4.52C5.31 9.44 8.26 6 12 6c1.66 0 3.14.69 4.22 1.78l-1.51 1.51c-.63.63-.19 1.71.7 1.71H19c.55 0 1-.45 1-1V6.41c0-.89-1.08-1.34-1.71-.71l-.64.65z" fill="currentColor" stroke="none"></path>',
         'star' => '<path d="m12 2 3.1 6.3 6.9 1-5 4.9 1.2 6.8-6.2-3.2L5.8 21 7 14.2l-5-4.9 6.9-1z"></path>',

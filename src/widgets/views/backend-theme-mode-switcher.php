@@ -2,10 +2,12 @@
 
 use skeeks\cms\backend\helpers\BackendIcon;
 use yii\helpers\Html;
+use yii\helpers\Json;
 
 /* @var $containerClass string */
 /* @var $toggleClass string */
 /* @var $showLabel bool */
+/* @var $customizer array */
 
 $lightLabel = \Yii::t('skeeks/cms', 'Light theme');
 $darkLabel = \Yii::t('skeeks/cms', 'Dark theme');
@@ -36,4 +38,19 @@ $darkLabel = \Yii::t('skeeks/cms', 'Dark theme');
             <span class="sx-theme-switcher__current-label"></span>
         <?php endif; ?>
     </button>
+
+    <?php if ($customizer) : ?>
+        <button
+            class="sx-theme-switcher__customize"
+            type="button"
+            data-sx-theme-customizer-lazy
+            data-sx-theme-customizer-config="<?= Html::encode(Json::htmlEncode($customizer)); ?>"
+            title="<?= Html::encode(\Yii::t('skeeks/backend', 'Customize theme')); ?>"
+            aria-label="<?= Html::encode(\Yii::t('skeeks/backend', 'Customize theme')); ?>"
+            aria-haspopup="dialog"
+            aria-expanded="false"
+        >
+            <?= BackendIcon::render('palette', ['size' => 17]); ?>
+        </button>
+    <?php endif; ?>
 </div>

@@ -1,3 +1,11 @@
+/*
+ * Token lifecycle:
+ * - public palette: --sx-color-*; safe inputs for projects and theme editors;
+ * - internal component tokens: every other canonical --sx-* declaration;
+ * - compatibility aliases: the dedicated historical component alias block;
+ * - deprecated aliases: the generic legacy alias block kept for old markup;
+ * - unused tokens: do not keep declarations after a repository-wide audit.
+ */
 :root {
     color-scheme: light;
 
@@ -13,7 +21,8 @@
     --sx-color-accent-contrast: #10141a;
     --sx-color-accent-soft: #fff4ea;
     --sx-color-accent-border: #f0b9a6;
-    --sx-color-accent-gradient: var(--sx-color-accent);
+    /* Optional branded fill; component tokens fall back to the solid accent states. */
+    --sx-color-accent-gradient: initial;
 
     --sx-color-canvas: #eef2f4;
     --sx-color-canvas-translucent: rgba(238, 242, 244, .58);
@@ -119,27 +128,42 @@
     --sx-quick-access-avatar-shadow: 0 0 0 2px var(--sx-color-surface), 0 3px 9px rgba(38, 50, 56, .2);
 
     --sx-shell-top-offset: 65px;
-    --sx-shell-header-background: #171923;
-    --sx-shell-header-color: #fff;
-    --sx-shell-header-muted: #8294b9;
-    --sx-shell-header-subtle: rgba(255, 255, 255, .58);
-    --sx-shell-header-action-background: rgba(255, 255, 255, .08);
-    --sx-shell-header-divider-color: rgba(255, 255, 255, .16);
-    --sx-shell-header-shadow: 0 1px 0 rgba(255, 255, 255, .08);
+    --sx-shell-header-background: var(--sx-color-surface);
+    --sx-shell-header-color: var(--sx-color-text);
+    --sx-shell-header-muted: var(--sx-color-text-muted);
+    --sx-shell-header-subtle: var(--sx-color-text-subtle);
+    --sx-shell-header-action-background: var(--sx-color-surface-hover);
+    --sx-shell-header-divider-color: var(--sx-color-border);
+    --sx-shell-header-shadow: 0 1px 0 var(--sx-color-border);
     --sx-shell-header-menu-shadow: 0 14px 28px rgba(0, 0, 0, .22);
-    --sx-theme-switcher-track-color: rgba(255, 255, 255, .66);
-    --sx-theme-switcher-track-border: rgba(255, 255, 255, .18);
-    --sx-theme-switcher-track-background: rgba(255, 255, 255, .08);
-    --sx-theme-switcher-track-shadow: inset 0 1px 0 rgba(255, 255, 255, .06);
-    --sx-theme-switcher-track-hover-border: rgba(255, 255, 255, .34);
-    --sx-theme-switcher-track-hover-background: rgba(255, 255, 255, .13);
+    --sx-shell-header-dark-background: #111620;
+    --sx-shell-header-dark-color: #f2f5fa;
+    --sx-shell-header-dark-muted: #8f9bb2;
+    --sx-shell-header-dark-subtle: #74829c;
+    --sx-shell-header-dark-action-background: rgba(255, 255, 255, .08);
+    --sx-shell-header-dark-divider-color: #283142;
+    --sx-shell-header-dark-shadow: 0 1px 0 var(--sx-shell-header-dark-divider-color);
+    --sx-shell-header-light-background: var(--sx-color-surface);
+    --sx-shell-header-light-color: var(--sx-color-text);
+    --sx-shell-header-light-muted: var(--sx-color-text-muted);
+    --sx-shell-header-light-subtle: var(--sx-color-text-subtle);
+    --sx-shell-header-light-action-background: var(--sx-color-surface-hover);
+    --sx-shell-header-light-divider-color: var(--sx-color-border);
+    --sx-shell-header-light-shadow: 0 1px 0 var(--sx-shell-header-light-divider-color);
+    --sx-theme-switcher-track-color: var(--sx-color-text-muted);
+    --sx-theme-switcher-track-border: var(--sx-color-border-strong);
+    --sx-theme-switcher-track-background: var(--sx-color-surface-muted);
+    --sx-theme-switcher-track-shadow: inset 0 1px 0 rgba(255, 255, 255, .2);
+    --sx-theme-switcher-track-hover-border: var(--sx-color-accent-border);
+    --sx-theme-switcher-track-hover-background: var(--sx-color-surface-hover);
     --sx-theme-switcher-light-thumb: linear-gradient(135deg, #fff0a6, #f6b843);
     --sx-theme-switcher-light-icon: #4b3610;
     --sx-theme-switcher-dark-thumb: linear-gradient(135deg, #9dd2ff, #4f9fe9);
     --sx-theme-switcher-dark-icon: #11283d;
-    --sx-theme-switcher-inactive-icon: rgba(255, 255, 255, .48);
+    --sx-theme-switcher-inactive-icon: var(--sx-color-text-muted);
     --sx-theme-switcher-thumb-shadow: 0 3px 9px rgba(0, 0, 0, .28);
     --sx-theme-switcher-dark-thumb-shadow: 0 3px 12px rgba(67, 155, 236, .38);
+    --sx-theme-customizer-backdrop-background: rgba(17, 24, 39, .18);
     --sx-shell-sidebar-width: 250px;
     --sx-shell-sidebar-background: var(--sx-color-surface);
     --sx-shell-sidebar-color: var(--sx-color-text);
@@ -248,9 +272,9 @@
     --sx-button-focus-shadow: 0 0 0 3px var(--sx-color-focus-ring);
     --sx-button-loading-spinner-size: 1em;
     --sx-button-loading-spinner-width: 2px;
-    --sx-button-primary-background: var(--sx-color-accent);
-    --sx-button-primary-hover-background: var(--sx-color-accent-hover);
-    --sx-button-primary-active-background: var(--sx-color-accent-active);
+    --sx-button-primary-background: var(--sx-color-accent-gradient, var(--sx-color-accent));
+    --sx-button-primary-hover-background: var(--sx-color-accent-gradient, var(--sx-color-accent-hover));
+    --sx-button-primary-active-background: var(--sx-color-accent-gradient, var(--sx-color-accent-active));
     --sx-button-primary-border-color: var(--sx-color-accent);
     --sx-button-primary-hover-border-color: var(--sx-color-accent-hover);
     --sx-button-primary-active-border-color: var(--sx-color-accent-active);
@@ -473,7 +497,7 @@
     --sx-file-progress-bar-background: var(--sx-color-accent);
     --sx-file-error-color: var(--sx-color-danger);
 
-    /* Historical aliases keep old controllers theme-aware. */
+    /* Deprecated generic aliases keep old controllers theme-aware. */
     --primary-color: var(--sx-color-accent);
     --bg-gray: var(--sx-color-surface-muted);
     --bg-color: var(--sx-color-canvas);
@@ -643,9 +667,6 @@
     --sx-detail-view-code-background: var(--sx-code-background);
 
     --sx-list-box-shadow: none;
-    --sx-list-item-background: var(--sx-collection-item-background);
-    --sx-list-item-hover-background: var(--sx-collection-item-hover-background);
-    --sx-list-item-border-color: var(--sx-collection-item-border-color);
     --sx-list-item-padding-block: 16px;
     --sx-list-item-padding-inline: 20px;
     --sx-list-item-gap: 18px;
@@ -738,7 +759,7 @@ html[data-sx-theme="dark"] {
     --sx-color-border: #2c343f;
     --sx-color-border-strong: #414b59;
     --sx-color-focus-ring: rgba(240, 138, 98, .34);
-    --sx-shell-header-background: #10141a;
+    --sx-theme-customizer-backdrop-background: rgba(0, 0, 0, .24);
 
     --sx-color-success: #6fce9b;
     --sx-color-success-hover: #83d8a9;
@@ -772,6 +793,40 @@ html[data-sx-theme="dark"] {
 .sx-theme-switcher {
     display: inline-flex;
     align-items: center;
+}
+
+.sx-theme-switcher__customize {
+    display: inline-flex;
+    width: 32px;
+    height: 32px;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    color: var(--sx-shell-header-muted, #8294b9);
+    border: 0;
+    border-radius: 999px;
+    outline: 0;
+    background: transparent;
+    cursor: pointer;
+    transition: color 160ms ease, background-color 160ms ease;
+}
+
+.sx-theme-switcher__customize:hover,
+.sx-theme-switcher__customize[aria-expanded="true"] {
+    color: var(--sx-shell-header-color, #fff);
+    background: var(--sx-shell-header-action-background, rgba(255, 255, 255, .08));
+}
+
+.sx-shell-header .sx-theme-switcher__customize:focus-visible {
+    color: var(--sx-shell-header-color, #fff);
+    outline: none;
+    background: var(--sx-shell-header-action-background, rgba(255, 255, 255, .08));
+    box-shadow: inset 0 0 0 2px var(--sx-color-accent-border, #ed7044);
+}
+
+.sx-theme-switcher__customize[aria-busy="true"] {
+    opacity: .55;
+    cursor: wait;
 }
 
 .sx-theme-switcher__toggle {
@@ -867,7 +922,8 @@ html[data-sx-theme="dark"] .sx-theme-switcher__moon {
     .sx-theme-switcher__track,
     .sx-theme-switcher__sun,
     .sx-theme-switcher__moon,
-    .sx-theme-switcher__thumb {
+    .sx-theme-switcher__thumb,
+    .sx-theme-switcher__customize {
         transition: none;
     }
 }
