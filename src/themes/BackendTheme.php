@@ -140,9 +140,14 @@ class BackendTheme extends Theme
     {
         $bundles = \Yii::$app->assetManager->bundles;
 
-        $bundles[\yii\web\JqueryAsset::class] = [
-            'class' => BackendJqueryAsset::class,
-        ];
+        // A client portal may have registered its application assets before a
+        // backend action installs the semantic theme. Replacing jQuery at that
+        // point would render two copies and detach plugins from sx.$.
+        if (!isset(\Yii::$app->view->assetBundles[\yii\web\JqueryAsset::class])) {
+            $bundles[\yii\web\JqueryAsset::class] = [
+                'class' => BackendJqueryAsset::class,
+            ];
+        }
         $bundles[\yii\bootstrap\BootstrapAsset::class] = [
             'class' => BackendBootstrapAsset::class,
         ];
