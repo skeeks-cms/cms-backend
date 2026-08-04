@@ -25,18 +25,17 @@
 
                 var jQueryBtn = $(this);
 
-                if (!eventData && !eventData.action) {
+                if (!eventData || !eventData.action) {
                     return false;
                 }
 
                 if (!jQueryBtn.data("content") || jQueryBtn.data("content").length == 0) {
                     var data = _.clone(jQueryBtn.data());
-                    //Загружаем контент
-                    self._createPopover(jQueryBtn, data, false);
-
-                    jQueryBtn.on("contentComplete", function () {
+                    jQueryBtn.one("contentComplete", function () {
                         self._goAction(jQueryBtn, eventData.action);
                     });
+                    //Загружаем контент после подписки: ответ может прийти синхронно из кеша.
+                    self._createPopover(jQueryBtn, data, false);
                 } else {
                     self._goAction(jQueryBtn, eventData.action);
                 }
@@ -51,12 +50,11 @@
 
                 if (!jQueryBtn.data("content") || jQueryBtn.data("content").length == 0) {
                     var data = _.clone(jQueryBtn.data());
-                    //Загружаем контент
-                    self._createPopover(jQueryBtn, data, false);
-
-                    jQueryBtn.on("contentComplete", function () {
+                    jQueryBtn.one("contentComplete", function () {
                         self._goFirstAction(jQueryBtn);
                     });
+                    //Загружаем контент после подписки: ответ может прийти синхронно из кеша.
+                    self._createPopover(jQueryBtn, data, false);
                 } else {
                     self._goFirstAction(jQueryBtn);
                 }
@@ -128,11 +126,12 @@
 
             var jContent = $($.parseHTML(jQueryBtn.data("content")));
             var jFirst = $("li:first", jContent);
-            $('body').append($("<div>", {
+            var jActionProxy = $("<div>", {
                 'style': 'display: none;'
-            }).append(jFirst));
+            }).append(jFirst).appendTo('body');
 
             jFirst.click();
+            jActionProxy.remove();
 
             jQueryBtn.trigger("firstActionOpen");
 
@@ -144,7 +143,6 @@
 
         _goAction: function(jQueryBtn, actionId) {
 
-            console.log(actionId);
             if (jQueryBtn.hasClass("sx-start")) {
                 console.log("Еще не завершено предыдущее действие");
                 return false;
@@ -153,13 +151,13 @@
             jQueryBtn.addClass("sx-start");
 
             var jContent = $($.parseHTML(jQueryBtn.data("content")));
-            console.log(jContent);
             var jFirst = $("li[data-id=" + actionId + "]", jContent);
-            $('body').append($("<div>", {
+            var jActionProxy = $("<div>", {
                 'style': 'display: none;'
-            }).append(jFirst));
+            }).append(jFirst).appendTo('body');
 
             jFirst.click();
+            jActionProxy.remove();
 
             jQueryBtn.trigger("actionOpen");
 

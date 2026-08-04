@@ -589,8 +589,7 @@
     --sx-collection-row-active-background: var(--sx-interactive-surface-active-background);
     --sx-collection-row-transition-duration: var(--sx-collection-item-transition-duration);
 
-    /* Grid-specific typography; its palette and surfaces use collection tokens. */
-    --sx-backend-grid-header-color: var(--sx-color-text-subtle);
+    --sx-collection-header-color: var(--sx-color-text-subtle);
 
     --sx-collection-cell-color: var(--sx-color-text);
     --sx-collection-cell-link-color: var(--sx-color-text);
@@ -680,9 +679,8 @@
     --sx-list-item-title-color: var(--sx-color-text);
     --sx-list-item-title-hover-color: var(--sx-color-accent);
     --sx-list-item-meta-color: var(--sx-color-text-muted);
-    --sx-list-item-focus-ring: var(--sx-collection-item-focus-ring);
-
     /* Historical component aliases for old consumers; shared CSS does not chain through them. */
+    --sx-backend-grid-header-color: var(--sx-collection-header-color);
     --sx-backend-grid-accent: var(--sx-collection-accent);
     --sx-backend-grid-accent-contrast: var(--sx-color-accent-contrast);
     --sx-backend-grid-accent-soft: var(--sx-collection-accent-soft);
@@ -698,7 +696,7 @@
     --sx-backend-theme-accent-soft: var(--sx-collection-accent-soft);
     --sx-backend-theme-border-color: var(--sx-collection-border-color);
     --sx-backend-theme-row-border-color: var(--sx-collection-row-border);
-    --sx-backend-theme-header-color: var(--sx-backend-grid-header-color);
+    --sx-backend-theme-header-color: var(--sx-collection-header-color);
     --sx-backend-theme-text: var(--sx-collection-text);
     --sx-backend-theme-muted: var(--sx-collection-muted);
     --sx-backend-theme-surface: var(--sx-collection-surface);
@@ -718,6 +716,7 @@
     --sx-collection-theme-action-shadow: var(--sx-collection-action-shadow);
     --sx-list-surface: var(--sx-collection-surface);
     --sx-list-text: var(--sx-collection-text);
+    --sx-list-item-focus-ring: var(--sx-collection-item-focus-ring);
     --sx-list-border: var(--sx-collection-border-color);
     --sx-list-border-radius: var(--sx-collection-radius);
     --sx-list-row-surface: var(--sx-collection-row-surface);

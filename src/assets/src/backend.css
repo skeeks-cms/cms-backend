@@ -440,7 +440,7 @@
 .sx-backend-list .sx-list-item__primary:focus-visible {
     border-radius: var(--sx-radius-control) !important;
     outline: 0;
-    box-shadow: var(--sx-list-item-focus-ring);
+    box-shadow: var(--sx-collection-item-focus-ring);
 }
 
 .sx-backend-list .sx-list-item__primary:hover .sx-list-item__title {
@@ -1202,7 +1202,7 @@ html[data-sx-theme] .sx-preview-card .sx-no-photo a {
 
 .sx-backend-grid table.sx-table > thead:first-child > tr:first-child > th {
     padding: 13px 16px;
-    color: var(--sx-backend-grid-header-color);
+    color: var(--sx-collection-header-color);
     border: 0;
     border-bottom: 1px solid var(--sx-collection-border-color);
     background: var(--sx-collection-surface);
@@ -1214,7 +1214,7 @@ html[data-sx-theme] .sx-preview-card .sx-no-photo a {
 }
 
 .sx-backend-grid table.sx-table thead th a {
-    color: var(--sx-backend-grid-header-color) !important;
+    color: var(--sx-collection-header-color) !important;
     text-shadow: none !important;
 }
 .sx-backend-grid table.sx-table thead th a.asc,
@@ -1346,7 +1346,7 @@ html[data-sx-theme] .sx-preview-card .sx-no-photo a {
     justify-content: center;
     margin: 0;
     padding: 0 8px;
-    color: var(--sx-backend-grid-header-color);
+    color: var(--sx-collection-header-color);
     border: 1px solid var(--sx-collection-border-color);
     border-radius: 6px !important;
     background: var(--sx-collection-surface);
@@ -1390,7 +1390,7 @@ html[data-sx-theme] .sx-preview-card .sx-no-photo a {
     align-items: center;
     gap: 8px;
     margin: 0;
-    color: var(--sx-backend-grid-header-color);
+    color: var(--sx-collection-header-color);
     white-space: nowrap;
 }
 
@@ -1405,7 +1405,7 @@ html[data-sx-theme] .sx-preview-card .sx-no-photo a {
 
 .sx-collection-footer .summary {
     padding: 0;
-    color: var(--sx-backend-grid-header-color);
+    color: var(--sx-collection-header-color);
     white-space: nowrap;
 }
 

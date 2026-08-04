@@ -660,9 +660,11 @@ html[data-sx-theme] .sx-model-header__image--round {
 }
 
 html[data-sx-theme] .sx-model-header__title {
+    min-width: 0;
     margin-bottom: 0;
     color: var(--sx-color-text);
     line-height: 1.1;
+    overflow-wrap: anywhere;
 }
 
 html[data-sx-theme] .sx-model-header__title .sx-controlls {
@@ -701,6 +703,36 @@ html[data-sx-theme] .sx-model-header__meta > span + span {
 html[data-sx-theme] .sx-model-header__actions {
     max-width: 70px;
     text-align: right;
+}
+
+html[data-sx-theme] .sx-model-header--split .sx-model-header__actions {
+    display: flex;
+    max-width: none;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+/* Related entities that own a backend view open through the standard drawer. */
+html[data-sx-theme] .sx-entity-link {
+    color: var(--sx-color-text);
+    cursor: pointer;
+    text-decoration: none;
+    transition: color var(--sx-interactive-surface-transition-duration) ease-out;
+}
+
+html[data-sx-theme] .sx-entity-link:hover,
+html[data-sx-theme] .sx-entity-link:focus {
+    color: var(--sx-color-accent-hover);
+    text-decoration: none;
+}
+
+html[data-sx-theme] .sx-entity-link:focus-visible {
+    border-radius: var(--sx-radius-control);
+    outline: var(--sx-button-focus-outline);
+    outline-offset: var(--sx-button-focus-outline-offset);
+    box-shadow: var(--sx-button-focus-shadow);
 }
 
 /*

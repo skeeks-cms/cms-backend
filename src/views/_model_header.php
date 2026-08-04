@@ -32,9 +32,11 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
         </a>
     </div>
 <?php endif; ?>
-<div class="row no-gutters sx-model-header">
-    <? if ($image) : ?>
-        <div class="col my-auto sx-model-header__media">
+<div class="sx-model-header sx-model-header--split">
+    <div class="sx-model-header__main">
+        <div class="sx-model-header__identity">
+        <? if ($image) : ?>
+            <div class="sx-model-header__media">
             <?php
             $imageSrc = isset($model->cms_image_id)
                 ? $image->src
@@ -44,9 +46,9 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
                     ]));
             ?>
             <img class="sx-model-header__image" src="<?php echo \yii\helpers\Html::encode($imageSrc); ?>"/>
-        </div>
-    <? endif; ?>
-    <div class="col my-auto">
+            </div>
+        <? endif; ?>
+        <div class="sx-model-header__content">
         <h1 class="sx-model-header__title">
             <?php echo $controller->modelShowName; ?>
             <? if (isset($model->sx_id) && $model->sx_id) : ?>
@@ -85,6 +87,8 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
                             class="far fa-user"></i> <?php echo $model->createdBy->shortDisplayName; ?></span>
             <? endif; ?>
         </div>
+        </div>
+        </div>
     </div>
 
     <?php
@@ -114,8 +118,10 @@ $isEmpty = \skeeks\cms\backend\helpers\BackendUrlHelper::createByParams()->setBa
                 'title' => "Удалить"
             ]);
         ?>
-        <div class="col my-auto sx-model-header__actions">
-            <?php echo $href; ?>
+        <div class="sx-model-header__side">
+            <div class="sx-model-header__actions">
+                <?php echo $href; ?>
+            </div>
         </div>
     <?php endif; ?>
 </div>
