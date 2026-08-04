@@ -8,6 +8,7 @@
 
 namespace skeeks\cms\backend;
 
+use skeeks\cms\backend\themes\BackendTheme;
 use yii\base\Application;
 use yii\base\BootstrapInterface;
 use yii\base\Component;
@@ -19,7 +20,8 @@ use yii\helpers\Inflector;
 
 /**
  * @property BackendMenu $menu
- * @property bool $canManageBackendShowings
+ * @property bool              $canManageBackendShowings
+ * @property BackendTheme|null $theme
  *
  * Class BackendComponent
  * @package skeeks\cms\backend
@@ -69,6 +71,20 @@ class BackendComponent extends Component
      * @var string
      */
     public $accessControl = AccessControl::class;
+
+    /**
+     * Theme configuration for this backend shell.
+     *
+     * The base component keeps this disabled for legacy backends. Standard
+     * admin/UPA components opt in with their shared theme classes, while a
+     * project may replace the class or pass a Yii object configuration.
+     *
+     * @var string|array|null
+     */
+    public $themeClass;
+
+    /** @var BackendTheme|null */
+    protected $_theme;
 
     /**
      * @var null
@@ -196,6 +212,7 @@ class BackendComponent extends Component
             $event = new Event();
             $this->trigger(self::EVENT_BEFORE_RUN, $event);
 
+            $this->initTheme();
             $this->_run();
 
             $event = new Event();
@@ -204,6 +221,50 @@ class BackendComponent extends Component
 
         return $this;
     }
+
+    /**
+     * Creates and installs the backend theme before domain-specific startup.
+     * Legacy components with no themeClass keep their existing event-based
+     * composition unchanged.
+     *
+     * @return $this
+     * @throws InvalidConfigException
+     */
+    protected function initTheme()
+    {
+        if (!$this->themeClass || !(\Yii::$app instanceof \yii\web\Application)) {
+            return $this;
+        }
+
+        $theme = \Yii::createObject($this->themeClass);
+        if (!$theme instanceof BackendTheme) {
+            throw new InvalidConfigException('Backend theme must extend '.BackendTheme::class.'.');
+        }
+
+        $this->configureTheme($theme);
+        $theme::initBeforeRender();
+        \Yii::$app->view->theme = $theme;
+        $this->_theme = $theme;
+
+        return $this;
+    }
+
+    /**
+     * Allows a standard backend component to add its scope-specific settings
+     * without moving persistence concerns into cms-backend.
+     *
+     * @param BackendTheme $theme
+     */
+    protected function configureTheme(BackendTheme $theme)
+    {
+    }
+
+    /** @return BackendTheme|null */
+    public function getTheme()
+    {
+        return $this->_theme;
+    }
+
     protected function _run()
     {
         //Backend run code

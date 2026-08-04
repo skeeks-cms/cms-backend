@@ -555,15 +555,6 @@
     --sx-collection-action-hover-filter: var(--sx-button-primary-hover-filter);
     --sx-collection-action-active-filter: var(--sx-button-primary-active-filter);
 
-    --sx-collection-item-color: var(--sx-interactive-surface-color);
-    --sx-collection-item-muted-color: var(--sx-color-text-muted);
-    --sx-collection-item-background: var(--sx-color-surface);
-    --sx-collection-item-hover-background: var(--sx-interactive-surface-hover-background);
-    --sx-collection-item-border-color: var(--sx-color-border);
-    --sx-collection-item-selected-color: var(--sx-interactive-surface-selected-color);
-    --sx-collection-item-selected-background: var(--sx-interactive-surface-selected-background);
-    --sx-collection-item-disabled-color: var(--sx-interactive-surface-disabled-color);
-    --sx-collection-item-disabled-background: var(--sx-interactive-surface-disabled-background);
     --sx-collection-item-success-background: var(--sx-color-success-soft);
     --sx-collection-item-warning-background: var(--sx-color-warning-soft);
     --sx-collection-item-danger-background: var(--sx-color-danger-soft);
@@ -576,18 +567,18 @@
     --sx-collection-item-action-hover-color: var(--sx-color-accent);
     --sx-collection-item-action-hover-background: var(--sx-color-accent-soft);
 
-    --sx-collection-row-color: var(--sx-collection-item-color);
-    --sx-collection-row-muted-color: var(--sx-collection-item-muted-color);
-    --sx-collection-row-surface: var(--sx-collection-item-background);
-    --sx-collection-row-hover: var(--sx-collection-item-hover-background);
-    --sx-collection-row-border: var(--sx-collection-item-border-color);
-    --sx-collection-row-selected-color: var(--sx-collection-item-selected-color);
-    --sx-collection-row-selected-background: var(--sx-collection-item-selected-background);
-    --sx-collection-row-disabled-color: var(--sx-collection-item-disabled-color);
-    --sx-collection-row-disabled-background: var(--sx-collection-item-disabled-background);
+    --sx-collection-row-color: var(--sx-interactive-surface-color);
+    --sx-collection-row-muted-color: var(--sx-color-text-muted);
+    --sx-collection-row-surface: var(--sx-color-surface);
+    --sx-collection-row-hover: var(--sx-interactive-surface-hover-background);
+    --sx-collection-row-border: var(--sx-color-border);
+    --sx-collection-row-selected-color: var(--sx-interactive-surface-selected-color);
+    --sx-collection-row-selected-background: var(--sx-interactive-surface-selected-background);
+    --sx-collection-row-disabled-color: var(--sx-interactive-surface-disabled-color);
+    --sx-collection-row-disabled-background: var(--sx-interactive-surface-disabled-background);
     --sx-collection-row-active-color: var(--sx-interactive-surface-active-color);
     --sx-collection-row-active-background: var(--sx-interactive-surface-active-background);
-    --sx-collection-row-transition-duration: var(--sx-collection-item-transition-duration);
+    --sx-collection-row-transition-duration: var(--sx-interactive-surface-transition-duration);
 
     --sx-collection-header-color: var(--sx-color-text-subtle);
 
@@ -680,6 +671,15 @@
     --sx-list-item-title-hover-color: var(--sx-color-accent);
     --sx-list-item-meta-color: var(--sx-color-text-muted);
     /* Historical component aliases for old consumers; shared CSS does not chain through them. */
+    --sx-collection-item-color: var(--sx-collection-row-color);
+    --sx-collection-item-muted-color: var(--sx-collection-row-muted-color);
+    --sx-collection-item-background: var(--sx-collection-row-surface);
+    --sx-collection-item-hover-background: var(--sx-collection-row-hover);
+    --sx-collection-item-border-color: var(--sx-collection-row-border);
+    --sx-collection-item-selected-color: var(--sx-collection-row-selected-color);
+    --sx-collection-item-selected-background: var(--sx-collection-row-selected-background);
+    --sx-collection-item-disabled-color: var(--sx-collection-row-disabled-color);
+    --sx-collection-item-disabled-background: var(--sx-collection-row-disabled-background);
     --sx-backend-grid-header-color: var(--sx-collection-header-color);
     --sx-backend-grid-accent: var(--sx-collection-accent);
     --sx-backend-grid-accent-contrast: var(--sx-color-accent-contrast);
@@ -724,10 +724,10 @@
     --sx-list-row-border: var(--sx-collection-row-border);
     --sx-list-row-padding-block: var(--sx-list-item-padding-block);
     --sx-list-row-padding-inline: var(--sx-list-item-padding-inline);
-    --sx-list-background: var(--sx-list-surface);
-    --sx-list-color: var(--sx-list-text);
-    --sx-list-border-color: var(--sx-list-border);
-    --sx-list-radius: var(--sx-list-border-radius);
+    --sx-list-background: var(--sx-collection-surface);
+    --sx-list-color: var(--sx-collection-text);
+    --sx-list-border-color: var(--sx-collection-border-color);
+    --sx-list-radius: var(--sx-collection-radius);
     --sx-list-shadow: var(--sx-list-box-shadow);
 }
 

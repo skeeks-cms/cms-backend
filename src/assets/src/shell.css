@@ -880,7 +880,7 @@ table.sx-table thead tr th {
 }
 
 table.sx-table > tbody > tr:hover > td {
-    background-color: var(--sx-collection-item-hover-background);
+    background-color: var(--sx-collection-row-hover);
 }
 
 
