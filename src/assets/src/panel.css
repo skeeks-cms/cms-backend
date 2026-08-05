@@ -1,4 +1,24 @@
+:root,
+html[data-sx-theme] {
+    --sx-panel-shadow: var(--sx-shadow-panel);
+    --sx-panel-header-padding: 18px 20px 14px;
+    --sx-panel-header-gap: 16px;
+    --sx-panel-body-padding: 20px;
+    --sx-panel-footer-padding: 14px 20px;
+    --sx-panel-actions-gap: 8px;
+    --sx-panel-compact-padding: 12px;
+    --sx-panel-title-color: var(--sx-color-text);
+    --sx-panel-title-size: 17px;
+    --sx-panel-title-weight: 650;
+    --sx-panel-hint-color: var(--sx-color-text-muted);
+    --sx-panel-hint-size: 12px;
+    --sx-panel-action-color: var(--sx-color-accent);
+    --sx-panel-action-size: 12px;
+}
+
 .sx-panel {
+    min-width: 0;
+    box-sizing: border-box;
     color: var(--sx-surface-color);
     border: 1px solid var(--sx-surface-border-color);
     border-radius: var(--sx-surface-radius);
@@ -26,9 +46,17 @@
     border-bottom: 1px solid var(--sx-surface-border-color);
 }
 
+.sx-panel__heading {
+    min-width: 0;
+}
+
 .sx-panel__body {
     min-width: 0;
     padding: var(--sx-panel-body-padding);
+}
+
+.sx-panel__body--flush {
+    padding: 0;
 }
 
 .sx-panel__actions,
@@ -49,6 +77,10 @@
     border-top: 1px solid var(--sx-surface-border-color);
 }
 
+.sx-panel__footer--stretch > * {
+    flex: 1 1 auto;
+}
+
 .sx-panel--compact .sx-panel__header,
 .sx-panel--compact .sx-panel__body,
 .sx-panel--compact .sx-panel__footer {
@@ -60,12 +92,17 @@
     color: var(--sx-panel-title-color);
     font-size: var(--sx-panel-title-size);
     font-weight: var(--sx-panel-title-weight);
+    line-height: 1.3;
+    text-wrap: balance;
 }
 
 .sx-panel__hint {
+    max-width: 72ch;
     margin: 4px 0 0;
     color: var(--sx-panel-hint-color);
     font-size: var(--sx-panel-hint-size);
+    line-height: 1.5;
+    text-wrap: pretty;
 }
 
 .sx-panel__action {

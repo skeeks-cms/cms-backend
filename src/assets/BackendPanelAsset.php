@@ -10,10 +10,10 @@ namespace skeeks\cms\backend\assets;
 use skeeks\cms\base\AssetBundle;
 
 /**
- * Optional semantic panel/card component.
+ * Optional compatibility asset for historical sx-panel consumers.
  *
- * Keep this outside BackendUiAsset: tables, forms and empty backend layouts do
- * not need panel structure. Consumers that emit `.sx-panel` register it.
+ * New interfaces use BackendSurfaceWidget and the global sx-surface contract.
+ * Keep this bundle functional while installed views still emit sx-panel.
  */
 class BackendPanelAsset extends AssetBundle
 {

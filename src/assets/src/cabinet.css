@@ -365,11 +365,11 @@ body.has-fixed-sidebar {
     line-height: 1.55;
 }
 
-.sx-content-wrapper a:not(.btn):not(.sx-interactive-surface) {
+.sx-content-wrapper a:not(.btn):not(.sx-button):not(.sx-interactive-surface) {
     color: var(--sx-color-accent);
 }
 
-.sx-content-wrapper a:not(.btn):not(.sx-interactive-surface):hover {
+.sx-content-wrapper a:not(.btn):not(.sx-button):not(.sx-interactive-surface):hover {
     color: var(--sx-color-accent-hover);
 }
 

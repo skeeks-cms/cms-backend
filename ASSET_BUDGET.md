@@ -47,10 +47,12 @@ reduce the request count.
   consumer-by-consumer native replacement before removal. Select2/Kartik keep
   their semantic adapters and must remain conditional on the owning field.
 
-`BackendPanelAsset` is an optional component boundary. Structural `.sx-panel`
-rules no longer live in the global theme; default model cards and dashboard
-panels register the bundle explicitly. This adds one named CSS request only to
-panel consumers and keeps tables, forms and empty backend layouts unchanged.
+`BackendSurfaceWidget` uses the global `BackendUiAsset` surface contract and
+does not add a CSS request. `BackendBlockAsset` and `BackendPanelAsset` remain
+conditional compatibility bundles for `.sx-block` and `.sx-panel` consumers
+until installed views migrate to canonical `.sx-surface` structure. The UPA
+shell no longer loads either compatibility bundle globally; the current Admin
+shell may temporarily load `BackendBlockAsset` while its old views remain.
 - **Lazy-load candidates:** dashboard editing, theme customization, large file
   upload modes, charts and rare editors. Their normal shell cost must stay zero.
 

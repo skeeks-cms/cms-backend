@@ -5,6 +5,8 @@
  * @copyright (c) 2010 SkeekS
  * @date 21.12.2017
  */
+use skeeks\cms\backend\widgets\BackendSurfaceWidget;
+
 /* @var $this yii\web\View */
 /* @var $controller \skeeks\cms\backend\controllers\BackendModelController */
 /* @var $action \skeeks\cms\backend\actions\BackendModelCreateAction|\skeeks\cms\backend\actions\IHasActiveForm */
@@ -19,23 +21,16 @@ $action = $controller->action;
     'id' => 'sx-comments',
 ]); ?>
 
-    <div class="row">
-        <div class="col-12">
-            <div class="sx-block">
-                <?php echo \skeeks\cms\widgets\admin\CmsCommentWidget::widget([
-                    'model' => $action->model,
-                ]); ?>
-            </div>
-        </div>
-    </div>
+    <?php echo BackendSurfaceWidget::widget([
+        'options' => ['class' => 'sx-model-log-comment'],
+        'content' => \skeeks\cms\widgets\admin\CmsCommentWidget::widget([
+            'model' => $action->model,
+        ]),
+    ]); ?>
 
-    <div class="row">
-        <div class="col-12">
-            <?php echo \skeeks\cms\widgets\admin\CmsLogListWidget::widget([
-                'query' => $action->model->getLogs(),
-                'is_show_model' => false
-            ]);; ?>
-        </div>
-    </div>
+    <?php echo \skeeks\cms\widgets\admin\CmsLogListWidget::widget([
+        'query' => $action->model->getLogs(),
+        'is_show_model' => false,
+    ]); ?>
 
 <?php $pjax::end(); ?>

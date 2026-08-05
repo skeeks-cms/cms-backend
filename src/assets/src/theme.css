@@ -203,17 +203,20 @@
     --sx-surface-padding: 20px;
     --sx-surface-padding-compact: 12px;
     --sx-surface-shadow: none;
-    --sx-block-color: var(--sx-surface-color);
-    --sx-block-background: var(--sx-surface-background);
-    --sx-block-border-color: var(--sx-surface-border-color);
-    --sx-block-radius: var(--sx-surface-radius);
-    --sx-block-shadow: var(--sx-panel-shadow);
-    --sx-block-padding: 1rem;
-    --sx-block-padding-compact: .75rem;
-    --sx-block-margin-bottom: 1rem;
-    --sx-block-title-color: var(--sx-color-text-muted);
-    --sx-block-title-size: 12px;
-    --sx-block-title-weight: 700;
+    --sx-surface-raised-shadow: var(--sx-shadow-panel);
+    --sx-surface-header-padding: 18px 20px 14px;
+    --sx-surface-header-gap: 16px;
+    --sx-surface-body-padding: 20px;
+    --sx-surface-footer-padding: 14px 20px;
+    --sx-surface-actions-gap: 8px;
+    --sx-surface-compact-padding: 12px;
+    --sx-surface-title-color: var(--sx-color-text);
+    --sx-surface-title-size: 17px;
+    --sx-surface-title-weight: 650;
+    --sx-surface-hint-color: var(--sx-color-text-muted);
+    --sx-surface-hint-size: 12px;
+    --sx-surface-action-color: var(--sx-color-accent);
+    --sx-surface-action-size: 12px;
     --sx-empty-state-min-height: 320px;
     --sx-empty-state-padding-block: 52px;
     --sx-empty-state-padding-inline: 24px;
@@ -242,20 +245,6 @@
     --sx-interactive-surface-disabled-opacity: 1;
     --sx-interactive-surface-focus-ring: inset 0 0 0 2px var(--sx-color-accent);
     --sx-interactive-surface-transition-duration: 160ms;
-    --sx-panel-shadow: var(--sx-shadow-panel);
-    --sx-panel-header-padding: 18px 20px 14px;
-    --sx-panel-header-gap: 16px;
-    --sx-panel-body-padding: 20px;
-    --sx-panel-footer-padding: 14px 20px;
-    --sx-panel-actions-gap: 8px;
-    --sx-panel-compact-padding: 12px;
-    --sx-panel-title-color: var(--sx-color-text);
-    --sx-panel-title-size: 17px;
-    --sx-panel-title-weight: 650;
-    --sx-panel-hint-color: var(--sx-color-text-muted);
-    --sx-panel-hint-size: 12px;
-    --sx-panel-action-color: var(--sx-color-accent);
-    --sx-panel-action-size: 12px;
     --sx-metrics-default-columns: 4;
     --sx-metric-padding: 22px 24px;
     --sx-metric-divider-color: var(--sx-color-border);
@@ -1537,11 +1526,17 @@ html[data-sx-theme] .alert p:last-child {
 }
 
 .sx-surface {
+    min-width: 0;
+    box-sizing: border-box;
     color: var(--sx-surface-color);
     border: 1px solid var(--sx-surface-border-color);
     border-radius: var(--sx-surface-radius);
     background: var(--sx-surface-background);
     box-shadow: var(--sx-surface-shadow);
+}
+
+.sx-surface--raised {
+    box-shadow: var(--sx-surface-raised-shadow);
 }
 
 .sx-surface--clip {
@@ -1556,28 +1551,95 @@ html[data-sx-theme] .alert p:last-child {
     padding: var(--sx-surface-padding-compact);
 }
 
-/*
- * Legacy backend panel. Shared CMS and third-party package views still emit
- * `.sx-block`, so keep it as a semantic compatibility primitive rather than
- * requiring an application theme to supply its surface.
- */
-html[data-sx-theme] .sx-block {
-    box-sizing: border-box;
-    padding: var(--sx-block-padding);
-    margin-bottom: var(--sx-block-margin-bottom);
-    color: var(--sx-block-color);
-    border: 1px solid var(--sx-block-border-color);
-    border-radius: var(--sx-block-radius);
-    background: var(--sx-block-background);
-    box-shadow: var(--sx-block-shadow);
+.sx-surface__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sx-surface-header-gap);
+    padding: var(--sx-surface-header-padding);
 }
 
-html[data-sx-theme] .sx-block p:last-child {
-    margin-bottom: 0;
+.sx-surface__header--bordered {
+    border-bottom: 1px solid var(--sx-surface-border-color);
 }
 
-html[data-sx-theme] .sx-block--compact {
-    padding: var(--sx-block-padding-compact);
+.sx-surface__heading {
+    min-width: 0;
+}
+
+.sx-surface__body {
+    min-width: 0;
+    padding: var(--sx-surface-body-padding);
+}
+
+.sx-surface__body--flush {
+    padding: 0;
+}
+
+.sx-surface__actions,
+.sx-surface__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--sx-surface-actions-gap);
+}
+
+.sx-surface__actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.sx-surface__footer {
+    justify-content: flex-end;
+    padding: var(--sx-surface-footer-padding);
+    border-top: 1px solid var(--sx-surface-border-color);
+}
+
+.sx-surface__footer--stretch > * {
+    flex: 1 1 auto;
+}
+
+.sx-surface--compact .sx-surface__header,
+.sx-surface--compact .sx-surface__body,
+.sx-surface--compact .sx-surface__footer {
+    padding: var(--sx-surface-compact-padding);
+}
+
+.sx-surface__title {
+    margin: 0;
+    color: var(--sx-surface-title-color);
+    font-size: var(--sx-surface-title-size);
+    font-weight: var(--sx-surface-title-weight);
+    line-height: 1.3;
+    text-wrap: balance;
+}
+
+.sx-surface__hint {
+    max-width: 72ch;
+    margin: 4px 0 0;
+    color: var(--sx-surface-hint-color);
+    font-size: var(--sx-surface-hint-size);
+    line-height: 1.5;
+    text-wrap: pretty;
+}
+
+.sx-surface__action {
+    color: var(--sx-surface-action-color);
+    font-size: var(--sx-surface-action-size);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+@media (max-width: 575.98px) {
+    .sx-surface--responsive .sx-surface__header,
+    .sx-surface--responsive .sx-surface__footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .sx-surface--responsive .sx-surface__actions,
+    .sx-surface--responsive .sx-surface__footer {
+        justify-content: flex-start;
+    }
 }
 
 .sx-metrics {

@@ -111,10 +111,12 @@ page-specific, legacy and lazy assets are maintained in
 [`ASSET_BUDGET.md`](ASSET_BUDGET.md). New shared UI must stay inside those
 ceilings or document the owning conditional component and measured delta.
 
-Panel structure is opt-in through `BackendPanelAsset`; emitting `.sx-panel`
-without registering that bundle is not supported. Dashboard layout belongs to
-`AdminDashboardAsset` in `skeeks/cms-backend-admin`, and chart/upload/table
-dependencies remain owned by the individual dashboard widget that needs them.
+New structured surfaces use `BackendSurfaceWidget`, which registers
+`BackendUiAsset` and emits canonical `.sx-surface` slots. `sx-block`,
+`sx-panel`, `BackendBlockAsset` and `BackendPanelAsset` remain conditional,
+deprecated compatibility contracts for installed consumers. Dashboard layout belongs to `AdminDashboardAsset` in
+`skeeks/cms-backend-admin`, and chart/upload/table dependencies remain owned by
+the individual dashboard widget that needs them.
 
 Status: **canonical**. Package owner: `skeeks/cms-backend`.
 
@@ -281,12 +283,12 @@ The verified migration set currently contains:
   link. No application controller retains an `sx-trigger-action` hook; the
   shared grid handler remains temporarily as a compatibility layer for external
   consumers.
-- The surface hierarchy is explicit: `sx-surface` owns low-level appearance,
-  `sx-block` remains the simple legacy-compatible content block, and `sx-panel`
-  owns structured header, body, actions and footer composition. Compact and
-  responsive variants use the same theme tokens. The legacy Admin dashboard
-  panel widget now emits this canonical structure while retaining its public
-  classes and optional streamed-body API.
+- The surface hierarchy is explicit: `BackendSurfaceWidget` owns structured
+  header, body, actions and footer composition, while `sx-surface` is its
+  low-level CSS contract. `sx-block` and `sx-panel` live only in their
+  deprecated conditional assets. Compact and responsive variants use the same
+  theme tokens. Legacy consumers retain their public classes while migration
+  proceeds.
 - `BackendModelHeader` is the canonical model-page and drawer header renderer.
   It owns the safe back link, optional media, encoded title, conventional
   ID/date/author metadata, status/toolbar/action slots and the standard

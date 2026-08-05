@@ -99,13 +99,21 @@ cross-controller links use `BackendEntityLinkColumn` with explicit parameters.
 
 | Primitive | Use it for | Asset rule |
 | --- | --- | --- |
-| `sx-surface` | Visual background/border/radius without structure | Included in `BackendUiAsset` |
-| `sx-block` | Simple legacy-compatible content block | Included in the shared theme compatibility layer |
-| `sx-panel` | Header/body/actions/footer, responsive or fullscreen panel | Register `BackendPanelAsset` |
+| `BackendSurfaceWidget` | Canonical header/body/actions/footer composition for new Admin and UPA UI | Registers `BackendUiAsset` automatically |
+| `sx-surface` | Direct low-level surface or special composition that cannot use the widget | Included in `BackendUiAsset` |
+| `sx-block`, `sx-panel` | Existing compatibility markup only | `BackendBlockAsset` / `BackendPanelAsset`; do not emit in new UI |
 
-Do not copy surface literals into a view. A direct `.sx-panel` consumer must
-register `BackendPanelAsset`; `AdminPanelWidget` and the default model card do
-this automatically.
+Pass `title`, `hint`, `actions`, `content`, `footer`, `raised`, `clip`,
+`responsive` and HTML options to `BackendSurfaceWidget`. Improve its global
+contract when a reusable slot or modifier is missing; do not recreate a panel
+in project CSS. Its canonical structure is `sx-surface__header`,
+`sx-surface__heading`, `sx-surface__title`, `sx-surface__hint`,
+`sx-surface__actions`, `sx-surface__body` and `sx-surface__footer`.
+`BackendBlockAsset` and `BackendPanelAsset` remain deprecated functional
+compatibility bundles for installed consumers. The UPA shell must not load
+either bundle globally; the Admin shell may still load the block bundle while
+its legacy views are being migrated. Do not add either asset as a dependency
+of a new component.
 
 ## 5. Own optional assets
 
@@ -124,9 +132,9 @@ final class ProductCardAsset extends \skeeks\cms\base\AssetBundle
 }
 ```
 
-Depend on `BackendPanelAsset` when the component emits a panel. Heavy chart,
-map, editor, upload, sortable or gallery dependencies belong to the widget or
-page that needs them. Compare the rendered route with `ASSET_BUDGET.md`.
+Surface structure is already part of `BackendUiAsset`. Heavy chart, map,
+editor, upload, sortable or gallery dependencies belong to the widget or page
+that needs them. Compare the rendered route with `ASSET_BUDGET.md`.
 
 ## 6. Theme and responsive rules
 
@@ -135,7 +143,7 @@ page that needs them. Compare the rendered route with `ASSET_BUDGET.md`.
 - Keep light and dark roles equivalent. User customization is limited to the
   ten `BackendThemePalette::INPUT_KEYS`; component and compatibility tokens are
   not editor inputs.
-- Use CSS Grid/flex and semantic modifiers such as `sx-panel--responsive`.
+- Use CSS Grid/flex and semantic modifiers such as `sx-surface--responsive`.
   Bootstrap utilities may remain local compatibility markup, not public API.
 - Verify focus-visible, keyboard fallback, readable semantic status contrast,
   reduced motion where animation exists, and zero horizontal overflow.
@@ -164,8 +172,10 @@ Current compatibility contracts and removal conditions:
   `BackendEntityLinkColumn` configuration.
 - legacy icon classes/font asset: remove after emitted Admin/UPA markup uses
   semantic `BackendIcon` names or package-owned SVG exclusively.
-- `sx-block` aliases and old panel/card classes: remove only after repository
-  consumers emit canonical structure.
+- `sx-block`, `sx-panel`, `BackendBlockAsset` and `BackendPanelAsset`:
+  compatibility only; keep their conditional bundles functional and remove
+  them only after repository consumers emit `BackendSurfaceWidget` or
+  canonical `sx-surface` structure.
 - jQuery UI sortable and ContextMenu: replace consumer by consumer; never
   delete based only on one Network trace.
 - `cms-theme-unify-v2`, jGrowl and other legacy bundles: explicit opt-in
