@@ -8,35 +8,38 @@
 
 namespace skeeks\cms\backend\grid;
 
-use skeeks\cms\modules\admin\widgets\ControllerActions;
-use skeeks\cms\modules\admin\widgets\ControllerModelActions;
-use yii\grid\DataColumn;
+use yii\web\Controller;
 
 /**
  * @author Semenov Alexander <semenov@skeeks.com>
  */
-class DefaultActionColumn extends DataColumn
+class DefaultActionColumn extends BackendEntityLinkColumn
 {
-
-    /**
-     * @var bool
-     */
-    public $filter = false;
-
-    /**
-     * @var string
-     */
-    public $viewAttribute = "";
-
     /**
      * @inheritdoc
      */
-    protected function renderDataCellContent($model, $key, $index)
+    public function init()
     {
-        $attribute = $this->viewAttribute ? $this->viewAttribute : $this->attribute;
-        return \yii\helpers\Html::a($model->{$attribute}, "#", [
-            'class' => "sx-trigger-action",
-        ]);
+        if (!$this->controllerId) {
+            $controller = null;
 
+            if ($this->grid && $this->grid->view) {
+                $controller = $this->grid->view->context;
+            }
+
+            if (!$controller) {
+                $controller = \Yii::$app->controller;
+            }
+
+            if ($controller instanceof Controller) {
+                $this->controllerId = '/'.ltrim($controller->uniqueId, '/');
+
+                if ($controller->canGetProperty('modelPkAttribute') && $controller->modelPkAttribute) {
+                    $this->modelIdAttribute = $controller->modelPkAttribute;
+                }
+            }
+        }
+
+        parent::init();
     }
 }

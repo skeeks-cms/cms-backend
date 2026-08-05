@@ -1,0 +1,89 @@
+.sx-panel {
+    color: var(--sx-surface-color);
+    border: 1px solid var(--sx-surface-border-color);
+    border-radius: var(--sx-surface-radius);
+    background: var(--sx-surface-background);
+    box-shadow: var(--sx-panel-shadow);
+}
+
+.sx-panel--clip {
+    overflow: hidden;
+}
+
+.sx-panel--padded {
+    padding: var(--sx-surface-padding);
+}
+
+.sx-panel__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--sx-panel-header-gap);
+    padding: var(--sx-panel-header-padding);
+}
+
+.sx-panel__header--bordered {
+    border-bottom: 1px solid var(--sx-surface-border-color);
+}
+
+.sx-panel__body {
+    min-width: 0;
+    padding: var(--sx-panel-body-padding);
+}
+
+.sx-panel__actions,
+.sx-panel__footer {
+    display: flex;
+    align-items: center;
+    gap: var(--sx-panel-actions-gap);
+}
+
+.sx-panel__actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.sx-panel__footer {
+    justify-content: flex-end;
+    padding: var(--sx-panel-footer-padding);
+    border-top: 1px solid var(--sx-surface-border-color);
+}
+
+.sx-panel--compact .sx-panel__header,
+.sx-panel--compact .sx-panel__body,
+.sx-panel--compact .sx-panel__footer {
+    padding: var(--sx-panel-compact-padding);
+}
+
+.sx-panel__title {
+    margin: 0;
+    color: var(--sx-panel-title-color);
+    font-size: var(--sx-panel-title-size);
+    font-weight: var(--sx-panel-title-weight);
+}
+
+.sx-panel__hint {
+    margin: 4px 0 0;
+    color: var(--sx-panel-hint-color);
+    font-size: var(--sx-panel-hint-size);
+}
+
+.sx-panel__action {
+    color: var(--sx-panel-action-color);
+    font-size: var(--sx-panel-action-size);
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+@media (max-width: 575.98px) {
+    .sx-panel--responsive .sx-panel__header,
+    .sx-panel--responsive .sx-panel__footer {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .sx-panel--responsive .sx-panel__actions,
+    .sx-panel--responsive .sx-panel__footer {
+        justify-content: flex-start;
+    }
+}

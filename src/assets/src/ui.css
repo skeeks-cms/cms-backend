@@ -753,12 +753,28 @@ html[data-sx-theme] .sx-detail-layout__main {
 /*
  * Semantic content inside legacy-compatible .sx-block surfaces.
  */
-html[data-sx-theme] .sx-block .sx-block-title {
+html[data-sx-theme] .sx-block .sx-block-title,
+html[data-sx-theme] .sx-block .sx-block__title {
     margin-bottom: 5px;
-    color: var(--sx-color-text-muted);
-    font-size: 12px;
-    font-weight: 700;
+    color: var(--sx-block-title-color);
+    font-size: var(--sx-block-title-size);
+    font-weight: var(--sx-block-title-weight);
     text-transform: uppercase;
+}
+
+html[data-sx-theme] .sx-block .sx-block__content,
+html[data-sx-theme] .sx-block .sx-block-content {
+    min-width: 0;
+}
+
+html[data-sx-theme] .sx-block .sx-block__footer {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--sx-panel-actions-gap);
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid var(--sx-block-border-color);
 }
 
 html[data-sx-theme] .sx-block .sx-label {
@@ -845,6 +861,10 @@ html[data-sx-theme] .sx-quick-access-favorite-btn.is-active {
     color: var(--sx-color-warning);
 }
 
+html[data-sx-theme] .sx-quick-access-favorite-btn.is-active .sx-icon--star {
+    fill: currentColor;
+}
+
 html[data-sx-theme] .sx-quick-access-favorite-btn:focus-visible {
     border-radius: var(--sx-radius-control);
     outline: var(--sx-button-focus-outline);
@@ -853,15 +873,15 @@ html[data-sx-theme] .sx-quick-access-favorite-btn:focus-visible {
 }
 
 html[data-sx-theme] .sx-text--success {
-    color: var(--sx-color-success) !important;
+    color: var(--sx-color-success-on-surface) !important;
 }
 
 html[data-sx-theme] .sx-text--danger {
-    color: var(--sx-color-danger) !important;
+    color: var(--sx-color-danger-on-surface) !important;
 }
 
 html[data-sx-theme] .sx-text--warning {
-    color: var(--sx-color-warning) !important;
+    color: var(--sx-color-warning-on-surface) !important;
 }
 
 html[data-sx-theme] .sx-text--info {

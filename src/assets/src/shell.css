@@ -1772,34 +1772,6 @@ ul.sx-properties .sx-properties--name:after {
 }
 
 
-/**
- * Кастомизация jGrowl
- */
-div.jGrowl.center {
-    top: 5rem;
-    left: 42%;
-}
-.jGrowl-message>img {
-    display: none;
-}
-.jGrowl-message {
-    display: flex;
-}
-
-div.jGrowl div.jGrowl-notification {
-    min-height: 2rem;
-    border-radius: var(--border-radius);
-    box-shadow: var(--sx-shadow-panel);
-    width: 23rem;
-}
-
-div.jGrowl-notification.ui-state-highlight {
-    border: 1px solid var(--primary-color);
-    background: var(--sx-color-surface-raised) !important;
-    color: var(--sx-color-text);
-}
-
-
 @media (max-width: 768px) {
     .sx-shell-context-bar {
         align-items: stretch;

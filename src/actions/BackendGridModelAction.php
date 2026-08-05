@@ -654,6 +654,10 @@ CSS
                 $actionConfig['backendAction'] = $key;
             }
 
+            if (!array_key_exists('variant', $actionConfig)) {
+                $actionConfig['variant'] = $resolvedActions ? 'secondary' : 'primary';
+            }
+
             $backendActionId = ArrayHelper::remove($actionConfig, 'backendAction');
             if ($backendActionId) {
                 $actionConfig = $this->getBackendActionPresentation($backendActionId, $actionConfig);

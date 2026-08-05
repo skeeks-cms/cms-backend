@@ -8,6 +8,7 @@
 namespace skeeks\cms\backend\widgets;
 
 use skeeks\cms\backend\assets\BackendUiAsset;
+use skeeks\cms\backend\helpers\BackendIcon;
 use yii\base\Widget;
 use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
@@ -47,7 +48,7 @@ class EmptyStateWidget extends Widget
 
         $content = Html::tag(
             'span',
-            Html::tag('i', '', ['class' => $icon, 'aria-hidden' => 'true']),
+            BackendIcon::renderConfigured($icon, ['size' => 28]),
             [
                 'class' => 'sx-empty-state__icon'
                     .' sx-collection-empty-state__icon sx-grid-empty-state__icon',
@@ -82,7 +83,7 @@ class EmptyStateWidget extends Widget
             );
             $actionIcon = (string)ArrayHelper::getValue($action, 'icon', '');
             $label = $actionIcon
-                ? Html::tag('i', '', ['class' => $actionIcon, 'aria-hidden' => 'true']).' '.Html::encode($actionLabel)
+                ? BackendIcon::renderConfigured($actionIcon, ['size' => 16]).' '.Html::encode($actionLabel)
                 : Html::encode($actionLabel);
             $content .= Html::a($label, $actionUrl, $actionOptions);
         }

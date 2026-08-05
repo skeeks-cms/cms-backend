@@ -788,6 +788,11 @@ img.sx-collection-cell__media {
     color: var(--sx-collection-cell-color);
 }
 
+.sx-preview-card-column {
+    width: 150px;
+    min-width: 150px;
+}
+
 .sx-preview-card__media,
 .sx-task-info .img-wrapper {
     display: flex;
@@ -889,6 +894,26 @@ img.sx-collection-cell__media {
 .sx-preview-card__related:focus {
     color: var(--sx-collection-cell-link-hover-color);
     text-decoration: none;
+}
+
+.sx-preview-card__inline-action {
+    display: inline-flex;
+    align-items: center;
+    width: fit-content;
+    padding: 0;
+    color: inherit;
+    font: inherit;
+    text-align: left;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    appearance: none;
+}
+
+.sx-preview-card__inline-action:focus-visible {
+    outline: 0;
+    border-radius: var(--sx-control-radius);
+    box-shadow: var(--sx-collection-item-focus-ring);
 }
 
 .sx-preview-card__worker-status {

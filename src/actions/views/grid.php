@@ -7,6 +7,7 @@
  */
 
 use skeeks\cms\backend\helpers\BackendIcon;
+use skeeks\cms\backend\widgets\BackendSectionHeader;
 
 /* @var $this yii\web\View */
 /* @var $action \skeeks\cms\backend\actions\BackendGridModelAction */
@@ -18,56 +19,7 @@ $controller = $this->context;
 
 <?php $pageHeader = $action->pageHeaderConfig; ?>
 <?php if ($pageHeader !== false) : ?>
-    <?php
-    $pageHeader = (array)$pageHeader;
-    $pageHeaderOptions = (array)\yii\helpers\ArrayHelper::getValue($pageHeader, 'options', []);
-    \yii\helpers\Html::addCssClass($pageHeaderOptions, 'sx-collection-page-header sx-grid-page-header');
-    $pageHeaderActions = (array)\yii\helpers\ArrayHelper::getValue($pageHeader, 'actions', []);
-    ?>
-    <header <?= \yii\helpers\Html::renderTagAttributes($pageHeaderOptions) ?>>
-        <div class="sx-grid-page-header__copy">
-            <?php if ($pageHeaderIcon = \yii\helpers\ArrayHelper::getValue($pageHeader, 'icon')) : ?>
-                <span class="sx-grid-page-header__icon">
-                    <i class="<?= \yii\helpers\Html::encode($pageHeaderIcon) ?>" aria-hidden="true"></i>
-                </span>
-            <?php endif; ?>
-            <div>
-                <?php if ($pageHeaderTitle = \yii\helpers\ArrayHelper::getValue($pageHeader, 'title')) : ?>
-                    <h1><?= \yii\helpers\Html::encode($pageHeaderTitle) ?></h1>
-                <?php endif; ?>
-                <?php if ($pageHeaderDescription = \yii\helpers\ArrayHelper::getValue($pageHeader, 'description')) : ?>
-                    <p><?= \yii\helpers\Html::encode($pageHeaderDescription) ?></p>
-                <?php endif; ?>
-            </div>
-        </div>
-        <?php if ($pageHeaderActions) : ?>
-            <div class="sx-collection-page-header__actions">
-                <?php foreach ($pageHeaderActions as $pageHeaderAction) : ?>
-                    <?php
-                    $pageHeaderActionLabel = (string)\yii\helpers\ArrayHelper::getValue($pageHeaderAction, 'label', '');
-                    $pageHeaderActionUrl = \yii\helpers\ArrayHelper::getValue($pageHeaderAction, 'url');
-                    $pageHeaderActionOptions = (array)\yii\helpers\ArrayHelper::getValue($pageHeaderAction, 'options', []);
-                    $pageHeaderActionVariant = (string)\yii\helpers\ArrayHelper::getValue($pageHeaderAction, 'variant', 'primary');
-                    \yii\helpers\Html::addCssClass(
-                        $pageHeaderActionOptions,
-                        'sx-button sx-button--'.$pageHeaderActionVariant
-                        .' sx-collection-action sx-collection-action--'.$pageHeaderActionVariant
-                        .' sx-grid-page-header__action'
-                    );
-                    $pageHeaderActionIcon = (string)\yii\helpers\ArrayHelper::getValue($pageHeaderAction, 'icon', '');
-                    $pageHeaderActionContent = $pageHeaderActionIcon
-                        ? \yii\helpers\Html::tag('i', '', ['class' => $pageHeaderActionIcon, 'aria-hidden' => 'true']).' '.\yii\helpers\Html::encode($pageHeaderActionLabel)
-                        : \yii\helpers\Html::encode($pageHeaderActionLabel);
-                    ?>
-                    <?= \yii\helpers\Html::a(
-                        $pageHeaderActionContent,
-                        $pageHeaderActionUrl,
-                        $pageHeaderActionOptions
-                    ) ?>
-                <?php endforeach; ?>
-            </div>
-        <?php endif; ?>
-    </header>
+    <?= BackendSectionHeader::widget((array)$pageHeader); ?>
 <?php endif; ?>
 
 <?

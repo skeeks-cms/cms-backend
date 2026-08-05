@@ -58,6 +58,14 @@ class AjaxControllerActionsWidget extends Widget
     public $isRunFirstActionOnClick = false;
 
     /**
+     * Explicit safe action to run on click. Takes precedence over
+     * isRunFirstActionOnClick.
+     *
+     * @var string|null
+     */
+    public $actionOnClick;
+
+    /**
      * @throws Exception
      */
     public function init()
@@ -117,6 +125,7 @@ JS
                 'url'           => Url::to(ArrayHelper::merge(["/".$this->controllerId."/model-actions", 'pk' => $this->modelId], (array) $this->urlParams)),
                 'controller-id' => $this->controllerId,
                 'model-id'      => $this->modelId,
+                'action-on-click' => $this->actionOnClick,
                 'is-run-first-action-on-click'      => (int)$this->isRunFirstActionOnClick,
             ],
         ], $this->options);

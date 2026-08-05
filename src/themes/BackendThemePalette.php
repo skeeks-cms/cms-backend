@@ -89,14 +89,20 @@ class BackendThemePalette
             '--sx-color-success'            => '#23754a',
             '--sx-color-success-hover'      => '#1b633e',
             '--sx-color-success-soft'       => '#eef9f3',
+            '--sx-color-success-on-soft'    => '#23754a',
+            '--sx-color-success-on-surface' => '#23754a',
             '--sx-color-success-contrast'   => '#fff',
             '--sx-color-warning'            => '#95611d',
             '--sx-color-warning-hover'      => '#7d4f16',
             '--sx-color-warning-soft'       => '#fff7e9',
+            '--sx-color-warning-on-soft'    => '#95611d',
+            '--sx-color-warning-on-surface' => '#95611d',
             '--sx-color-warning-contrast'   => '#fff',
             '--sx-color-danger'             => '#bd4348',
             '--sx-color-danger-hover'       => '#a7383d',
             '--sx-color-danger-soft'        => '#fff3f3',
+            '--sx-color-danger-on-soft'     => '#bd4348',
+            '--sx-color-danger-on-surface'  => '#bd4348',
             '--sx-color-danger-contrast'    => '#fff',
             '--sx-color-info'               => 'var(--sx-color-accent)',
             '--sx-color-info-soft'          => 'var(--sx-color-accent-soft)',
@@ -123,14 +129,20 @@ class BackendThemePalette
             '--sx-color-success'            => '#6fce9b',
             '--sx-color-success-hover'      => '#83d8a9',
             '--sx-color-success-soft'       => '#1d3a2c',
+            '--sx-color-success-on-soft'    => '#6fce9b',
+            '--sx-color-success-on-surface' => '#6fce9b',
             '--sx-color-success-contrast'   => '#102119',
             '--sx-color-warning'            => '#e5b86c',
             '--sx-color-warning-hover'      => '#edc985',
             '--sx-color-warning-soft'       => '#3d3120',
+            '--sx-color-warning-on-soft'    => '#e5b86c',
+            '--sx-color-warning-on-surface' => '#e5b86c',
             '--sx-color-warning-contrast'   => '#2b1d08',
             '--sx-color-danger'             => '#f08b90',
             '--sx-color-danger-hover'       => '#f2a0a4',
             '--sx-color-danger-soft'        => '#47282b',
+            '--sx-color-danger-on-soft'     => '#f08b90',
+            '--sx-color-danger-on-surface'  => '#f08b90',
             '--sx-color-danger-contrast'    => '#241214',
             '--sx-color-info'               => 'var(--sx-color-accent)',
             '--sx-color-info-soft'          => 'var(--sx-color-accent-soft)',
@@ -307,7 +319,8 @@ class BackendThemePalette
         if ($input['text'] !== self::DEFAULT_INPUT[$mode]['text']) {
             $output['--sx-color-text'] = $input['text'];
         }
-        if ($input['textMuted'] !== self::DEFAULT_INPUT[$mode]['textMuted']) {
+        if ($input['textMuted'] !== self::DEFAULT_INPUT[$mode]['textMuted']
+            || $input['surface'] !== self::DEFAULT_INPUT[$mode]['surface']) {
             $output['--sx-color-text-muted'] = $input['textMuted'];
             $output['--sx-color-text-subtle'] = $this->mix(
                 $input['textMuted'],
@@ -343,7 +356,10 @@ class BackendThemePalette
             $output[$prefix . '-hover'] = $this->adjust($color, $isDark ? .10 : -.10);
             $output[$prefix . '-contrast'] = $this->contrast($color);
         }
-        $output[$prefix . '-soft'] = $this->mix($color, $input['surface'], $isDark ? .18 : .08);
+        $soft = $this->mix($color, $input['surface'], $isDark ? .18 : .08);
+        $output[$prefix . '-soft'] = $soft;
+        $output[$prefix . '-on-soft'] = $this->accessibleForeground($color, $soft);
+        $output[$prefix . '-on-surface'] = $this->accessibleForeground($color, $input['surface']);
     }
 
     private function renderRule($selector, array $variables)
@@ -389,6 +405,55 @@ class BackendThemePalette
         $luminance = (0.2126 * $rgb[0] + 0.7152 * $rgb[1] + 0.0722 * $rgb[2]) / 255;
 
         return $luminance > .58 ? '#10141a' : '#ffffff';
+    }
+
+    /**
+     * Keeps the selected semantic color when it is readable and otherwise
+     * moves it only as far as necessary toward black or white.
+     */
+    private function accessibleForeground($foreground, $background)
+    {
+        if ($this->contrastRatio($foreground, $background) >= 4.5) {
+            return $foreground;
+        }
+
+        $dark = '#000000';
+        $light = '#ffffff';
+        $target = $this->contrastRatio($dark, $background) > $this->contrastRatio($light, $background)
+            ? $dark
+            : $light;
+
+        for ($percent = 1; $percent <= 100; $percent++) {
+            $candidate = $this->mix($target, $foreground, $percent / 100);
+            if ($this->contrastRatio($candidate, $background) >= 4.5) {
+                return $candidate;
+            }
+        }
+
+        return $target;
+    }
+
+    private function contrastRatio($first, $second)
+    {
+        $firstLuminance = $this->relativeLuminance($first);
+        $secondLuminance = $this->relativeLuminance($second);
+
+        return (max($firstLuminance, $secondLuminance) + .05)
+            / (min($firstLuminance, $secondLuminance) + .05);
+    }
+
+    private function relativeLuminance($hex)
+    {
+        $channels = $this->rgb($hex);
+        foreach ($channels as &$channel) {
+            $channel /= 255;
+            $channel = $channel <= .04045
+                ? $channel / 12.92
+                : pow(($channel + .055) / 1.055, 2.4);
+        }
+        unset($channel);
+
+        return .2126 * $channels[0] + .7152 * $channels[1] + .0722 * $channels[2];
     }
 
     private function rgba($hex, $alpha)

@@ -37,14 +37,20 @@
         '--sx-color-success',
         '--sx-color-success-hover',
         '--sx-color-success-soft',
+        '--sx-color-success-on-soft',
+        '--sx-color-success-on-surface',
         '--sx-color-success-contrast',
         '--sx-color-warning',
         '--sx-color-warning-hover',
         '--sx-color-warning-soft',
+        '--sx-color-warning-on-soft',
+        '--sx-color-warning-on-surface',
         '--sx-color-warning-contrast',
         '--sx-color-danger',
         '--sx-color-danger-hover',
         '--sx-color-danger-soft',
+        '--sx-color-danger-on-soft',
+        '--sx-color-danger-on-surface',
         '--sx-color-danger-contrast',
         '--sx-color-info',
         '--sx-color-info-soft'
@@ -113,6 +119,44 @@
         return 'rgba(' + channels.join(', ') + ', ' + alpha + ')';
     };
 
+    var relativeLuminance = function (color) {
+        var channels = rgb(color).map(function (channel) {
+            channel /= 255;
+            return channel <= .04045
+                ? channel / 12.92
+                : Math.pow((channel + .055) / 1.055, 2.4);
+        });
+        return .2126 * channels[0] + .7152 * channels[1] + .0722 * channels[2];
+    };
+
+    var contrastRatio = function (first, second) {
+        var firstLuminance = relativeLuminance(first);
+        var secondLuminance = relativeLuminance(second);
+        return (Math.max(firstLuminance, secondLuminance) + .05)
+            / (Math.min(firstLuminance, secondLuminance) + .05);
+    };
+
+    var accessibleForeground = function (foreground, background) {
+        if (contrastRatio(foreground, background) >= 4.5) {
+            return foreground;
+        }
+
+        var dark = '#000000';
+        var light = '#ffffff';
+        var target = contrastRatio(dark, background) > contrastRatio(light, background)
+            ? dark
+            : light;
+
+        for (var percent = 1; percent <= 100; percent++) {
+            var candidate = mix(target, foreground, percent / 100);
+            if (contrastRatio(candidate, background) >= 4.5) {
+                return candidate;
+            }
+        }
+
+        return target;
+    };
+
     var expand = function (snapshot, draft, mode) {
         var initial = snapshot.base;
         var output = clone(snapshot.output);
@@ -144,7 +188,7 @@
         if (surfaceChanged || textChanged) {
             output['--sx-color-surface-hover'] = mix(draft.text, draft.surface, isDark ? .08 : .04);
         }
-        if (draft.textMuted !== initial.textMuted) {
+        if (draft.textMuted !== initial.textMuted || surfaceChanged) {
             output['--sx-color-text-subtle'] = mix(
                 draft.textMuted,
                 draft.surface,
@@ -163,7 +207,10 @@
                 output[prefix + '-contrast'] = contrast(draft[key]);
             }
             if (colorChanged || surfaceChanged) {
-                output[prefix + '-soft'] = mix(draft[key], draft.surface, isDark ? .18 : .08);
+                var soft = mix(draft[key], draft.surface, isDark ? .18 : .08);
+                output[prefix + '-soft'] = soft;
+                output[prefix + '-on-soft'] = accessibleForeground(draft[key], soft);
+                output[prefix + '-on-surface'] = accessibleForeground(draft[key], draft.surface);
             }
         });
 
@@ -224,6 +271,7 @@
 
         opener = opener || findOpener(layer);
         var panel = layer.querySelector('.sx-theme-customizer__panel');
+        var body = layer.querySelector('.sx-theme-customizer__body');
         var modeLabel = layer.querySelector('[data-sx-theme-customizer-mode-label]');
         var closeButtons = layer.querySelectorAll('[data-sx-theme-customizer-close]');
         var modeButtons = layer.querySelectorAll('[data-sx-theme-customizer-mode]');
@@ -353,6 +401,9 @@
             previousFocus = document.activeElement;
             capture(currentMode());
             fillFields();
+            if (body) {
+                body.scrollTop = 0;
+            }
             isOpen = true;
             layer.hidden = false;
             opener.setAttribute('aria-expanded', 'true');

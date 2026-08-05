@@ -52,6 +52,33 @@ function expectInvalid(array $input, $message)
     throw new RuntimeException($message);
 }
 
+function relativeLuminance($hex)
+{
+    $channels = [
+        hexdec(substr($hex, 1, 2)),
+        hexdec(substr($hex, 3, 2)),
+        hexdec(substr($hex, 5, 2)),
+    ];
+    foreach ($channels as &$channel) {
+        $channel /= 255;
+        $channel = $channel <= .04045
+            ? $channel / 12.92
+            : pow(($channel + .055) / 1.055, 2.4);
+    }
+    unset($channel);
+
+    return .2126 * $channels[0] + .7152 * $channels[1] + .0722 * $channels[2];
+}
+
+function contrastRatio($first, $second)
+{
+    $firstLuminance = relativeLuminance($first);
+    $secondLuminance = relativeLuminance($second);
+
+    return (max($firstLuminance, $secondLuminance) + .05)
+        / (min($firstLuminance, $secondLuminance) + .05);
+}
+
 function readCssVariables($block)
 {
     preg_match_all('/(--sx-color-[a-z0-9-]+):\s*([^;]+);/i', $block, $matches, PREG_SET_ORDER);
@@ -84,6 +111,31 @@ expectSame(
     $emptyTheme->headerAppearanceAttributes,
     'The shared header must default to a dark surface in both page themes.'
 );
+
+$customStatusPalette = new BackendThemePalette([
+    'dark' => [
+        'surface' => '#1e1e20',
+        'danger' => '#a6595d',
+    ],
+]);
+$customStatusDark = $customStatusPalette->toCssVariables('dark');
+expectSame(
+    '#a6595d',
+    $customStatusDark['--sx-color-danger'],
+    'The user-selected semantic color must remain unchanged.'
+);
+if (contrastRatio(
+    $customStatusDark['--sx-color-danger-on-soft'],
+    $customStatusDark['--sx-color-danger-soft']
+) < 4.5) {
+    throw new RuntimeException('Generated status text on a soft background must meet WCAG AA contrast.');
+}
+if (contrastRatio(
+    $customStatusDark['--sx-color-danger-on-surface'],
+    '#1e1e20'
+) < 4.5) {
+    throw new RuntimeException('Generated semantic text on a surface must meet WCAG AA contrast.');
+}
 
 $configuredHeaderTheme = new BackendTheme([
     'headerModes' => [
@@ -130,6 +182,38 @@ expectSame(
     $surfaceLight['--sx-color-success-hover'],
     'Changing a surface must not regenerate an unchanged status state.'
 );
+if ($surfaceLight['--sx-color-text-subtle'] === BackendThemePalette::DEFAULT_OUTPUT['light']['--sx-color-text-subtle']) {
+    throw new RuntimeException('Changing a surface must regenerate dependent subtle text.');
+}
+
+$previewRuntime = file_get_contents(dirname(__DIR__).'/src/assets/src/theme-customizer.js');
+$customizerView = file_get_contents(dirname(__DIR__).'/src/widgets/views/theme-customizer-panel.php');
+foreach (BackendThemePalette::INPUT_KEYS as $inputKey) {
+    if (strpos($previewRuntime, $inputKey.": '--sx-color-") === false) {
+        throw new RuntimeException("Live preview input map is missing {$inputKey}.");
+    }
+    if (strpos($customizerView, "'{$inputKey}'") === false) {
+        throw new RuntimeException("Theme customizer form is missing {$inputKey}.");
+    }
+}
+if (strpos($customizerView, "'--sx-") !== false) {
+    throw new RuntimeException('Theme customizer must not expose internal CSS variable names.');
+}
+foreach (['success', 'warning', 'danger'] as $status) {
+    foreach (['on-soft', 'on-surface'] as $variant) {
+        $name = "--sx-color-{$status}-{$variant}";
+        if (strpos($previewRuntime, "'{$name}'") === false) {
+            throw new RuntimeException("Live preview output is missing {$name}.");
+        }
+    }
+}
+if (strpos($previewRuntime, "accessibleForeground(draft[key], soft)") === false
+    || strpos($previewRuntime, "accessibleForeground(draft[key], draft.surface)") === false) {
+    throw new RuntimeException('Live preview must regenerate accessible status foregrounds.');
+}
+if (strpos($previewRuntime, 'body.scrollTop = 0;') === false) {
+    throw new RuntimeException('Theme customizer must reopen at the beginning of its field list.');
+}
 
 $css = $palette->toCss();
 expectSame(

@@ -8,7 +8,7 @@ use yii\helpers\Html;
 use yii\helpers\Url;
 
 /**
- * Renders a semantic link that opens the first standard action of an entity.
+ * Renders a semantic link that opens the safe read-only view of an entity.
  *
  * The href remains a normal view URL as a keyboard/no-JavaScript fallback;
  * AjaxControllerActionsWidget owns the standard backend drawer behavior.
@@ -20,6 +20,9 @@ class BackendEntityLink extends Widget
 
     /** @var int|string */
     public $modelId;
+
+    /** @var array Additional parameters required by the backend controller action. */
+    public $urlParams = [];
 
     /** @var string|null Plain-text label used when content is not provided. */
     public $label;
@@ -57,7 +60,7 @@ class BackendEntityLink extends Widget
         }
 
         $route = '/'.ltrim($this->controllerId, '/').'/view';
-        $fallbackUrl = $this->url ?: [$route, 'pk' => $this->modelId];
+        $fallbackUrl = $this->url ?: array_merge([$route, 'pk' => $this->modelId], $this->urlParams);
         $options = array_merge([
             'class'     => 'sx-entity-link',
             'href'      => Url::to($fallbackUrl),
@@ -68,7 +71,8 @@ class BackendEntityLink extends Widget
         return AjaxControllerActionsWidget::widget([
             'controllerId'            => $this->controllerId,
             'modelId'                 => $this->modelId,
-            'isRunFirstActionOnClick' => true,
+            'urlParams'               => $this->urlParams,
+            'actionOnClick'            => 'view',
             'tag'                     => $this->tag,
             'content'                 => $content,
             'options'                 => $options,

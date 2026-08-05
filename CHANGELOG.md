@@ -1,6 +1,15 @@
 CHANGELOG
 ==============
 
+Unreleased
+-----------------
+ * Canonical Backend UI contracts for section headers, collections, entity
+   links and safe default model cards.
+ * Shared semantic panel, native notification and theme-palette contracts with
+   measured conditional asset budgets.
+ * Added `BACKEND_UI_GUIDE.md` and compatibility removal conditions for Admin,
+   UPA and future cabinets.
+
 1.2.11
 -----------------
  * Each access callbacks in MiltiActions

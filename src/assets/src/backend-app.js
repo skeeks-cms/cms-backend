@@ -481,6 +481,7 @@
                 var active = isFavorite(item);
 
                 $button.toggleClass('is-active', active);
+                $button.attr('aria-pressed', active ? 'true' : 'false');
                 $button.attr('title', active ? 'Убрать из избранного' : 'Добавить в избранное');
                 $button.find('i').toggleClass('fas', active).toggleClass('far', !active);
             };
@@ -821,14 +822,6 @@
                     subtree: true
                 });
             }
-        },
-
-        _initNotify: function () {
-            //Глобальные настройки JGrowl
-            $.jGrowl.defaults.closer = false;
-            $.jGrowl.defaults.closeTemplate = '×';
-            $.jGrowl.defaults.position = 'top-right';
-            $.jGrowl.defaults.life = 5000;
         },
 
     });

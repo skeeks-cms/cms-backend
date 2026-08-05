@@ -49,6 +49,12 @@ return [
     'Setting up access to this section' => 'Настройка доступа к этому разделу',
 
     'Edit'                => 'Редактировать',
+    'View'                => 'Просмотр',
+    'Back'                => 'Вернуться назад',
+    'Add to favorites'    => 'Добавить в избранное',
+    'Record ID'           => 'ID записи',
+    'Created at {date}'   => 'Создано: {date}',
+    'Created by user #{id}' => 'Автор записи, ID: {id}',
     'Add'                 => 'Добавить',
     'Create'              => 'Создать',
     'List'                => 'Список',

@@ -13,6 +13,7 @@ use skeeks\cms\backend\actions\BackendModelCreateAction;
 use skeeks\cms\backend\actions\BackendModelDeleteAction;
 use skeeks\cms\backend\actions\BackendModelMultiDeleteAction;
 use skeeks\cms\backend\actions\BackendModelUpdateAction;
+use skeeks\cms\backend\actions\BackendModelViewAction;
 use skeeks\cms\backend\BackendInfoInterface;
 use skeeks\cms\backend\BackendModelControllerInterface;
 use skeeks\cms\backend\BackendPermissionsInterface;
@@ -36,6 +37,11 @@ class BackendModelStandartController extends BackendModelController
 
             "create" => [
                 'class' => BackendModelCreateAction::class,
+            ],
+
+            "view" => [
+                'class'    => BackendModelViewAction::class,
+                'priority' => 10,
             ],
 
             "update" => [
