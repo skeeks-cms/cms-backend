@@ -129,6 +129,42 @@
             });
         },
 
+        /**
+         * Keep the actions menu inside the viewport that owns the trigger.
+         *
+         * The popover is initially rendered with a loader and becomes wider
+         * after its AJAX content arrives. Choosing a side from the available
+         * viewport space avoids preserving a stale right-hand placement in
+         * backend drawers and other nested browsing contexts.
+         */
+        _getPopoverPlacement: function(popover, trigger) {
+            var ownerDocument = trigger.ownerDocument || document;
+            var viewportWidth = ownerDocument.documentElement.clientWidth;
+            var triggerRect = trigger.getBoundingClientRect();
+            var popoverWidth = popover && popover.offsetWidth ? popover.offsetWidth : 0;
+            var gutter = 8;
+
+            if (popover && ownerDocument.defaultView) {
+                var popoverStyles = ownerDocument.defaultView.getComputedStyle(popover);
+                popoverWidth = Math.max(popoverWidth, parseFloat(popoverStyles.minWidth) || 0);
+            }
+
+            popoverWidth = Math.max(popoverWidth, 220);
+
+            var spaceOnRight = viewportWidth - triggerRect.right - gutter;
+            var spaceOnLeft = triggerRect.left - gutter;
+
+            if (spaceOnRight >= popoverWidth) {
+                return 'right';
+            }
+
+            if (spaceOnLeft >= popoverWidth) {
+                return 'left';
+            }
+
+            return spaceOnLeft > spaceOnRight ? 'left' : 'right';
+        },
+
         _goFirstAction: function(jQueryBtn) {
 
             if (jQueryBtn.hasClass("sx-start")) {
@@ -215,9 +251,12 @@
 
             jQueryBtn.popover({
                 "html": true,
-                //'container': "body",
+                'container': "body",
                 'trigger': "click",
-                'boundary': 'window',
+                'boundary': 'viewport',
+                'placement': function(popover, trigger) {
+                    return self._getPopoverPlacement(popover, trigger);
+                },
                 'popover-mode':'single',
                 'title': 'действия',
                 'template': '<div class="popover sx-popover-ajax-controller-actions" role="tooltip">' +

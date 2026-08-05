@@ -1,5 +1,5 @@
 .sx-popover-ajax-controller-actions {
-    min-width: 220px;
+    min-width: min(220px, calc(100vw - 16px));
     max-width: min(320px, calc(100vw - 16px));
     margin: 0;
     color: var(--sx-menu-color, var(--sx-color-text, #202332));
@@ -14,6 +14,10 @@
 }
 
 .sx-popover-ajax-controller-actions ul {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -21,6 +25,7 @@
 
 .sx-popover-ajax-controller-actions ul li {
     display: block;
+    width: 100%;
     margin: 0;
     padding: 0;
     border-radius: 6px;
