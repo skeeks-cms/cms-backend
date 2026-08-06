@@ -148,6 +148,16 @@ that needs them. Compare the rendered route with `ASSET_BUDGET.md`.
 - Verify focus-visible, keyboard fallback, readable semantic status contrast,
   reduced motion where animation exists, and zero horizontal overflow.
 
+Cabinets use the shared shell instead of a separate global cabinet stylesheet.
+Choose `sx-shell-sidebar--comfortable` for customer navigation and keep
+`sx-shell-sidebar--default` for dense administration. Tune product geometry
+through the `--sx-shell-*` variables in `theme.css`: header padding/gaps and
+action height, comfortable sidebar padding/link spacing/help-block spacing,
+and centered footer padding/gaps. Compose captions, actions, support content
+and footers with `sx-shell-header__*`, `sx-shell-sidebar__support*` and
+`sx-shell-footer--centered`; do not recreate these rules under project-only
+selectors.
+
 ## 7. Required verification
 
 1. Run PHP lint in the project Docker container and JS syntax checks locally.

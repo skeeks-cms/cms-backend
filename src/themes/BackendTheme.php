@@ -304,7 +304,7 @@ class BackendTheme extends Theme
      */
     public function getSlideNavClasses()
     {
-        return 'sx-shell-sidebar--default';
+        return 'sx-shell-sidebar--comfortable';
     }
 
     /**

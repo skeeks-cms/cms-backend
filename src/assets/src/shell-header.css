@@ -24,6 +24,34 @@
     top: 0;
 }
 
+.sx-shell-header__surface {
+    min-height: var(--sx-shell-top-offset, 65px);
+}
+
+.sx-shell-header__nav {
+    display: flex;
+    width: 100%;
+    min-height: var(--sx-shell-top-offset, 65px);
+    align-items: center;
+    padding: 0 var(--sx-shell-header-inline-padding, 24px);
+}
+
+.sx-shell-header__brand,
+.sx-shell-header__actions {
+    display: flex;
+    min-width: 0;
+    align-items: center;
+}
+
+.sx-shell-header__brand {
+    gap: var(--sx-shell-header-brand-gap, 12px);
+}
+
+.sx-shell-header__actions {
+    gap: var(--sx-shell-header-actions-gap, 12px);
+    margin-left: auto;
+}
+
 .sx-header-logo-toggler {
     height: var(--sx-shell-top-offset, 65px);
     padding-left: 1.07143rem !important;
@@ -138,6 +166,141 @@ html[data-sx-theme="dark"] .sx-shell-header__surface:not([data-sx-header-preview
     white-space: nowrap;
 }
 
+.sx-shell-header__brand-caption {
+    margin-left: var(--sx-shell-header-caption-margin, 12px);
+    padding-left: var(--sx-shell-header-caption-padding, 12px);
+    border-left: 1px solid var(--sx-shell-header-divider-color);
+    color: var(--sx-shell-header-subtle);
+    font-size: 11px;
+    line-height: 1.25;
+}
+
+.sx-shell-header__action {
+    display: inline-flex;
+    min-height: var(--sx-shell-header-action-height, 40px);
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 var(--sx-shell-header-action-inline-padding, 12px);
+    border-radius: var(--sx-radius-control, 8px);
+    color: var(--sx-shell-header-muted);
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.sx-shell-header__action--icon {
+    width: var(--sx-shell-header-action-height, 40px);
+    padding: 0;
+    font-size: var(--sx-shell-header-icon-size, 20px);
+}
+
+.sx-shell-header__action:hover,
+.sx-shell-header__action:focus-visible {
+    color: var(--sx-shell-header-color);
+    background: var(--sx-shell-header-action-background);
+    text-decoration: none;
+}
+
+.sx-shell-header__action:focus-visible,
+.sx-shell-header__brand-link:focus-visible {
+    outline: 3px solid var(--sx-color-focus-ring);
+    outline-offset: 2px;
+}
+
+.sx-shell-profile__toggle {
+    display: inline-flex;
+    min-height: var(--sx-shell-header-action-height, 40px);
+    align-items: center;
+    gap: var(--sx-shell-header-profile-gap, 9px);
+    padding: var(--sx-shell-header-profile-padding, 4px 8px 4px 5px);
+    border-radius: var(--sx-radius-control, 8px);
+    color: var(--sx-shell-header-muted);
+    font-size: 13px;
+    line-height: 1.6;
+    text-decoration: none;
+}
+
+.sx-shell-profile__toggle::after {
+    display: none;
+}
+
+.sx-shell-profile__toggle:hover,
+.sx-shell-profile__toggle:focus-visible,
+.sx-shell-profile.show .sx-shell-profile__toggle {
+    color: var(--sx-shell-header-color);
+    background: var(--sx-shell-header-action-background);
+    text-decoration: none;
+}
+
+.sx-shell-profile__toggle:focus-visible {
+    outline: 3px solid var(--sx-color-focus-ring);
+    outline-offset: 2px;
+}
+
+.sx-shell-profile__avatar {
+    display: block;
+    width: var(--sx-shell-header-profile-avatar-size, 31px);
+    height: var(--sx-shell-header-profile-avatar-size, 31px);
+    flex: 0 0 var(--sx-shell-header-profile-avatar-size, 31px);
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.sx-shell-profile__label {
+    white-space: nowrap;
+}
+
+.sx-shell-profile__chevron {
+    font-size: var(--sx-shell-header-profile-chevron-size, 10px);
+}
+
+.sx-shell-profile__toggle {
+    display: inline-flex;
+    min-height: var(--sx-shell-header-action-height, 40px);
+    align-items: center;
+    gap: var(--sx-shell-header-profile-gap, 9px);
+    padding: var(--sx-shell-header-profile-padding, 4px 8px 4px 5px);
+    border-radius: var(--sx-radius-control, 8px);
+    color: var(--sx-shell-header-muted);
+    font-size: 13px;
+    line-height: 1.6;
+    text-decoration: none;
+}
+
+.sx-shell-profile__toggle::after {
+    display: none;
+}
+
+.sx-shell-profile__toggle:hover,
+.sx-shell-profile__toggle:focus-visible,
+.sx-shell-profile.show .sx-shell-profile__toggle {
+    color: var(--sx-shell-header-color);
+    background: var(--sx-shell-header-action-background);
+    text-decoration: none;
+}
+
+.sx-shell-profile__toggle:focus-visible {
+    outline: 3px solid var(--sx-color-focus-ring);
+    outline-offset: 2px;
+}
+
+.sx-shell-profile__avatar {
+    display: block;
+    width: var(--sx-shell-header-profile-avatar-size, 31px);
+    height: var(--sx-shell-header-profile-avatar-size, 31px);
+    flex: 0 0 var(--sx-shell-header-profile-avatar-size, 31px);
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.sx-shell-profile__label {
+    white-space: nowrap;
+}
+
+.sx-shell-profile__chevron {
+    font-size: var(--sx-shell-header-profile-chevron-size, 10px);
+}
+
 
 .sx-header-logo-toggler .navbar-brand img {
     max-height: 50px;
@@ -166,15 +329,31 @@ html[data-sx-theme="dark"] .sx-shell-header__surface:not([data-sx-header-preview
 }
 
 .sx-header .sx-avatar {
-    height: 40px;
-    width: 40px;
+    height: var(--sx-shell-header-avatar-size, 40px);
+    width: var(--sx-shell-header-avatar-size, 40px);
     margin-right: 10px;
 }
 
 .sx-shell-header__mobile-button {
-    padding-right: 0;
-    padding-left: 0;
+    display: inline-flex;
+    width: var(--sx-shell-header-action-height, 40px);
+    height: var(--sx-shell-header-action-height, 40px);
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    border: 0;
+    border-radius: var(--sx-radius-control, 8px);
+    color: var(--sx-shell-header-muted);
+    background: transparent;
+    font: inherit;
+    cursor: pointer;
     vertical-align: middle;
+}
+
+.sx-shell-header__mobile-button:hover,
+.sx-shell-header__mobile-button:focus-visible {
+    color: var(--sx-shell-header-color);
+    background: var(--sx-shell-header-action-background);
 }
 
 .sx-shell-header__avatar,
@@ -415,6 +594,28 @@ html[data-sx-theme="dark"] .sx-shell-header__surface:not([data-sx-header-preview
     }
 
 
+}
+
+@media (max-width: 575.98px) {
+    .sx-shell-header__nav {
+        padding-right: 15px;
+        padding-left: 15px;
+    }
+
+    .sx-shell-header__brand-caption,
+    .sx-shell-header__action span {
+        display: none;
+    }
+
+    .sx-shell-header__actions {
+        gap: 3px;
+    }
+
+    .sx-shell-header__action {
+        width: 38px;
+        height: 38px;
+        padding: 0;
+    }
 }
 
 @media (max-width: 575.98px) {

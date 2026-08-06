@@ -142,6 +142,23 @@
     --sx-shell-header-divider-color: var(--sx-color-border);
     --sx-shell-header-shadow: 0 1px 0 var(--sx-color-border);
     --sx-shell-header-menu-shadow: 0 14px 28px rgba(0, 0, 0, .22);
+    --sx-shell-header-inline-padding: 24px;
+    --sx-shell-header-brand-gap: 12px;
+    --sx-shell-header-actions-gap: 12px;
+    --sx-shell-header-caption-margin: 12px;
+    --sx-shell-header-caption-padding: 12px;
+    --sx-shell-header-action-height: 40px;
+    --sx-shell-header-action-inline-padding: 12px;
+    --sx-shell-header-icon-size: 20px;
+    --sx-shell-header-avatar-size: 40px;
+    --sx-shell-header-profile-padding: 4px 8px 4px 5px;
+    --sx-shell-header-profile-gap: 9px;
+    --sx-shell-header-profile-avatar-size: 31px;
+    --sx-shell-header-profile-chevron-size: 10px;
+    --sx-shell-header-profile-padding: 4px 8px 4px 5px;
+    --sx-shell-header-profile-gap: 9px;
+    --sx-shell-header-profile-avatar-size: 31px;
+    --sx-shell-header-profile-chevron-size: 10px;
     --sx-shell-header-dark-background: #111620;
     --sx-shell-header-dark-color: #f2f5fa;
     --sx-shell-header-dark-muted: #8f9bb2;
@@ -181,11 +198,22 @@
     --sx-shell-sidebar-active-background: var(--sx-color-accent-soft);
     --sx-shell-sidebar-special-background: var(--sx-color-accent);
     --sx-shell-sidebar-special-color: var(--sx-color-accent-contrast);
+    --sx-shell-sidebar-comfortable-padding: 40px 15px 20px;
+    --sx-shell-sidebar-comfortable-mobile-padding: 16px 15px 20px;
+    --sx-shell-sidebar-item-gap: 3px;
+    --sx-shell-sidebar-link-padding: 10px 12px;
+    --sx-shell-sidebar-nested-link-padding: 8px 12px 8px 20px;
+    --sx-shell-sidebar-support-margin: 24px 5px 0;
+    --sx-shell-sidebar-support-padding: 15px;
     --sx-shell-main-end-gutter: 64px;
     --sx-shell-content-max-width: none;
     --sx-shell-content-padding: 10px 15px;
     --sx-shell-main-bottom-padding: 65px;
     --sx-shell-mobile-content-top-padding: 90px;
+    --sx-shell-footer-gap: 24px;
+    --sx-shell-footer-link-gap: 18px;
+    --sx-shell-footer-padding: 18px 34px 28px;
+    --sx-shell-footer-mobile-padding: 18px 15px 24px;
 
     --sx-loading-overlay-background: linear-gradient(
         100deg,

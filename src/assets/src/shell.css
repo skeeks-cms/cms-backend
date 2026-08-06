@@ -852,6 +852,34 @@ a:hover {
     text-decoration: none;
 }
 
+.sx-shell-footer--centered {
+    display: flex;
+    width: 100%;
+    max-width: var(--sx-shell-content-max-width, none);
+    align-items: center;
+    justify-content: center;
+    gap: var(--sx-shell-footer-gap, 24px);
+    margin-right: auto;
+    margin-left: auto;
+    padding: var(--sx-shell-footer-padding, 18px 34px 28px);
+    color: var(--sx-color-text-muted);
+    font-size: 12px;
+}
+
+.sx-shell-footer--centered .sx-shell-footer__links {
+    display: flex;
+    gap: var(--sx-shell-footer-link-gap, 18px);
+}
+
+.sx-shell-footer--centered a {
+    color: var(--sx-color-text-muted) !important;
+}
+
+.sx-shell-footer--centered a:hover,
+.sx-shell-footer--centered a:focus-visible {
+    color: var(--sx-color-accent) !important;
+}
+
 .sx-shell-footer--sticky {
     position: absolute;
     bottom: 0;
@@ -881,6 +909,15 @@ table.sx-table thead tr th {
 
 table.sx-table > tbody > tr:hover > td {
     background-color: var(--sx-collection-row-hover);
+}
+
+@media (max-width: 575.98px) {
+    .sx-shell-footer--centered {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 10px;
+        padding: var(--sx-shell-footer-mobile-padding, 18px 15px 24px);
+    }
 }
 
 
