@@ -307,6 +307,7 @@
         var saveButton = layer.querySelector('[data-sx-theme-customizer-save]');
         var saveDefaultButton = layer.querySelector('[data-sx-theme-customizer-save-default]');
         var resetButton = layer.querySelector('[data-sx-theme-customizer-reset]');
+        var resetDefaultButton = layer.querySelector('[data-sx-theme-customizer-reset-default]');
         var config = {};
         var snapshots = {};
         var drafts = {};
@@ -571,6 +572,17 @@
         resetButton.addEventListener('click', function () {
             request(config.resetUrl, currentMode(), {});
         });
+        if (resetDefaultButton) {
+            resetDefaultButton.addEventListener('click', function () {
+                if (!window.confirm(
+                    config.resetDefaultConfirm
+                    || (resetDefaultButton.textContent.trim() + '?')
+                )) {
+                    return;
+                }
+                request(config.resetDefaultUrl, currentMode(), {});
+            });
+        }
 
         document.addEventListener('keydown', function (event) {
             if (!isOpen) {

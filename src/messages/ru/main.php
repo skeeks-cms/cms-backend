@@ -6,6 +6,8 @@
  * @date 21.03.2017
  */
 return [
+    'Reset for everyone' => 'Сбросить для всех',
+    'Reset shared settings for this color scheme?' => 'Сбросить общие настройки выбранной цветовой схемы?',
     'Administration' => 'Админка',
     'Client cabinet' => 'Личный кабинет',
     'Customize theme' => 'Настроить тему',

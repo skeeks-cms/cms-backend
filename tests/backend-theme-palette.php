@@ -246,6 +246,11 @@ if (strpos($previewRuntime, 'gradientContrast(') === false) {
 if (strpos($previewRuntime, 'body.scrollTop = 0;') === false) {
     throw new RuntimeException('Theme customizer must reopen at the beginning of its field list.');
 }
+if (strpos($customizerView, 'data-sx-theme-customizer-reset-default') === false
+    || strpos($previewRuntime, 'config.resetDefaultUrl') === false
+    || strpos($previewRuntime, 'config.resetDefaultConfirm') === false) {
+    throw new RuntimeException('Theme customizer must expose the protected shared-palette reset action.');
+}
 
 $css = $palette->toCss();
 expectSame(

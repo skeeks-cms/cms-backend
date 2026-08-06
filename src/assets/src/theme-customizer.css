@@ -278,6 +278,14 @@
     gap: 8px;
 }
 
+.sx-theme-customizer__footer-resets {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
 .sx-theme-customizer__footer-actions > :only-child {
     grid-column: 2;
 }
@@ -310,6 +318,7 @@ body.sx-theme-customizer-is-open {
     }
 
     .sx-theme-customizer__footer button,
+    .sx-theme-customizer__footer-resets,
     .sx-theme-customizer__footer-actions {
         width: 100%;
     }

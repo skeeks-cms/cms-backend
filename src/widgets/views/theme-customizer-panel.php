@@ -135,9 +135,16 @@ $fields = [
         </div>
 
         <footer class="sx-theme-customizer__footer">
-            <button class="sx-button sx-button--secondary sx-button--sm sx-theme-customizer__reset" type="button" data-sx-theme-customizer-reset>
-                <?= Html::encode(\Yii::t('skeeks/backend', 'Reset my settings')); ?>
-            </button>
+            <div class="sx-theme-customizer__footer-resets">
+                <button class="sx-button sx-button--secondary sx-button--sm sx-theme-customizer__reset" type="button" data-sx-theme-customizer-reset>
+                    <?= Html::encode(\Yii::t('skeeks/backend', 'Reset my settings')); ?>
+                </button>
+                <?php if (!empty($customizer['canApplyDefault']) && !empty($customizer['resetDefaultUrl'])) : ?>
+                    <button class="sx-button sx-button--secondary sx-button--sm" type="button" data-sx-theme-customizer-reset-default>
+                        <?= Html::encode(\Yii::t('skeeks/backend', 'Reset for everyone')); ?>
+                    </button>
+                <?php endif; ?>
+            </div>
             <div class="sx-theme-customizer__footer-actions">
                 <?php if (!empty($customizer['canApplyDefault']) && !empty($customizer['saveDefaultUrl'])) : ?>
                     <button class="sx-button sx-button--secondary sx-button--sm" type="button" data-sx-theme-customizer-save-default>
