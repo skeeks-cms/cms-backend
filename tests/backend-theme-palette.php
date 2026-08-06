@@ -159,11 +159,40 @@ $dark = $palette->toCssVariables('dark');
 
 expectSame('#0066cc', $light['--sx-color-accent'], 'Short hex colors must be normalized.');
 expectSame('#005cb8', $light['--sx-color-accent-hover'], 'Accent hover must be generated.');
+expectSame(
+    '#005cb8',
+    $light['--sx-color-accent-secondary'],
+    'A stored one-color palette must use the generated hover color as its compatible second stop.'
+);
 expectSame('#ffffff', $light['--sx-color-accent-contrast'], 'Readable accent contrast must be generated.');
+expectSame(
+    '#ffffff',
+    $light['--sx-color-accent-gradient-contrast'],
+    'Gradient contrast must be calculated against both stops.'
+);
 expectSame(
     BackendThemePalette::DEFAULT_OUTPUT['dark'],
     $dark,
     'Changing the light palette must not alter dark defaults.'
+);
+
+$twoAccentPalette = new BackendThemePalette([
+    'light' => [
+        'accent' => '#28d745',
+        'accentSecondary' => '#efd740',
+    ],
+]);
+$twoAccentLight = $twoAccentPalette->toCssVariables('light');
+expectSame('#28d745', $twoAccentLight['--sx-color-accent'], 'The primary accent must remain editable.');
+expectSame(
+    '#efd740',
+    $twoAccentLight['--sx-color-accent-secondary'],
+    'The secondary accent must remain an independent editable gradient stop.'
+);
+expectSame(
+    '#10141a',
+    $twoAccentLight['--sx-color-accent-gradient-contrast'],
+    'A light two-color gradient must select dark readable text.'
 );
 
 $surfacePalette = new BackendThemePalette([
@@ -210,6 +239,9 @@ foreach (['success', 'warning', 'danger'] as $status) {
 if (strpos($previewRuntime, "accessibleForeground(draft[key], soft)") === false
     || strpos($previewRuntime, "accessibleForeground(draft[key], draft.surface)") === false) {
     throw new RuntimeException('Live preview must regenerate accessible status foregrounds.');
+}
+if (strpos($previewRuntime, 'gradientContrast(') === false) {
+    throw new RuntimeException('Live preview must regenerate contrast for both accent gradient stops.');
 }
 if (strpos($previewRuntime, 'body.scrollTop = 0;') === false) {
     throw new RuntimeException('Theme customizer must reopen at the beginning of its field list.');

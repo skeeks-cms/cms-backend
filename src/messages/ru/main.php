@@ -21,6 +21,7 @@ return [
     'Changes are previewed immediately and are not saved until you choose an action below.' => 'Изменения видны сразу и сохранятся только после выбора действия внизу.',
     'Brand and accent' => 'Бренд и акцент',
     'Accent' => 'Акцент',
+    'Secondary accent' => 'Дополнительный акцент',
     'Surfaces' => 'Поверхности',
     'Page background' => 'Фон страницы',
     'Main surface' => 'Основная поверхность',

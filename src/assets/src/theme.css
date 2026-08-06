@@ -15,14 +15,15 @@
      * Public theme palette. Projects and future user theme editors should
      * override this small semantic facade instead of component-level tokens.
      */
-    --sx-color-accent: #ed7044;
-    --sx-color-accent-hover: #d95a32;
-    --sx-color-accent-active: #d95a32;
+    --sx-color-accent: #ee4d7d;
+    --sx-color-accent-secondary: #efd740;
+    --sx-color-accent-hover: #d64571;
+    --sx-color-accent-active: #d64571;
     --sx-color-accent-contrast: #10141a;
-    --sx-color-accent-soft: #fff4ea;
-    --sx-color-accent-border: #f0b9a6;
-    /* Optional branded fill; component tokens fall back to the solid accent states. */
-    --sx-color-accent-gradient: initial;
+    --sx-color-accent-gradient-contrast: #10141a;
+    --sx-color-accent-soft: #fdedf2;
+    --sx-color-accent-border: #f8b4c8;
+    --sx-color-accent-gradient: linear-gradient(135deg, var(--sx-color-accent) 0%, var(--sx-color-accent-secondary, var(--sx-color-accent-hover)) 100%);
 
     --sx-color-canvas: #eef2f4;
     --sx-color-canvas-translucent: rgba(238, 242, 244, .58);
@@ -36,7 +37,7 @@
     --sx-color-text-subtle: #707583;
     --sx-color-border: #dedede;
     --sx-color-border-strong: #c2c2c2;
-    --sx-color-focus-ring: rgba(237, 112, 68, .28);
+    --sx-color-focus-ring: rgba(238, 77, 125, .28);
 
     --sx-color-success: #23754a;
     --sx-color-success-hover: #1b633e;
@@ -144,17 +145,15 @@
     --sx-shell-header-menu-shadow: 0 14px 28px rgba(0, 0, 0, .22);
     --sx-shell-header-inline-padding: 24px;
     --sx-shell-header-brand-gap: 12px;
+    --sx-shell-header-context-gap: 44px;
     --sx-shell-header-actions-gap: 12px;
     --sx-shell-header-caption-margin: 12px;
     --sx-shell-header-caption-padding: 12px;
     --sx-shell-header-action-height: 40px;
     --sx-shell-header-action-inline-padding: 12px;
+    --sx-shell-header-action-radius: 8px;
     --sx-shell-header-icon-size: 20px;
     --sx-shell-header-avatar-size: 40px;
-    --sx-shell-header-profile-padding: 4px 8px 4px 5px;
-    --sx-shell-header-profile-gap: 9px;
-    --sx-shell-header-profile-avatar-size: 31px;
-    --sx-shell-header-profile-chevron-size: 10px;
     --sx-shell-header-profile-padding: 4px 8px 4px 5px;
     --sx-shell-header-profile-gap: 9px;
     --sx-shell-header-profile-avatar-size: 31px;
@@ -286,16 +285,16 @@
     --sx-control-height-md: 40px;
     --sx-control-height-lg: 44px;
 
-    --sx-button-height-sm: var(--sx-control-height-sm);
-    --sx-button-height-md: var(--sx-control-height-md);
-    --sx-button-height-lg: var(--sx-control-height-lg);
-    --sx-button-radius: var(--sx-radius-control);
+    --sx-button-height-sm: 32px;
+    --sx-button-height-md: 42px;
+    --sx-button-height-lg: 44px;
+    --sx-button-radius: 8px;
     --sx-button-gap: 8px;
     --sx-button-group-gap: 8px;
-    --sx-button-font-weight: 400;
+    --sx-button-font-weight: 600;
     --sx-button-font-size: 14px;
     --sx-button-line-height: 1.35;
-    --sx-button-padding-y: 8px;
+    --sx-button-padding-y: 9px;
     --sx-button-padding-x: 14px;
     --sx-button-transition-duration: 180ms;
     --sx-button-transition-easing: cubic-bezier(.22, 1, .36, 1);
@@ -307,23 +306,23 @@
     --sx-button-primary-background: var(--sx-color-accent-gradient, var(--sx-color-accent));
     --sx-button-primary-hover-background: var(--sx-color-accent-gradient, var(--sx-color-accent-hover));
     --sx-button-primary-active-background: var(--sx-color-accent-gradient, var(--sx-color-accent-active));
-    --sx-button-primary-border-color: var(--sx-color-accent);
-    --sx-button-primary-hover-border-color: var(--sx-color-accent-hover);
-    --sx-button-primary-active-border-color: var(--sx-color-accent-active);
-    --sx-button-primary-border-width: 1px;
-    --sx-button-primary-color: var(--sx-color-accent-contrast);
-    --sx-button-primary-shadow: none;
-    --sx-button-primary-hover-shadow: var(--sx-button-primary-shadow);
-    --sx-button-primary-active-shadow: var(--sx-button-primary-shadow);
-    --sx-button-primary-hover-filter: none;
-    --sx-button-primary-active-filter: none;
-    --sx-button-secondary-background: transparent;
-    --sx-button-secondary-hover-background: var(--sx-color-surface-hover);
+    --sx-button-primary-border-color: transparent;
+    --sx-button-primary-hover-border-color: transparent;
+    --sx-button-primary-active-border-color: transparent;
+    --sx-button-primary-border-width: 0;
+    --sx-button-primary-color: var(--sx-color-accent-gradient-contrast, var(--sx-color-accent-contrast));
+    --sx-button-primary-shadow: 0 5px 14px color-mix(in srgb, var(--sx-color-accent) 16%, transparent);
+    --sx-button-primary-hover-shadow: 0 7px 18px color-mix(in srgb, var(--sx-color-accent) 22%, transparent);
+    --sx-button-primary-active-shadow: 0 2px 7px color-mix(in srgb, var(--sx-color-accent) 20%, transparent);
+    --sx-button-primary-hover-filter: brightness(.95);
+    --sx-button-primary-active-filter: brightness(.9);
+    --sx-button-secondary-background: var(--sx-color-surface);
+    --sx-button-secondary-hover-background: var(--sx-color-accent-soft);
     --sx-button-secondary-active-background: var(--sx-color-accent-soft);
     --sx-button-secondary-color: var(--sx-color-text);
-    --sx-button-secondary-border-color: var(--sx-color-border-strong);
+    --sx-button-secondary-border-color: var(--sx-color-border);
     --sx-button-secondary-hover-color: var(--sx-color-accent);
-    --sx-button-secondary-hover-border-color: var(--sx-color-accent);
+    --sx-button-secondary-hover-border-color: var(--sx-color-accent-border);
     --sx-button-secondary-active-color: var(--sx-color-accent-active);
     --sx-button-secondary-active-border-color: var(--sx-color-accent-active);
     --sx-button-danger-background: var(--sx-color-danger);
@@ -770,12 +769,14 @@ html[data-sx-theme="light"] {
 html[data-sx-theme="dark"] {
     color-scheme: dark;
 
-    --sx-color-accent: #f08a62;
-    --sx-color-accent-hover: #ff9d79;
-    --sx-color-accent-active: #ff9d79;
+    --sx-color-accent: #f06f91;
+    --sx-color-accent-secondary: #efd740;
+    --sx-color-accent-hover: #f2809e;
+    --sx-color-accent-active: #f2809e;
     --sx-color-accent-contrast: #10141a;
-    --sx-color-accent-soft: #3b2b27;
-    --sx-color-accent-border: #84523f;
+    --sx-color-accent-gradient-contrast: #10141a;
+    --sx-color-accent-soft: #422d3a;
+    --sx-color-accent-border: #7f4458;
 
     --sx-color-canvas: #11151b;
     --sx-color-canvas-translucent: rgba(17, 21, 27, .78);
@@ -789,7 +790,7 @@ html[data-sx-theme="dark"] {
     --sx-color-text-subtle: #7f8998;
     --sx-color-border: #2c343f;
     --sx-color-border-strong: #414b59;
-    --sx-color-focus-ring: rgba(240, 138, 98, .34);
+    --sx-color-focus-ring: rgba(240, 111, 145, .34);
     --sx-theme-customizer-backdrop-background: rgba(0, 0, 0, .24);
 
     --sx-color-success: #6fce9b;

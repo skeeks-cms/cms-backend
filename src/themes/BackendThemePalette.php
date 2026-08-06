@@ -24,6 +24,7 @@ class BackendThemePalette
     /** Stable storage schema for a user-editable palette. */
     const INPUT_KEYS = [
         'accent',
+        'accentSecondary',
         'canvas',
         'surface',
         'surfaceMuted',
@@ -37,7 +38,8 @@ class BackendThemePalette
 
     const DEFAULT_INPUT = [
         self::MODE_LIGHT => [
-            'accent'       => '#ed7044',
+            'accent'       => '#ee4d7d',
+            'accentSecondary' => '#efd740',
             'canvas'       => '#eef2f4',
             'surface'      => '#ffffff',
             'surfaceMuted' => '#f9f9f9',
@@ -49,7 +51,8 @@ class BackendThemePalette
             'danger'       => '#bd4348',
         ],
         self::MODE_DARK => [
-            'accent'       => '#f08a62',
+            'accent'       => '#f06f91',
+            'accentSecondary' => '#efd740',
             'canvas'       => '#11151b',
             'surface'      => '#171c24',
             'surfaceMuted' => '#1d232c',
@@ -68,12 +71,14 @@ class BackendThemePalette
      */
     const DEFAULT_OUTPUT = [
         self::MODE_LIGHT => [
-            '--sx-color-accent'             => '#ed7044',
-            '--sx-color-accent-hover'       => '#d95a32',
-            '--sx-color-accent-active'      => '#d95a32',
+            '--sx-color-accent'             => '#ee4d7d',
+            '--sx-color-accent-secondary'   => '#efd740',
+            '--sx-color-accent-hover'       => '#d64571',
+            '--sx-color-accent-active'      => '#d64571',
             '--sx-color-accent-contrast'    => '#10141a',
-            '--sx-color-accent-soft'        => '#fff4ea',
-            '--sx-color-accent-border'      => '#f0b9a6',
+            '--sx-color-accent-gradient-contrast' => '#10141a',
+            '--sx-color-accent-soft'        => '#fdedf2',
+            '--sx-color-accent-border'      => '#f8b4c8',
             '--sx-color-canvas'             => '#eef2f4',
             '--sx-color-canvas-translucent' => 'rgba(238, 242, 244, .58)',
             '--sx-color-surface'            => '#fff',
@@ -85,7 +90,7 @@ class BackendThemePalette
             '--sx-color-text-subtle'        => '#707583',
             '--sx-color-border'             => '#dedede',
             '--sx-color-border-strong'      => '#c2c2c2',
-            '--sx-color-focus-ring'         => 'rgba(237, 112, 68, .28)',
+            '--sx-color-focus-ring'         => 'rgba(238, 77, 125, .28)',
             '--sx-color-success'            => '#23754a',
             '--sx-color-success-hover'      => '#1b633e',
             '--sx-color-success-soft'       => '#eef9f3',
@@ -108,12 +113,14 @@ class BackendThemePalette
             '--sx-color-info-soft'          => 'var(--sx-color-accent-soft)',
         ],
         self::MODE_DARK => [
-            '--sx-color-accent'             => '#f08a62',
-            '--sx-color-accent-hover'       => '#ff9d79',
-            '--sx-color-accent-active'      => '#ff9d79',
+            '--sx-color-accent'             => '#f06f91',
+            '--sx-color-accent-secondary'   => '#efd740',
+            '--sx-color-accent-hover'       => '#f2809e',
+            '--sx-color-accent-active'      => '#f2809e',
             '--sx-color-accent-contrast'    => '#10141a',
-            '--sx-color-accent-soft'        => '#3b2b27',
-            '--sx-color-accent-border'      => '#84523f',
+            '--sx-color-accent-gradient-contrast' => '#10141a',
+            '--sx-color-accent-soft'        => '#422d3a',
+            '--sx-color-accent-border'      => '#7f4458',
             '--sx-color-canvas'             => '#11151b',
             '--sx-color-canvas-translucent' => 'rgba(17, 21, 27, .78)',
             '--sx-color-surface'            => '#171c24',
@@ -125,7 +132,7 @@ class BackendThemePalette
             '--sx-color-text-subtle'        => '#7f8998',
             '--sx-color-border'             => '#2c343f',
             '--sx-color-border-strong'      => '#414b59',
-            '--sx-color-focus-ring'         => 'rgba(240, 138, 98, .34)',
+            '--sx-color-focus-ring'         => 'rgba(240, 111, 145, .34)',
             '--sx-color-success'            => '#6fce9b',
             '--sx-color-success-hover'      => '#83d8a9',
             '--sx-color-success-soft'       => '#1d3a2c',
@@ -264,12 +271,29 @@ class BackendThemePalette
     private function expandAccent(array &$output, array $input, $mode, $isDark)
     {
         $accentChanged = $input['accent'] !== self::DEFAULT_INPUT[$mode]['accent'];
+        $accentWasConfigured = array_key_exists('accent', $this->_input[$mode]);
+        $secondaryWasConfigured = array_key_exists('accentSecondary', $this->_input[$mode]);
+        $accentSecondary = $secondaryWasConfigured
+            ? $input['accentSecondary']
+            : ($accentWasConfigured
+                ? $this->adjust($input['accent'], $isDark ? .12 : -.10)
+                : self::DEFAULT_INPUT[$mode]['accentSecondary']);
+        $secondaryChanged = $accentSecondary !== self::DEFAULT_INPUT[$mode]['accentSecondary'];
         $surfaceChanged = $input['surface'] !== self::DEFAULT_INPUT[$mode]['surface'];
-        if (!$accentChanged && !$surfaceChanged) {
+        if (!$accentChanged && !$secondaryChanged && !$surfaceChanged) {
             return;
         }
 
         $accent = $input['accent'];
+        if ($secondaryChanged) {
+            $output['--sx-color-accent-secondary'] = $accentSecondary;
+        }
+        if ($accentChanged || $secondaryChanged) {
+            $output['--sx-color-accent-gradient-contrast'] = $this->gradientContrast(
+                $accent,
+                $accentSecondary
+            );
+        }
         if ($accentChanged) {
             $output['--sx-color-accent'] = $accent;
             $output['--sx-color-accent-hover'] = $this->adjust($accent, $isDark ? .12 : -.10);
@@ -440,6 +464,22 @@ class BackendThemePalette
 
         return (max($firstLuminance, $secondLuminance) + .05)
             / (min($firstLuminance, $secondLuminance) + .05);
+    }
+
+    private function gradientContrast($first, $second)
+    {
+        $dark = '#10141a';
+        $light = '#ffffff';
+        $darkScore = min(
+            $this->contrastRatio($dark, $first),
+            $this->contrastRatio($dark, $second)
+        );
+        $lightScore = min(
+            $this->contrastRatio($light, $first),
+            $this->contrastRatio($light, $second)
+        );
+
+        return $darkScore >= $lightScore ? $dark : $light;
     }
 
     private function relativeLuminance($hex)

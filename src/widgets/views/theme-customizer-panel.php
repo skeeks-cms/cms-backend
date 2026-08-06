@@ -13,7 +13,8 @@ $scopeLabel = $scope === 'upa'
 $titleId = 'sx-theme-customizer-title-'.$scope;
 $fields = [
     \Yii::t('skeeks/backend', 'Brand and accent') => [
-        'accent' => \Yii::t('skeeks/backend', 'Accent'),
+        'accent'          => \Yii::t('skeeks/backend', 'Accent'),
+        'accentSecondary' => \Yii::t('skeeks/backend', 'Secondary accent'),
     ],
     \Yii::t('skeeks/backend', 'Surfaces') => [
         'canvas'       => \Yii::t('skeeks/backend', 'Page background'),

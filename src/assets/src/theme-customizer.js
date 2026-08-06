@@ -5,6 +5,7 @@
     var previewStyleId = 'sx-theme-customizer-preview';
     var baseVariables = {
         accent: '--sx-color-accent',
+        accentSecondary: '--sx-color-accent-secondary',
         canvas: '--sx-color-canvas',
         surface: '--sx-color-surface',
         surfaceMuted: '--sx-color-surface-muted',
@@ -17,9 +18,11 @@
     };
     var outputNames = [
         '--sx-color-accent',
+        '--sx-color-accent-secondary',
         '--sx-color-accent-hover',
         '--sx-color-accent-active',
         '--sx-color-accent-contrast',
+        '--sx-color-accent-gradient-contrast',
         '--sx-color-accent-soft',
         '--sx-color-accent-border',
         '--sx-color-canvas',
@@ -136,6 +139,21 @@
             / (Math.min(firstLuminance, secondLuminance) + .05);
     };
 
+    var gradientContrast = function (first, second) {
+        var dark = '#10141a';
+        var light = '#ffffff';
+        var darkScore = Math.min(
+            contrastRatio(dark, first),
+            contrastRatio(dark, second)
+        );
+        var lightScore = Math.min(
+            contrastRatio(light, first),
+            contrastRatio(light, second)
+        );
+
+        return darkScore >= lightScore ? dark : light;
+    };
+
     var accessibleForeground = function (foreground, background) {
         if (contrastRatio(foreground, background) >= 4.5) {
             return foreground;
@@ -162,6 +180,7 @@
         var output = clone(snapshot.output);
         var isDark = mode === 'dark';
         var accentChanged = draft.accent !== initial.accent;
+        var accentSecondaryChanged = draft.accentSecondary !== initial.accentSecondary;
         var surfaceChanged = draft.surface !== initial.surface;
         var textChanged = draft.text !== initial.text;
 
@@ -174,6 +193,12 @@
             output['--sx-color-accent-active'] = output['--sx-color-accent-hover'];
             output['--sx-color-accent-contrast'] = contrast(draft.accent);
             output['--sx-color-focus-ring'] = rgba(draft.accent, isDark ? '.34' : '.28');
+        }
+        if (accentChanged || accentSecondaryChanged) {
+            output['--sx-color-accent-gradient-contrast'] = gradientContrast(
+                draft.accent,
+                draft.accentSecondary
+            );
         }
         if (accentChanged || surfaceChanged) {
             output['--sx-color-accent-soft'] = mix(draft.accent, draft.surface, isDark ? .20 : .10);

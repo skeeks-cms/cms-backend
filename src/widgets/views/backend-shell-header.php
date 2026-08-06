@@ -20,7 +20,7 @@ echo Html::beginTag('div', $surfaceOptions);
 echo Html::beginTag('nav', $navOptions);
 
 echo Html::tag('div', $brand, $brandOptions);
-if ($context !== '') {
+if (trim($context) !== '') {
     echo Html::tag('div', $context, $contextOptions);
 }
 echo Html::tag('div', $actions . $profile, $actionsOptions);
