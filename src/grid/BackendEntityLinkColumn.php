@@ -18,6 +18,9 @@ class BackendEntityLinkColumn extends DataColumn
     /** @var string Backend controller route, for example /shop/admin-pay-system. */
     public $controllerId;
 
+    /** @var string|null Explicit action; null opens the first available action by priority. */
+    public $action;
+
     /** @var string Attribute used as the BackendEntityLink model id. */
     public $modelIdAttribute = 'id';
 
@@ -71,6 +74,7 @@ class BackendEntityLinkColumn extends DataColumn
 
         return BackendEntityLink::widget([
             'controllerId' => $this->controllerId,
+            'action'       => $this->action,
             'modelId'      => $model->{$this->modelIdAttribute},
             'label'        => (string)$label,
             'content'      => $content,

@@ -85,11 +85,12 @@ For a primary grid title, prefer the explicit column:
 ```
 
 For composed markup, use `BackendEntityLink::widget()` with `label` for plain
-text or `content` only for deliberately trusted HTML. It always keeps a normal
-`/view?pk=...` fallback and progressively opens the safe read-only `view` card
-in the shared drawer. `BackendModelStandartController` supplies that card by
-default. Never infer the drawer action from action order and never make delete
-the entity-link action.
+text or `content` only for deliberately trusted HTML. By default the enhanced
+click loads the target controller's available model actions, respects their
+`priority` order and opens the first one. Pass `action` only to deliberately
+override that contract. The normal no-JavaScript/new-tab fallback remains an
+explicit `url` when supplied, otherwise `update`; never select delete as a
+fallback.
 
 `DefaultActionColumn` remains a compatibility facade that derives the current
 controller and model primary key. Existing consumers may keep it; new code and

@@ -170,10 +170,12 @@ return Html::tag(
 ```
 
 When an entity has a standard backend card, use `BackendEntityLink` for its
-title. It preserves a normal `view` URL and delegates drawer behavior to the
-shared controller-actions runtime. Pass controller-specific routing values in
-`urlParams`; they are applied to both the normal fallback URL and the enhanced
-drawer request. Do not add page-local drawer JavaScript.
+title. It preserves a normal action URL and delegates drawer behavior to the
+shared controller-actions runtime. By default that runtime opens the first
+available model action after the controller's `priority` ordering; pass
+`action` only for an intentional override. Pass controller-specific routing
+values in `urlParams`; they are applied to both the normal fallback URL and the
+enhanced drawer request. Do not add page-local drawer JavaScript.
 
 In an interactive tree, keep the primary node label as that normal entity
 link. Create, sort, expand and other tree operations are explicit buttons or
@@ -258,7 +260,7 @@ The verified migration set currently contains:
   Rich legacy cells can pass deliberately trusted composed markup through the
   inherited `content` callback; extra route context belongs in `urlParams`.
   Populated measure, currency and CMS reference routes were checked with normal
-  `view` fallbacks in light, dark and mobile modes without horizontal overflow.
+  action fallbacks in light, dark and mobile modes without horizontal overflow.
 - Site phone, email, social-network and address collections use explicit
   `BackendEntityLinkColumn` routes with semantic stacked labels. Their populated
   and empty related lists were checked in light desktop and dark mobile modes
@@ -321,11 +323,13 @@ The verified migration set currently contains:
   that dependency.
 
 These entity links keep their existing presentation classes while replacing
-`href="#"` or JS-only triggers with a normal backend `view` URL. The shared
-drawer now requests the explicit safe `view` action, backed by the standard
-read-only model card when a controller does not provide a richer view. It never
-infers a destructive default from action ordering. Direct navigation is the
-keyboard, new-tab and no-JavaScript fallback.
+`href="#"` or JS-only triggers with a normal backend action URL. Ordinary link
+clicks follow the controller's first available action after priority sorting,
+so a controller-owned `view` can lead without becoming a global action. A safe
+`view` card remains opt-in and controller-owned;
+`BackendModelStandartController` does not add it globally. For direct
+navigation, new-tab and no-JavaScript use a non-destructive `update` fallback
+unless the link explicitly configures another action or URL.
 
 Known compatibility consumers still include the legacy Hosting VPS/site
 controllers that are not present in the current Admin navigation. They must be

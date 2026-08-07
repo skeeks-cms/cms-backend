@@ -3,7 +3,7 @@
 namespace skeeks\cms\backend\actions;
 
 /**
- * Safe read-only model card used as the default entity-link action.
+ * Optional safe read-only model card for controllers that explicitly enable it.
  */
 class BackendModelViewAction extends BackendModelAction
 {
