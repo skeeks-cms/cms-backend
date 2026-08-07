@@ -54,6 +54,7 @@ $surfaceWidget = file_get_contents(dirname(__DIR__).'/src/widgets/BackendSurface
 
 panelExpect(strpos($themeCss, '.sx-surface__header') !== false, 'Canonical surface structure is missing from the global theme.');
 panelExpect(strpos($themeCss, '.sx-surface--responsive') !== false, 'Responsive surface contract is missing.');
+panelExpect(strpos($uiCss, '.sx-surface-stack') !== false, 'Canonical surface stack layout is missing.');
 foreach ([$themeCss, $uiCss, $backendCss] as $globalCss) {
     panelExpect(strpos($globalCss, 'sx-panel') === false, 'Deprecated sx-panel contract leaked into global backend CSS.');
 }

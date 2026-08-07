@@ -21,6 +21,7 @@ $requiredContracts = [
     'sx-collection-cell__primary',
     'BackendSurfaceWidget',
     'sx-surface',
+    'sx-surface-stack',
     'sx-surface__header',
     'sx-block',
     'sx-panel',

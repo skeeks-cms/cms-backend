@@ -750,6 +750,12 @@ html[data-sx-theme] .sx-detail-layout__main {
     min-width: 0;
 }
 
+html[data-sx-theme] .sx-surface-stack {
+    display: grid;
+    align-content: start;
+    gap: 10px;
+}
+
 @media (max-width: 900px) {
     html[data-sx-theme] .sx-model-header--split {
         flex-direction: column;

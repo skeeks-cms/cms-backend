@@ -101,6 +101,7 @@ cross-controller links use `BackendEntityLinkColumn` with explicit parameters.
 | --- | --- | --- |
 | `BackendSurfaceWidget` | Canonical header/body/actions/footer composition for new Admin and UPA UI | Registers `BackendUiAsset` automatically |
 | `sx-surface` | Direct low-level surface or special composition that cannot use the widget | Included in `BackendUiAsset` |
+| `sx-surface-stack` | Vertical group of sibling surfaces with canonical spacing | Included in `BackendUiAsset` |
 | `sx-block`, `sx-panel` | Existing compatibility markup only | `BackendBlockAsset` / `BackendPanelAsset`; do not emit in new UI |
 
 Pass `title`, `hint`, `actions`, `content`, `footer`, `raised`, `clip`,
