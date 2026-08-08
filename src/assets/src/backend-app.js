@@ -20,6 +20,7 @@
 
             $('.sx-main-col').fadeIn();
 
+            $('[data-toggle="tooltip"]').tooltip();
 
             $(document).on('pjax:complete', function (e) {
                 $('[data-toggle="tooltip"]').tooltip();
