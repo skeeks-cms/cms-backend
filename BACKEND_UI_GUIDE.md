@@ -113,9 +113,10 @@ in project CSS. Its canonical structure is `sx-surface__header`,
 `sx-surface__actions`, `sx-surface__body` and `sx-surface__footer`.
 `BackendBlockAsset` and `BackendPanelAsset` remain deprecated functional
 compatibility bundles for installed consumers. The UPA shell must not load
-either bundle globally; the Admin shell may still load the block bundle while
-its legacy views are being migrated. Do not add either asset as a dependency
-of a new component.
+either bundle globally. The standard Admin shell no longer loads the block
+bundle globally either; an installed legacy view must register its required
+compatibility bundle explicitly. Do not add either asset as a dependency of a
+new component.
 
 ## 5. Own optional assets
 
@@ -155,6 +156,10 @@ that needs them. Compare the rendered route with `ASSET_BUDGET.md`.
   reduced motion where animation exists, and zero horizontal overflow.
 
 Cabinets use the shared shell instead of a separate global cabinet stylesheet.
+Backend products select their shared-shell theme through
+`BackendComponent::$themeClass`; do not replace the view theme from a
+`beforeRun` event. A project customizes a product backend by replacing that
+configuration value with its `BackendTheme` subclass.
 Choose `sx-shell-sidebar--comfortable` for customer navigation and keep
 `sx-shell-sidebar--default` for dense administration. Tune product geometry
 through the `--sx-shell-*` variables in `theme.css`: header padding/gaps and
