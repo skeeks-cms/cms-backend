@@ -147,6 +147,10 @@ that needs them. Compare the rendered route with `ASSET_BUDGET.md`.
   not editor inputs.
 - Use CSS Grid/flex and semantic modifiers such as `sx-surface--responsive`.
   Bootstrap utilities may remain local compatibility markup, not public API.
+- Use `sx-detail-layout` for the canonical narrow-first detail composition.
+  Add `sx-detail-layout--main-first` when the primary content is the first,
+  wide column; mark its children with `sx-detail-layout__main` and
+  `sx-detail-layout__aside` instead of recreating column ratios locally.
 - Verify focus-visible, keyboard fallback, readable semantic status contrast,
   reduced motion where animation exists, and zero horizontal overflow.
 

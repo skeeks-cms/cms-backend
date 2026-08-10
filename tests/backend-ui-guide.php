@@ -2,6 +2,7 @@
 
 $guide = file_get_contents(dirname(__DIR__).'/BACKEND_UI_GUIDE.md');
 $readme = file_get_contents(dirname(__DIR__).'/README.md');
+$uiCss = file_get_contents(dirname(__DIR__).'/src/assets/src/ui.css');
 
 function guideExpect($condition, $message)
 {
@@ -22,6 +23,7 @@ $requiredContracts = [
     'BackendSurfaceWidget',
     'sx-surface',
     'sx-surface-stack',
+    'sx-detail-layout--main-first',
     'sx-surface__header',
     'sx-block',
     'sx-panel',
@@ -54,6 +56,11 @@ guideExpect(
 guideExpect(
     strpos($guide, 'Do not commit or push without approval.') !== false,
     'Guide is missing the safe Git boundary.'
+);
+guideExpect(
+    strpos($uiCss, 'html[data-sx-theme] .sx-detail-layout--main-first') !== false
+    && strpos($uiCss, 'grid-template-columns: minmax(0, 2fr) minmax(260px, 1fr);') !== false,
+    'Main-first detail layout is missing from the shared UI contract.'
 );
 
 echo "Backend UI guide contract: OK\n";
