@@ -18,10 +18,13 @@ $action = $controller->action;
 
 
 <?php $pjax = \skeeks\cms\widgets\Pjax::begin([
-    'id' => 'sx-comments',
+    'id'      => 'sx-comments',
+    'options' => ['class' => 'sx-activity-thread'],
 ]); ?>
 
     <?php echo BackendSurfaceWidget::widget([
+        'title'    => 'Добавить комментарий',
+        'titleTag' => 'h3',
         'options' => ['class' => 'sx-model-log-comment'],
         'content' => \skeeks\cms\widgets\admin\CmsCommentWidget::widget([
             'model' => $action->model,
