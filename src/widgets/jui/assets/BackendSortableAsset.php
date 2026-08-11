@@ -11,7 +11,9 @@ use skeeks\cms\base\AssetBundle;
 use yii\web\JqueryAsset;
 
 /**
- * Selective jQuery UI modules required by Sortable.
+ * Selective jQuery UI modules retained for legacy Sortable callers.
+ *
+ * @deprecated Use BackendSortableAdapterAsset.
  */
 class BackendSortableAsset extends AssetBundle
 {
@@ -19,18 +21,8 @@ class BackendSortableAsset extends AssetBundle
 
     public $js = [
         'ui/minified/data.js',
-        'ui/minified/disable-selection.js',
-        'ui/minified/focusable.js',
-        'ui/minified/form.js',
         'ui/minified/ie.js',
-        'ui/minified/keycode.js',
-        'ui/minified/labels.js',
-        'ui/minified/plugin.js',
-        'ui/minified/safe-active-element.js',
-        'ui/minified/safe-blur.js',
         'ui/minified/scroll-parent.js',
-        'ui/minified/tabbable.js',
-        'ui/minified/unique-id.js',
         'ui/minified/version.js',
         'ui/minified/widget.js',
         'ui/widgets/mouse.js',

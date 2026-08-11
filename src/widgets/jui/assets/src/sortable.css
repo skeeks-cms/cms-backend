@@ -1,0 +1,16 @@
+.ui-sortable-handle {
+    touch-action: none;
+}
+
+.ui-sortable-helper {
+    cursor: grabbing;
+}
+
+.ui-sortable-placeholder.ui-state-highlight {
+    visibility: visible !important;
+    box-sizing: border-box;
+    border: 1px dashed var(--sx-color-accent-border, #f8b4c8);
+    border-radius: var(--sx-radius-sm, 6px);
+    background: var(--sx-color-accent-soft, #fdedf2);
+    color: transparent;
+}

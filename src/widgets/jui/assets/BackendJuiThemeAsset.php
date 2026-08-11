@@ -10,13 +10,13 @@ namespace skeeks\cms\backend\widgets\jui\assets;
 use yii\web\AssetBundle;
 
 /**
- * Compatibility theme for existing jQuery UI sortable consumers.
+ * Minimal theme contract for existing jQuery UI sortable consumers.
  */
 class BackendJuiThemeAsset extends AssetBundle
 {
-    public $sourcePath = '@bower/jquery-ui';
+    public $sourcePath = '@skeeks/cms/backend/widgets/jui/assets/src';
 
     public $css = [
-        'themes/smoothness/jquery-ui.min.css',
+        'sortable.css',
     ];
 }

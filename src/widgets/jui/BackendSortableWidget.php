@@ -13,8 +13,10 @@ use yii\helpers\Html;
 use yii\jui\Sortable;
 
 /**
- * Sortable provider that loads only the jQuery UI modules required by
- * backend collections and avoids the full bundle's Bootstrap tooltip clash.
+ * Legacy Sortable provider that loads only the jQuery UI modules required by
+ * extensions which have not migrated to the backend SortableJS adapter.
+ *
+ * @deprecated Use BackendSortableAdapterAsset and sx.backend.sortable.create().
  */
 class BackendSortableWidget extends Sortable
 {

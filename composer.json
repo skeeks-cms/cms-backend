@@ -21,6 +21,7 @@
         "skeeks/yii2-bootstrap4": "^2.0.0 || dev-master",
         "skeeks/yii2-ajax-pager": "^2.0",
         "fortawesome/font-awesome": "^5.9.0",
+        "npm-asset/sortablejs": "^1.15.7",
         "yiisoft/yii2-jui": "~2.0.0"
     },
     "autoload": {

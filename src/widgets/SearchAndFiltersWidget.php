@@ -11,6 +11,7 @@ use skeeks\cms\backend\widgets\assets\BackendFiltersWidgetAsset;
 use skeeks\cms\backend\widgets\assets\BackendSearchAndFiltersWidgetAsset;
 use skeeks\cms\backend\widgets\filters\ActiveField;
 use skeeks\cms\backend\widgets\filters\Bootstrap4InlineActiveField;
+use skeeks\cms\backend\widgets\sortable\assets\BackendSortableAdapterAsset;
 use skeeks\cms\helpers\RequestResponse;
 use skeeks\cms\queryfilters\QueryFiltersWidget;
 use yii\bootstrap\ActiveForm;
@@ -132,11 +133,15 @@ class SearchAndFiltersWidget extends QueryFiltersWidget
 
         }
 
+        $canManageBackendShowings = $this->canManageBackendShowings;
         $jsOptions = Json::encode([
-            'id' => $this->id,
+            'id'                       => $this->id,
+            'canManageBackendShowings' => $canManageBackendShowings,
         ]);
 
-        \yii\jui\Sortable::widget();
+        if ($canManageBackendShowings) {
+            BackendSortableAdapterAsset::register($this->view);
+        }
 
         $this->view->registerJs(<<<JS
 (function(sx, $, _)
@@ -258,22 +263,17 @@ class SearchAndFiltersWidget extends QueryFiltersWidget
                 
             });*/
             
-            this._initSortable();
+            if (this.get('canManageBackendShowings')) {
+                this._initSortable();
+            }
         },
         
         _initSortable: function() {
             var self = this;
-            //$('.form-group', this.jForm).sortable({
-            console.log(this.jSortable);
-            this.jSortable.sortable({
-                cursor: "move",
+            this.Sortable = sx.backend.sortable.create(this.jSortable, {
                 handle: ".sx-move",
-                forceHelperSize: true,
-                forcePlaceholderSize: true,
-                opacity: 0.5,
-                placeholder: "ui-state-highlight",
-                
-                out: function( event, ui )
+                itemSelector: "> .form-group",
+                onUpdate: function()
                 {
                     var newSort = [];
                     
