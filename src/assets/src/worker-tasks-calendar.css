@@ -10,7 +10,6 @@
     --sx-task-calendar-expired-header-background: var(--sx-color-danger-soft);
     --sx-task-calendar-expired-header-color: var(--sx-color-danger);
     --sx-task-calendar-expired-row-background: var(--sx-color-danger-soft);
-    --sx-task-calendar-planned-row-background: var(--sx-color-info-soft);
     --sx-task-calendar-unfinished-header-background: var(--sx-color-warning-soft);
     --sx-task-calendar-unfinished-header-color: var(--sx-color-warning);
     --sx-task-calendar-unfinished-row-background: var(--sx-color-warning-soft);
@@ -130,10 +129,6 @@
 
 .sx-worker-tasks-calendar-widget .sx-task-expired > td {
     background: var(--sx-task-calendar-expired-row-background) !important;
-}
-
-.sx-worker-tasks-calendar-widget .sx-task-planned > td {
-    background: var(--sx-task-calendar-planned-row-background) !important;
 }
 
 .sx-worker-tasks-calendar-widget .sx-unfinished-tasks thead th {
