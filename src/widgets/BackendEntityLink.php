@@ -42,6 +42,12 @@ class BackendEntityLink extends Widget
     /** @var string */
     public $tag = 'a';
 
+    /** @var bool Automatically suppress the link when the current user cannot access its controller. */
+    public $checkAccess = true;
+
+    /** @var string|null Explicit permission name; defaults to the normalized controller route. */
+    public $permissionName;
+
     public function init()
     {
         parent::init();
@@ -60,6 +66,15 @@ class BackendEntityLink extends Widget
         $content = $this->content;
         if ($content === null) {
             $content = Html::encode($this->label);
+        }
+
+        if (!$this->isLinkAllowed()) {
+            $options = $this->options;
+            unset($options['href'], $options['onclick'], $options['data']);
+            Html::removeCssClass($options, ['sx-entity-link', 'sx-btn-ajax-actions']);
+            Html::addCssClass($options, 'sx-entity-label');
+
+            return Html::tag('span', $content, $options);
         }
 
         $fallbackAction = $this->action ?: 'update';
@@ -82,5 +97,19 @@ class BackendEntityLink extends Widget
             'content'                 => $content,
             'options'                 => $options,
         ]);
+    }
+
+    protected function isLinkAllowed()
+    {
+        if (!$this->checkAccess || !\Yii::$app->has('authManager') || !\Yii::$app->has('user')) {
+            return true;
+        }
+
+        $permissionName = $this->permissionName ?: ltrim($this->controllerId, '/');
+        if (!\Yii::$app->authManager->getPermission($permissionName)) {
+            return true;
+        }
+
+        return !\Yii::$app->user->isGuest && \Yii::$app->user->can($permissionName);
     }
 }
