@@ -8,7 +8,6 @@
 namespace skeeks\cms\backend\actions\assets;
 
 use skeeks\cms\base\AssetBundle;
-use yii\bootstrap\BootstrapAsset;
 
 /**
  * Class SelectLanguage

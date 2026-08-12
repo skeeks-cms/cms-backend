@@ -64,7 +64,20 @@ class BackendShellProfileWidget extends Widget
     {
         BackendShellHeaderAsset::register($this->view);
 
-        $toggle = Html::img($this->avatarSrc, $this->avatarOptions)
+        if ((string)$this->avatarSrc !== '') {
+            $avatar = Html::img($this->avatarSrc, $this->avatarOptions);
+        } else {
+            $fallbackOptions = $this->avatarOptions;
+            unset($fallbackOptions['alt']);
+            Html::addCssClass($fallbackOptions, 'sx-shell-profile__avatar--fallback');
+            $fallbackOptions['aria-hidden'] = 'true';
+
+            $avatar = Html::tag('span', BackendIcon::render('user', [
+                'size' => 18,
+            ]), $fallbackOptions);
+        }
+
+        $toggle = $avatar
             .Html::tag('span', Html::encode($this->label), $this->labelOptions)
             .BackendIcon::render('chevron-down', [
                 'size'  => 10,

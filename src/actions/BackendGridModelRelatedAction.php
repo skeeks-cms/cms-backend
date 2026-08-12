@@ -36,6 +36,17 @@ class BackendGridModelRelatedAction extends BackendModelAction
     public $backendShowings = true;
     public $relation = [];
 
+    /**
+     * Pass the bound parent relation to parameterized iframe multi-actions.
+     *
+     * This lets a bulk form opened from a company, client or project tab use
+     * the current parent as its initial value without coupling the form to the
+     * parent controller.
+     *
+     * @var bool
+     */
+    public $passRelationContextToMultiWindowActions = true;
+
     public function init()
     {
         if (!$this->icon) {
@@ -131,6 +142,18 @@ class BackendGridModelRelatedAction extends BackendModelAction
 
                         $query->andWhere($this->getBindRelation($this->model));
                     };
+
+                    if ($this->passRelationContextToMultiWindowActions) {
+                        $relationContext = $this->getBindRelation($this->model);
+                        foreach ($controller->modelMultiActions as $relatedAction) {
+                            if ($relatedAction instanceof BackendModelMultiWindowAction) {
+                                $relatedAction->url = ArrayHelper::merge(
+                                    (array)$relatedAction->urlData,
+                                    $relationContext
+                                );
+                            }
+                        }
+                    }
                 }
 
                 $this->trigger(self::EVENT_GRID_INIT);

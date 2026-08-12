@@ -31,7 +31,10 @@ $headerView = file_get_contents(dirname(__DIR__).'/src/widgets/views/backend-she
 headerExpect(class_exists(BackendShellProfileWidget::class), 'Shared shell profile widget is not autoloadable.');
 headerExpect(strpos($profileWidget, "'sx-shell-profile__toggle'") !== false, 'Profile widget does not emit the semantic toggle.');
 headerExpect(strpos($profileWidget, "BackendIcon::render('chevron-down'") !== false, 'Profile widget does not use the semantic chevron icon.');
+headerExpect(strpos($profileWidget, "'sx-shell-profile__avatar--fallback'") !== false, 'Profile widget does not emit a fallback avatar when the image is missing.');
+headerExpect(strpos($profileWidget, "BackendIcon::render('user'") !== false, 'Profile fallback does not use the semantic user icon.');
 headerExpect(preg_match_all('/^\\.sx-shell-profile__toggle \\{/m', $css) === 1, 'Profile toggle CSS must have one canonical definition.');
+headerExpect(strpos($css, '.sx-shell-profile__avatar--fallback') !== false, 'Profile fallback avatar is not themed.');
 headerExpect(substr_count($theme, '--sx-shell-header-profile-avatar-size:') === 1, 'Profile avatar token must have one canonical default.');
 headerExpect(strpos($theme, '--sx-shell-header-action-radius: 8px;') !== false, 'Header action radius token is missing.');
 headerExpect(strpos($css, '.sx-shell-profile__toggle[aria-expanded="true"]') !== false, 'Open profile state is not styled.');

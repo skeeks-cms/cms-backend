@@ -250,12 +250,25 @@ html[data-sx-theme="dark"] .sx-shell-header__surface:not([data-sx-header-preview
 }
 
 .sx-shell-profile__avatar {
-    display: block;
+    box-sizing: border-box;
+    display: inline-flex;
     width: var(--sx-shell-header-profile-avatar-size, 31px);
     height: var(--sx-shell-header-profile-avatar-size, 31px);
     flex: 0 0 var(--sx-shell-header-profile-avatar-size, 31px);
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
     border-radius: 50%;
+}
+
+img.sx-shell-profile__avatar {
     object-fit: cover;
+}
+
+.sx-shell-profile__avatar--fallback {
+    border: 1px solid var(--sx-shell-header-divider-color);
+    color: var(--sx-shell-header-color);
+    background: var(--sx-shell-header-action-background);
 }
 
 .sx-shell-profile__label {

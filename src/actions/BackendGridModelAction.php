@@ -9,6 +9,7 @@
 namespace skeeks\cms\backend\actions;
 
 use skeeks\cms\backend\actions\assets\BackendGridModelActionAsset;
+use skeeks\cms\backend\actions\assets\BackendGridModelMultiActionAsset;
 use skeeks\cms\backend\BackendComponent;
 use skeeks\cms\backend\grid\ControllerActionsColumn;
 use skeeks\cms\backend\helpers\BackendIcon;
@@ -18,7 +19,6 @@ use skeeks\cms\backend\widgets\ControllerActionsWidget;
 use skeeks\cms\backend\widgets\GridViewWidget;
 use skeeks\cms\backend\widgets\ListViewWidget;
 use skeeks\cms\cmsWidgets\gridView\GridViewCmsWidget;
-use skeeks\cms\modules\admin\widgets\gridViewStandart\GridViewStandartAsset;
 use skeeks\cms\rbac\CmsManager;
 use skeeks\cms\widgets\DynamicFiltersWidget;
 use skeeks\cms\widgets\FiltersWidget;
@@ -439,11 +439,6 @@ JS
     public function renderBeforeTable(GridViewWidget $gridViewWidget)
     {
         BackendGridModelActionAsset::register(\Yii::$app->view);
-        GridViewStandartAsset::register($gridViewWidget->view);
-        $multiActions = [];
-        if ($this->controller) {
-            $multiActions = $this->controller->modelMultiActions;
-        }
 
         $this->_initMultiActions($gridViewWidget);
         return $this->_buttonsMulti;
@@ -466,6 +461,8 @@ JS
         if (!$multiActions) {
             return $this;
         }
+
+        BackendGridModelMultiActionAsset::register($gridViewWidget->view);
 
         $options = [
             'id'                 => $gridViewWidget->id,
@@ -590,7 +587,16 @@ CSS
      */
     public function getBackendActionPresentation($actionId = 'create', array $config = [])
     {
-        $backendAction = $this->controller->createAction($actionId);
+        /*
+         * Reuse the controller-owned action instance first. Related grids and
+         * other composition actions may already have enriched its URL with
+         * parent context. Recreating it here would silently drop those runtime
+         * parameters from page-header and empty-state actions.
+         */
+        $backendAction = ArrayHelper::getValue($this->controller->actions, $actionId);
+        if (!$backendAction) {
+            $backendAction = $this->controller->createAction($actionId);
+        }
         if (!$backendAction || !$backendAction->isVisible || !$backendAction->url) {
             return [];
         }
