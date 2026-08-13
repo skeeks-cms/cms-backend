@@ -8,6 +8,7 @@
 namespace skeeks\cms\backend\widgets\sortable\assets;
 
 use skeeks\cms\base\AssetBundle;
+use skeeks\sx\assets\Core;
 
 /**
  * Stable backend API for sortable collections.
@@ -27,6 +28,7 @@ class BackendSortableAdapterAsset extends AssetBundle
     ];
 
     public $depends = [
+        Core::class,
         BackendSortableJsAsset::class,
     ];
 }

@@ -29,6 +29,7 @@ use skeeks\cms\backend\widgets\jui\assets\BackendJuiThemeAsset;
 use skeeks\cms\backend\widgets\jui\assets\BackendSortableAsset;
 use skeeks\cms\backend\widgets\sortable\assets\BackendSortableAdapterAsset;
 use skeeks\cms\backend\widgets\sortable\assets\BackendSortableJsAsset;
+use skeeks\sx\assets\Core;
 
 Yii::setAlias('@skeeks/cms/backend', dirname(__DIR__).'/src');
 
@@ -64,6 +65,10 @@ sortableAssetExpect(
     'Sortable placeholder does not follow the active backend theme.'
 );
 sortableAssetExpect(strpos($sortableCss, 'url(') === false, 'Sortable styles still load theme images.');
+sortableAssetExpect(
+    in_array(Core::class, (array)$adapterAsset->depends, true),
+    'Sortable adapter does not declare the SkeekS JS core dependency.'
+);
 sortableAssetExpect(
     in_array(BackendSortableJsAsset::class, (array)$adapterAsset->depends, true),
     'Sortable adapter does not declare SortableJS as its provider dependency.'
