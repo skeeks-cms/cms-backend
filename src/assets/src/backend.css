@@ -613,6 +613,16 @@ img.sx-collection-cell__media {
     object-fit: cover;
 }
 
+.sx-collection-cell__media--accent {
+    color: var(--sx-color-accent);
+    border-color: var(--sx-color-accent-border);
+    background: var(--sx-color-accent-soft);
+}
+
+.sx-collection-cell__media--image {
+    background: var(--sx-color-surface);
+}
+
 .sx-collection-cell__media--small {
     width: var(--sx-collection-cell-media-size-small);
     height: var(--sx-collection-cell-media-size-small);
