@@ -143,9 +143,9 @@ class BackendGridModelRelatedAction extends BackendModelAction
                         $query->andWhere($this->getBindRelation($this->model));
                     };
 
-                    if ($this->passRelationContextToMultiWindowActions) {
+                    if ($this->passRelationContextToMultiWindowActions && $controller->canGetProperty('modelMultiActions')) {
                         $relationContext = $this->getBindRelation($this->model);
-                        foreach ($controller->modelMultiActions as $relatedAction) {
+                        foreach ((array)$controller->modelMultiActions as $relatedAction) {
                             if ($relatedAction instanceof BackendModelMultiWindowAction) {
                                 $relatedAction->url = ArrayHelper::merge(
                                     (array)$relatedAction->urlData,

@@ -295,9 +295,11 @@ trait TBackendModelController
 
         $actions = $this->actions();
 
+        $this->_modelActions = [];
+
         if ($actions) {
             foreach ($actions as $id => $data) {
-                if (!is_subclass_of($data['class'], IBackendModelAction::class)) {
+                if (!is_subclass_of(ArrayHelper::getValue($data, 'class'), IBackendModelAction::class)) {
                     continue;
                 }
 
@@ -317,8 +319,6 @@ trait TBackendModelController
 
                 }
             }
-        } else {
-            $this->_modelActions = [];
         }
 
         if ($this->_modelActions) {
@@ -339,12 +339,14 @@ trait TBackendModelController
 
         $actions = $this->actions();
 
+        $this->_modelMultiActions = [];
+
         if ($actions) {
             foreach ($actions as $id => $data) {
-                if (!is_subclass_of($data['class'], IBackendModelMultiAction::class)) {
+                if (!is_subclass_of(ArrayHelper::getValue($data, 'class'), IBackendModelMultiAction::class)) {
                     continue;
                 }
-                
+
                 $action = $this->createAction($id);
 
                 if ($action instanceof IBackendModelMultiAction) {
@@ -353,8 +355,6 @@ trait TBackendModelController
                     //}
                 }
             }
-        } else {
-            $this->_modelMultiActions = [];
         }
 
         if ($this->_modelMultiActions) {
