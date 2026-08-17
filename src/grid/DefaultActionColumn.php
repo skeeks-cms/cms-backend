@@ -37,6 +37,13 @@ class DefaultActionColumn extends BackendEntityLinkColumn
                 if ($controller->canGetProperty('modelPkAttribute') && $controller->modelPkAttribute) {
                     $this->modelIdAttribute = $controller->modelPkAttribute;
                 }
+
+                if ($this->permissionName === null
+                    && $controller->canGetProperty('permissionName')
+                    && $controller->permissionName
+                ) {
+                    $this->permissionName = $controller->permissionName;
+                }
             }
         }
 

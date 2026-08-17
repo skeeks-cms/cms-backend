@@ -39,6 +39,12 @@ class BackendEntityLinkColumn extends DataColumn
     /** @var array|callable */
     public $linkOptions = [];
 
+    /** @var bool Suppress the link when the current user cannot access its controller. */
+    public $checkAccess = true;
+
+    /** @var string|null Explicit controller permission checked by BackendEntityLink. */
+    public $permissionName;
+
     /** @var string */
     public $tag = 'a';
 
@@ -82,6 +88,8 @@ class BackendEntityLinkColumn extends DataColumn
             'urlParams'    => (array)$urlParams,
             'tag'          => $this->tag,
             'options'      => $options,
+            'checkAccess'  => $this->checkAccess,
+            'permissionName' => $this->permissionName,
         ]);
     }
 }
