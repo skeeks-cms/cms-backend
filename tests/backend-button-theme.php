@@ -19,6 +19,8 @@ buttonThemeExpect(strpos($theme, '--sx-button-primary-border-width: 0;') !== fal
 buttonThemeExpect(strpos($theme, '--sx-button-primary-shadow: 0 5px 14px color-mix(in srgb, var(--sx-color-accent) 16%, transparent);') !== false, 'Primary shadow must derive from the editable accent palette.');
 buttonThemeExpect(strpos($theme, '--sx-button-primary-hover-filter: brightness(.95);') !== false, 'Primary hover filter is missing.');
 buttonThemeExpect(strpos($theme, '--sx-button-secondary-background: var(--sx-color-surface);') !== false, 'Secondary button surface is missing.');
+buttonThemeExpect(strpos($theme, '.sx-button:focus:not(:focus-visible) {') !== false, 'Pointer-focused buttons must not keep the browser default outline.');
+buttonThemeExpect(strpos($theme, '.sx-button:focus-visible {') !== false, 'Keyboard-focused buttons must retain the semantic focus indicator.');
 buttonThemeExpect(preg_match('/^\.btn\s*\{/m', $shell) === 0, 'Legacy shell button radius still overrides the theme contract.');
 buttonThemeExpect(strpos($shell, '.btn:visited,') === false, 'Legacy shell button state still suppresses semantic shadows.');
 buttonThemeExpect(strpos($shell, '.btn-primary {') === false, 'Legacy shell primary color still overrides the theme contract.');

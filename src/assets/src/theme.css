@@ -1410,6 +1410,11 @@ fieldset:disabled .btn,
     pointer-events: none;
 }
 
+.btn:focus:not(:focus-visible),
+.sx-button:focus:not(:focus-visible) {
+    outline: 0;
+}
+
 .btn:focus-visible,
 .sx-button:focus-visible {
     outline: var(--sx-button-focus-outline);
