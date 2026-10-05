@@ -38,6 +38,17 @@ $isEmpty = $backendUrl->isEmptyLayout;
 if ($isEmpty && \Yii::$app->getModule('debug')) {
     \Yii::$app->getModule('debug')->panels = [];
 }
+
+// Footer and quick access are product slots: the administration theme ships
+// them, a client cabinet theme may not. Render a slot only when it resolves.
+$renderOptionalSlot = function ($view) {
+    $file = \Yii::getAlias($view) . '.php';
+    if ($this->theme !== null) {
+        $file = $this->theme->applyTo($file);
+    }
+
+    return is_file($file) ? $this->render($view) : '';
+};
 ?>
 <?php $this->beginPage() ?>
 <!DOCTYPE html>
@@ -167,14 +178,14 @@ if ($isEmpty && \Yii::$app->getModule('debug')) {
                 <?php endif; ?>
             </div>
 
-            <?= $this->render('@app/views/layouts/_footer') ?>
+            <?= $renderOptionalSlot('@app/views/layouts/_footer') ?>
         </div>
     </div>
 </main>
 
 <?= $this->render('@app/views/layouts/_modals') ?>
 <?php if (!$isEmpty) : ?>
-    <?= $this->render('@app/views/layouts/_quick-access') ?>
+    <?= $renderOptionalSlot('@app/views/layouts/_quick-access') ?>
 <?php endif; ?>
 <?= $this->render('@app/views/layouts/_end-body') ?>
 
