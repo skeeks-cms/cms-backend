@@ -64,6 +64,11 @@ form.sx-backend-form
         font-weight: bold;
     }
 
+    form.sx-backend-form .sx-form-submit-error {
+        color: var(--sx-form-error-color);
+        overflow-wrap: anywhere;
+    }
+
     form.sx-backend-form .sx-buttons-standart
     {
         padding-top: 10px;

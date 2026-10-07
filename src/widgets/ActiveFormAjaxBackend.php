@@ -120,7 +120,25 @@ class ActiveFormAjaxBackend extends ActiveForm implements IActiveFormHasFieldSet
                     });
                     
                     ActiveFormAjaxSubmit.on('error', function(e, response) {
-                        $('.sx-buttons-standart .sx-success-meessage', ActiveFormAjaxSubmit.jForm).empty().append('<span style="color: red;">Есть ошибки!</span>');
+                        response = response || {};
+                        var messages = [];
+                        var validation = response.data && response.data.validation;
+                        $.each(validation || {}, function(attribute, errors) {
+                            $.each(Array.isArray(errors) ? errors : [errors], function(index, error) {
+                                if (typeof error === 'string' && error.trim() && messages.indexOf(error.trim()) === -1) {
+                                    messages.push(error.trim());
+                                }
+                            });
+                        });
+
+                        var message = messages.length ? messages.join(' ') : response.message;
+                        message = typeof message === 'string' && message.trim()
+                            ? 'Не удалось сохранить. ' + message.trim()
+                            : 'Не удалось сохранить данные. Попробуйте ещё раз. Если ошибка повторится, обратитесь в поддержку.';
+
+                        $('.sx-buttons-standart .sx-success-meessage', ActiveFormAjaxSubmit.jForm).empty().append(
+                            $('<span>', {'class': 'sx-form-submit-error', 'role': 'alert'}).text(message)
+                        );
                         
                     });
                 }
