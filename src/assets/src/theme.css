@@ -433,6 +433,12 @@
     --sx-scrollbar-thumb: var(--sx-color-border-strong);
     --sx-scrollbar-thumb-hover: var(--sx-color-text-subtle);
 
+    /* Inner scroll areas (columns, panels, lists): thin, without a track, like the shell sidebar. */
+    --sx-scroll-width: thin;
+    --sx-scroll-thumb: var(--sx-color-border-strong);
+    --sx-scroll-thumb-hover: var(--sx-color-text-subtle);
+    --sx-scroll-track: transparent;
+
     --sx-filter-wrapper-background: var(--sx-color-surface-muted);
     --sx-filter-wrapper-border-color: var(--sx-color-border);
     --sx-filter-wrapper-shadow: inset 0 1px 0 var(--sx-color-surface);

@@ -933,6 +933,26 @@ html[data-sx-theme] {
     scrollbar-color: var(--sx-scrollbar-thumb) var(--sx-scrollbar-track);
 }
 
+/*
+ * Shared inner scroll style. Every column, panel and list of a section
+ * (mail folders, chat lists, drawers, grids) gets the thin trackless
+ * scrollbar of the shell sidebar, so sections do not style it one by one.
+ * Zero specificity: a component tunes it only through the --sx-scroll-*
+ * tokens. The page scrollbar is styled by the html rule above.
+ */
+:where(html[data-sx-theme] body) {
+    scrollbar-color: var(--sx-scroll-thumb) var(--sx-scroll-track);
+}
+
+:where(html[data-sx-theme] body *) {
+    scrollbar-width: var(--sx-scroll-width);
+}
+
+/* Opt-in: the thumb darkens while the pointer is over the area. */
+html[data-sx-theme] .sx-scroll:hover {
+    scrollbar-color: var(--sx-scroll-thumb-hover) var(--sx-scroll-track);
+}
+
 html[data-sx-theme] .scroll-textarea {
     border-color: var(--sx-form-control-border-color);
     background: var(--sx-form-control-background);
