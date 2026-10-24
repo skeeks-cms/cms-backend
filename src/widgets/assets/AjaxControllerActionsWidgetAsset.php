@@ -25,5 +25,7 @@ class AjaxControllerActionsWidgetAsset extends AssetBundle
     public $depends = [
         'yii\web\YiiAsset',
         'skeeks\sx\assets\Custom',
+        // Loaded actions run through sx.classes.backend.widgets.Action.
+        ControllerActionsWidgetAsset::class,
     ];
 }
