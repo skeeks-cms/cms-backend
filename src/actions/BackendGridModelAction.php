@@ -455,7 +455,8 @@ JS
 
         $multiActions = [];
         if ($this->controller) {
-            $multiActions = $this->controller->modelMultiActions;
+            // Only the actions the user may run: a button of a forbidden one would answer 403.
+            $multiActions = array_filter($this->controller->modelMultiActions, static fn($action) => $action->isAllow);
         }
 
         if (!$multiActions) {
