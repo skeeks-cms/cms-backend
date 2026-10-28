@@ -77,6 +77,13 @@ foreach ($items as $item) {
         'class' => 'sx-shell-menu__label',
     ]);
 
+    if ($badge = $item->getBadgeValue()) {
+        echo Html::tag('span', $badge > 99 ? '99+' : (string)$badge, [
+            'class'      => 'sx-shell-menu__badge',
+            'aria-label' => (string)$badge,
+        ]);
+    }
+
     if ($hasChildren) {
         echo Html::tag(
             'span',

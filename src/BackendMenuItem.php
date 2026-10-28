@@ -83,6 +83,25 @@ class BackendMenuItem extends Component
      */
     public $accessCallback = null;
     /**
+     * A counter next to the label (pending requests, unread items): an int or
+     * a callable(BackendMenuItem): int; 0 or null shows nothing. Computed only
+     * when the item is rendered.
+     *
+     * @var int|callable|null
+     */
+    public $badge = null;
+
+    /** The counter of the item, 0 when there is none. */
+    public function getBadgeValue(): int
+    {
+        $badge = $this->badge;
+        if (is_callable($badge)) {
+            $badge = call_user_func($badge, $this);
+        }
+
+        return max(0, (int)$badge);
+    }
+    /**
      * @var null|\skeeks\cms\backend\BackendController
      */
     protected $_controller = null;
