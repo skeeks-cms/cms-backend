@@ -272,25 +272,42 @@ class BackendModelHeader extends Widget
         return $result;
     }
 
-    protected function renderDeleteAction()
+    /**
+     * The client action data of the "delete" model action of $controller
+     * (sx.classes.backend.widgets.Action), null when it is absent or not
+     * allowed. A card may render it elsewhere — in its own menu — with the
+     * header actions turned off (`actions => false`).
+     *
+     * @return array|null
+     */
+    public static function deleteActionData($controller)
     {
-        if (!$this->controller || !isset($this->controller->modelActions)) {
-            return '';
+        if (!$controller || !isset($controller->modelActions)) {
+            return null;
         }
 
-        $deleteAction = ArrayHelper::getValue($this->controller->modelActions, 'delete');
+        $deleteAction = ArrayHelper::getValue($controller->modelActions, 'delete');
         if (!$deleteAction || (isset($deleteAction->isVisible) && !$deleteAction->isVisible)) {
-            return '';
+            return null;
         }
 
-        $actionData = Json::encode([
+        return [
             'url'             => $deleteAction->url,
             'isOpenNewWindow' => true,
             'confirm'         => isset($deleteAction->confirm) ? $deleteAction->confirm : '',
             'method'          => isset($deleteAction->method) ? $deleteAction->method : '',
             'request'         => isset($deleteAction->request) ? $deleteAction->request : '',
             'size'            => isset($deleteAction->size) ? $deleteAction->size : '',
-        ]);
+        ];
+    }
+
+    protected function renderDeleteAction()
+    {
+        $actionData = static::deleteActionData($this->controller);
+        if ($actionData === null) {
+            return '';
+        }
+        $actionData = Json::encode($actionData);
         $label = \Yii::t('skeeks/backend', 'Delete');
 
         return Html::a(BackendIcon::render('trash', ['size' => 17]), '#', [

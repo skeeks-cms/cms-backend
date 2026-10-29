@@ -14,6 +14,14 @@
 }
 
 /*
+ * Focus: a mouse click leaves no frame on a button, a tab or a link; the
+ * keyboard focus stays visible (:focus-visible keeps every focus style).
+ */
+html[data-sx-theme] :focus:not(:focus-visible) {
+    outline: none !important;
+}
+
+/*
  * Universal interactive surface.
  *
  * Use this opt-in primitive for a link, compact card or navigation row with a
@@ -599,6 +607,8 @@ html[data-sx-theme] .sx-model-header__toolbar {
     display: flex;
     align-items: flex-start;
     flex: 0 0 auto;
+    /* A narrow header wraps its buttons instead of pushing the last one out of the screen. */
+    max-width: 100%;
     flex-wrap: wrap;
     justify-content: flex-end;
     gap: 8px;
