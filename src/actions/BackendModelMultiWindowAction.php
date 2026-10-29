@@ -250,7 +250,11 @@ class BackendModelMultiWindowAction extends BackendModelMultiAction implements I
 
         $modelClass = $this->controller->modelClassName;
         /** @var ActiveQuery $query */
-        $query = $modelClass::find()->andWhere([$this->controller->modelPkAttribute => $pks]);
+        // The pk with its table: modelsQueryCallback may join tables that have the same column (a scope with managers).
+        $pkColumn = method_exists($modelClass, 'tableName')
+            ? $modelClass::tableName().'.'.$this->controller->modelPkAttribute
+            : $this->controller->modelPkAttribute;
+        $query = $modelClass::find()->andWhere([$pkColumn => $pks]);
         if ($this->modelsQueryCallback && is_callable($this->modelsQueryCallback)) {
             $queryCallback = $this->modelsQueryCallback;
             $result = call_user_func($queryCallback, $query, $this);
