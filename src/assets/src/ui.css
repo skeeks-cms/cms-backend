@@ -614,12 +614,38 @@ html[data-sx-theme] .sx-model-header__toolbar {
     gap: 8px;
 }
 
+/* The status beside the buttons (a responsible, a stage) is centred on their row. */
+html[data-sx-theme] .sx-model-header__side,
+html[data-sx-theme] .sx-model-header__toolbar {
+    align-items: center;
+}
+
+/*
+ * Every button of the header side — a toolbar action, an icon, the summary of
+ * a menu («⋯», «Не продажа ▾») — has one height, the medium button: a card
+ * does not size them one by one (.sx-button--sm here is as tall as .btn).
+ */
+html[data-sx-theme] .sx-model-header__toolbar .btn,
+html[data-sx-theme] .sx-model-header__toolbar .sx-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    min-height: var(--sx-button-height-md);
+    padding: 0 var(--sx-button-padding-x);
+    font-size: 1em;
+    line-height: 1.2;
+}
+html[data-sx-theme] .sx-model-header__toolbar .btn:has(> svg:only-child) {
+    min-width: var(--sx-button-height-md);
+    padding: 0;
+}
+
 html[data-sx-theme] .sx-model-header__status-stack {
     display: flex;
     align-items: flex-end;
     flex-direction: column;
     gap: 4px;
-    padding-top: 4px;
 }
 
 html[data-sx-theme] .sx-model-header__status-note {
