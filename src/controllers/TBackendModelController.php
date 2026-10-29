@@ -456,6 +456,24 @@ trait TBackendModelController
 
         $this->model;
 
+        // A link opened by itself (a new tab, no script — BackendEntityLink without an action): the first model
+        // action the user may open, as the script picks it, not a fixed "update" that may be forbidden.
+        if (!\Yii::$app->request->isAjax) {
+            // Never an action with a confirmation or a POST (delete): a plain GET must not change a record.
+            $first = null;
+            foreach ($this->modelActions as $modelAction) {
+                if (empty($modelAction->confirm) && strtolower((string)($modelAction->method ?? '')) !== 'post') {
+                    $first = $modelAction;
+                    break;
+                }
+            }
+            if (!$first || !$first->url) {
+                throw new \yii\web\NotFoundHttpException(\Yii::t('skeeks/backend', 'The requested page does not exist.'));
+            }
+
+            return $this->redirect($first->url);
+        }
+
         $rr->data['html'] = ControllerActionsWidget::widget([
             'actions' => $this->modelActions,
             'minViewCount' => 1,

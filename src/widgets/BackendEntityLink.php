@@ -77,7 +77,9 @@ class BackendEntityLink extends Widget
             return Html::tag('span', $content, $options);
         }
 
-        $fallbackAction = $this->action ?: 'update';
+        // Without an action the href (a new tab, no script) goes through model-actions to the first action the
+        // user may open — the same the click picks; a fixed "update" gave 403 to who may only view.
+        $fallbackAction = $this->action ?: 'model-actions';
         $route = '/'.ltrim($this->controllerId, '/').'/'.$fallbackAction;
         $fallbackUrl = $this->url ?: array_merge([$route, 'pk' => $this->modelId], $this->urlParams);
         $options = array_merge([

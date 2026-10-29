@@ -20,6 +20,19 @@
 html[data-sx-theme] :focus:not(:focus-visible) {
     outline: none !important;
 }
+/*
+ * The Bootstrap focus shadow of a button (.btn:focus) goes after a click too:
+ * a secondary button has no shadow of its own, a primary one keeps its usual
+ * shadow (the hover shadow wins while hovered). :focus-visible keeps the ring.
+ */
+html[data-sx-theme] .btn:not(.btn-primary):focus:not(:focus-visible),
+html[data-sx-theme] .sx-button:not(.sx-button--primary):focus:not(:focus-visible) {
+    box-shadow: none;
+}
+html[data-sx-theme] .btn-primary:focus:not(:focus-visible):not(:hover),
+html[data-sx-theme] .sx-button--primary:focus:not(:focus-visible):not(:hover) {
+    box-shadow: var(--sx-button-primary-shadow);
+}
 
 /*
  * Universal interactive surface.
