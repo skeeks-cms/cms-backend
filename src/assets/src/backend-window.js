@@ -83,6 +83,7 @@
             iframe: iframe,
             close: close,
             blocker: null,
+            readyTimer: null,
             previousFocus: doc.activeElement
         };
     };
@@ -105,20 +106,10 @@
         entry.backdrop.addEventListener("click", function () {
             self.close(widget);
         });
-        entry.iframe.addEventListener("load", function () {
+        // The spinner ends when the frame document is parsed, not at `load`:
+        // an image of a dead site in a feed entry kept `load` for 10+ seconds.
+        var ready = function () {
             var iframeWindow = entry.iframe.contentWindow;
-            var loadedUrl = "";
-
-            try {
-                loadedUrl = iframeWindow.location.href;
-            } catch (error) {
-                // Cross-origin drawers are allowed. A load event is enough to
-                // remove the parent-side loading state in that case.
-            }
-
-            if (loadedUrl === "about:blank" && widget._src !== "about:blank") {
-                return;
-            }
 
             widget._openedWindow = iframeWindow;
             try {
@@ -130,9 +121,48 @@
                 // drawer usable if a custom action intentionally does not.
             }
 
-            if (entry.blocker) {
+            if (entry.blocker && entry.blocker.isBlocked()) {
                 entry.blocker.unblock();
             }
+        };
+        var startedAt = Date.now();
+        var stopWaiting = function () {
+            self.mainWindow.clearInterval(entry.readyTimer);
+        };
+
+        entry.readyTimer = this.mainWindow.setInterval(function () {
+            var parsed = false;
+
+            try {
+                var doc = entry.iframe.contentDocument;
+                parsed = !!doc && doc.readyState !== "loading"
+                    && doc.location.href !== "about:blank";
+            } catch (error) {
+                // A cross-origin frame: `load` or the time limit decide.
+            }
+
+            if (parsed || Date.now() - startedAt > 8000) {
+                stopWaiting();
+                ready();
+            }
+        }, 100);
+
+        entry.iframe.addEventListener("load", function () {
+            var loadedUrl = "";
+
+            try {
+                loadedUrl = entry.iframe.contentWindow.location.href;
+            } catch (error) {
+                // Cross-origin drawers are allowed. A load event is enough to
+                // remove the parent-side loading state in that case.
+            }
+
+            if (loadedUrl === "about:blank" && widget._src !== "about:blank") {
+                return;
+            }
+
+            stopWaiting();
+            ready();
         });
 
         this.entries.push(entry);
@@ -200,6 +230,7 @@
             return false;
         }
 
+        this.mainWindow.clearInterval(entry.readyTimer);
         if (entry.blocker && entry.blocker.isBlocked()) {
             entry.blocker.unblock();
         }
